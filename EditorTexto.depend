@@ -35,7 +35,7 @@
 	<ListaDuplaCirc.h>
 	<Pilha.h>
 
-1475629225 c:\wamp64\www\editorcpp\include\string.h
+1475631386 c:\wamp64\www\editorcpp\include\string.h
 
 1475626056 c:\wamp64\www\editorcpp\include\acao.h
 
@@ -54,6 +54,6 @@
 1475626057 source:c:\wamp64\www\editorcpp\src\pilha.cpp
 	"Pilha.h"
 
-1475629152 source:c:\wamp64\www\editorcpp\src\string.cpp
+1475631352 source:c:\wamp64\www\editorcpp\src\string.cpp
 	"String.h"
 

@@ -15,7 +15,7 @@ class String
         void deleteCharAt(unsigned int posicao);
         void deletar(unsigned int posIni, unsigned int posFim);
         void inserir(unsigned int posicao, char letra);
-        void append(char letra);
+        void inserir(char letra);
         void replace(unsigned int posicao, char letra);
         void destroy();
 
