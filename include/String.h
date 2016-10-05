@@ -27,8 +27,8 @@ class String
         int length() const;
 
         // operators
-        bool operator= (String primeira);
-        bool operator+ (String outra);
+        void operator= (String primeira);
+        void operator+ (String outra);
     protected:
     private:
         char* minhaString;

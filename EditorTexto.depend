@@ -28,3 +28,29 @@
 1475582837 source:z:\testesc\editortexto\src\string.cpp
 	"String.h"
 
+1475626056 source:c:\wamp64\www\editorcpp\main.cpp
+	<iostream>
+	<String.h>
+	<Acao.h>
+	<ListaDuplaCirc.h>
+	<Pilha.h>
+
+1475626992 c:\wamp64\www\editorcpp\include\string.h
+
+1475626056 c:\wamp64\www\editorcpp\include\acao.h
+
+1475626056 c:\wamp64\www\editorcpp\include\listaduplacirc.h
+	<String.h>
+
+1475626056 c:\wamp64\www\editorcpp\include\pilha.h
+	<Acao.h>
+
+1475626057 source:c:\wamp64\www\editorcpp\src\acao.cpp
+	"Acao.h"
+
+1475626057 source:c:\wamp64\www\editorcpp\src\listaduplacirc.cpp
+	"ListaDuplaCirc.h"
+
+1475626057 source:c:\wamp64\www\editorcpp\src\pilha.cpp
+	"Pilha.h"
+
