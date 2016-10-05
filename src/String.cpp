@@ -1,18 +1,19 @@
 #include "String.h"
+#include <stdio.h>
 
 String::String(String &original)
 {
     //ctor
 }
 
-String::~String()
-{
-    //dtor
-}
-
 String::String(int novoTamanho)
 {
 
+}
+
+String::~String()
+{
+    //dtor
 }
 
         // Métodos normais
