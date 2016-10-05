@@ -29,6 +29,9 @@ class String
         // operators
         void operator= (String primeira);
         void operator+ (String outra);
+
+        // constantes
+        const char null = '\0';
     protected:
     private:
         char* minhaString;
