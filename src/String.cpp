@@ -6,6 +6,11 @@ String::String(String &original)
     //ctor
 }
 
+String::String(const String &original)
+{
+    //ctor
+}
+
 String::String(int novoTamanho)
 {
 

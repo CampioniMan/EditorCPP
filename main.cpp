@@ -9,10 +9,16 @@ using namespace std;
 
 int main()
 {
-    int trem;
-    trem = 4;
-    String oi(trem);
-    cout << "Aperte enter para encerrar o programa" << endl;
+    char c[3] = " ";
+    cin >> c;
+
+    if( *c == 22 )
+        cout << "Apertou" << endl;
+
+    //int trem;
+    //trem = 4;
+    //String oi(trem);
+    //cout << "Aperte enter para encerrar o programa" << endl;
     return 0;
 }
 

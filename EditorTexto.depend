@@ -57,32 +57,47 @@
 1475631352 source:c:\wamp64\www\editorcpp\src\string.cpp
 	"String.h"
 
-1475702766 source:z:\editorcpp\main.cpp
+1476110602 source:z:\editorcpp\main.cpp
 	<iostream>
 	"String.h"
 	"Acao.h"
 	"ListaDuplaCirc.h"
 	"Pilha.h"
 
-1475704469 z:\editorcpp\include\\string.h
+1476117119 z:\editorcpp\include\\string.h
 
-1475699988 z:\editorcpp\include\\acao.h
+1476117354 z:\editorcpp\include\\acao.h
+	"String.h"
 
-1475699988 z:\editorcpp\include\\listaduplacirc.h
+1475587138 z:\editorcpp\include\\listaduplacirc.h
 	<String.h>
 
-1475699988 z:\editorcpp\include\\pilha.h
+1475587138 z:\editorcpp\include\\pilha.h
 	<Acao.h>
 
-1475699988 source:z:\editorcpp\src\acao.cpp
+1475587139 source:z:\editorcpp\src\acao.cpp
 	"Acao.h"
 
-1475699988 source:z:\editorcpp\src\listaduplacirc.cpp
+1475587139 source:z:\editorcpp\src\listaduplacirc.cpp
 	"ListaDuplaCirc.h"
 
-1475699988 source:z:\editorcpp\src\pilha.cpp
+1475587139 source:z:\editorcpp\src\pilha.cpp
 	"Pilha.h"
 
-1475700569 source:z:\editorcpp\src\string.cpp
+1475780446 source:z:\editorcpp\src\string.cpp
 	"String.h"
+	<stdio.h>
+
+1475587139 source:z:\pd-tópico orientado a objeto\editorcpp\src\acao.cpp
+	"Acao.h"
+
+1475587139 source:z:\pd-tópico orientado a objeto\editorcpp\src\listaduplacirc.cpp
+	"ListaDuplaCirc.h"
+
+1475587139 source:z:\pd-tópico orientado a objeto\editorcpp\src\pilha.cpp
+	"Pilha.h"
+
+1475780446 source:z:\pd-tópico orientado a objeto\editorcpp\src\string.cpp
+	"String.h"
+	<stdio.h>
 
