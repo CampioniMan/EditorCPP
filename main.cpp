@@ -1,9 +1,6 @@
 #include <iostream>
-<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
 #include <stdlib.h>
-=======
 #include <stdio.h>
->>>>>>> String melhorada
 #include "String.h"
 #include "Acao.h"
 #include "ListaDuplaCirc.h"
@@ -14,7 +11,6 @@ using namespace std;
 
 int main()
 {
-<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
     char *c = new char[5]();
 
     *(c + 0) = 'a';
@@ -30,12 +26,6 @@ int main()
     //trem = 4;
     //String oi(trem);
     //cout << "Aperte enter para encerrar o programa" << endl;
-=======
-    unsigned int i;
-    i = 1;
-    cout << i << endl;
-    String *ola = new String(i);
->>>>>>> String melhorada
     return 0;
 }
 

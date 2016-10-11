@@ -3,15 +3,7 @@
 
 String::String(const String &original) : minhaString(original.minhaString), tamanho(original.length()), tamanhoMax(original.getTamanhoMax())
 {
-}
 
-String::String(const String &original)
-{
-<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
-    //ctor
-=======
-    delete [] minhaString;
->>>>>>> String melhorada
 }
 
 String::String() : tamanhoMax(256), tamanho(0), minhaString(new char[257]())
@@ -19,17 +11,13 @@ String::String() : tamanhoMax(256), tamanho(0), minhaString(new char[257]())
 
 }
 
-<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
 String::~String()
 {
-    //dtor
+    delete [] minhaString;
 }
 
         // Métodos normais
-char String::charAt(int indice) const
-=======
 String::String(const unsigned int &novoTamanhoMax) : tamanhoMax(novoTamanhoMax), tamanho(0), minhaString(new char[novoTamanhoMax+1]())
->>>>>>> String melhorada
 {
 
 }
@@ -90,7 +78,11 @@ void String::inserir(const unsigned int &posicao, const char &letra)
 
     if (this[posicao] == charNull)
     {
-
+        for (int i = this->tamanho; i <= posicao; i++)
+        {
+            this[i+1] = this[i];
+        }
+        this[posicao] = letra;
     }
     this->tamanho++;
 }

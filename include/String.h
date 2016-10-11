@@ -8,6 +8,7 @@ class String
         // Construtores
         String(const unsigned int &novoTamanho);
         String(const String &original);
+        String();
         virtual ~String();
 
         // Métodos normais
