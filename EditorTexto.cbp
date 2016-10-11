@@ -13,8 +13,13 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
 					<Add directory="Z:/EditorCPP/include/" />
 					<Add directory="Z:/EditorCPP/src/" />
+=======
+					<Add directory="F:/4oSemestreAtivo/Maligno/EditorCPP/include/" />
+					<Add directory="F:/4oSemestreAtivo/Maligno/EditorCPP/src/" />
+>>>>>>> String melhorada
 				</Compiler>
 				<Linker>
 					<Add directory="Z:/EditorCPP/src/" />

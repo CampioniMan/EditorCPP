@@ -57,14 +57,21 @@
 1475631352 source:c:\wamp64\www\editorcpp\src\string.cpp
 	"String.h"
 
+<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
 1476182948 source:z:\editorcpp\main.cpp
 	<iostream>
 	<stdlib.h>
+=======
+1476110004 source:f:\4osemestreativo\maligno\editorcpp\main.cpp
+	<iostream>
+	<stdio.h>
+>>>>>>> String melhorada
 	"String.h"
 	"Acao.h"
 	"ListaDuplaCirc.h"
 	"Pilha.h"
 
+<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
 1476117119 z:\editorcpp\include\\string.h
 
 1476217801 z:\editorcpp\include\\acao.h
@@ -111,4 +118,24 @@
 1475780446 source:z:\pd-tópico orientado a objeto\editorcpp\src\string.cpp
 	"String.h"
 	<stdio.h>
+=======
+1475581812 source:f:\4osemestreativo\maligno\editorcpp\src\acao.cpp
+	"Acao.h"
+
+1475670234 f:\4osemestreativo\maligno\editorcpp\include\\acao.h
+
+1475581026 source:f:\4osemestreativo\maligno\editorcpp\src\listaduplacirc.cpp
+	"ListaDuplaCirc.h"
+
+1475586190 f:\4osemestreativo\maligno\editorcpp\include\\listaduplacirc.h
+	<String.h>
+
+1476191182 f:\4osemestreativo\maligno\editorcpp\include\\string.h
+
+1475582828 source:f:\4osemestreativo\maligno\editorcpp\src\pilha.cpp
+	"Pilha.h"
+
+1475586292 f:\4osemestreativo\maligno\editorcpp\include\\pilha.h
+	<Acao.h>
+>>>>>>> String melhorada
 

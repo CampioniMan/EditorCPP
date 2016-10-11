@@ -1,21 +1,25 @@
 #include "String.h"
 #include <stdio.h>
 
-String::String(String &original)
+String::String(const String &original) : minhaString(original.minhaString), tamanho(original.length()), tamanhoMax(original.getTamanhoMax())
 {
-    //ctor
 }
 
 String::String(const String &original)
 {
+<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
     //ctor
+=======
+    delete [] minhaString;
+>>>>>>> String melhorada
 }
 
-String::String(int novoTamanho)
+String::String() : tamanhoMax(256), tamanho(0), minhaString(new char[257]())
 {
 
 }
 
+<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
 String::~String()
 {
     //dtor
@@ -23,29 +27,29 @@ String::~String()
 
         // Métodos normais
 char String::charAt(int indice) const
+=======
+String::String(const unsigned int &novoTamanhoMax) : tamanhoMax(novoTamanhoMax), tamanho(0), minhaString(new char[novoTamanhoMax+1]())
+>>>>>>> String melhorada
 {
-    if (indice < 0 || indice > (*this).length()-1)
-        return (*this).null;
-    return (*this).minhaString[indice];
+
 }
 
-void String::deleteCharAt(unsigned int posicao)
+void String::deleteCharAt(const unsigned int &posicao)
 {
-    if (posicao < 0) // não pode ser menor que 0
+    if (posicao < 0 || posicao > this->tamanhoMax || this->vazia()) // não pode ser menor que 0
         return;
 
-    for (int i = posicao; i < (*this).length()-1;) // mexendo, de posicao pra frente, 1 para trás
-        (*this).minhaString[i] = (*this).minhaString[++i];
+    for (int i = posicao; i < this->length()-1;) // mexendo, de posicao pra frente, 1 para trás
+        this->minhaString[i] = this->minhaString[++i];
 
-    (*this).minhaString[(*this).length()-1] = (*this).null; // deixando o último nulo
-    (*this).tamanho--;
+    this->minhaString[this->length()-1] = charNull; // deixando o último nulo
+    this->tamanho--;
 }
 
 void String::deletar(unsigned int posIni, unsigned int posFim)
 {
-    if (posIni < 0 || posIni > (*this).length()-1 || posFim < 0 || posFim > (*this).length()-1)
+    if (posIni < 0 || posIni >= this->tamanho || posFim < 0 || posFim > this->length()-1 || this->vazia())
         return;
-
 
     if (posIni > posFim) // pode estar ao contrário
     {
@@ -60,94 +64,115 @@ void String::deletar(unsigned int posIni, unsigned int posFim)
         deleteCharAt(posIni+diff);
     }
     */
-    for (int i = posIni; i+diff <= (*this).length();i++) // mexendo, de posicao pra frente, 1 para trás
-        (*this).minhaString[i] = (*this).minhaString[i+diff];
+    for (int i = posIni; i+diff <= this->length();i++) // mexendo, de posicao pra frente, 1 para trás
+        this->minhaString[i] = this->minhaString[i+diff];
 
-    for (int i = posFim; i <= (*this).length();i++) // deixando os últimos nulos
-        (*this).minhaString[posFim] = (*this).null;
-    (*this).tamanho -= diff;
+    for (int i = posFim; i <= this->length();i++) // deixando os últimos nulos
+        this->minhaString[posFim] = this->charNull;
+    this->tamanho -= diff;
 
 }
 
-void String::inserir(unsigned int posicao, char letra)
+bool String::cheia() const
 {
-    (*this).tamanho++;
+    return (this->tamanho >= this->tamanhoMax);
 }
 
-void String::inserir(char letra)
+bool String::vazia() const
 {
-    (*this).tamanho++;
+    return (this->tamanho == 0);
 }
 
-void String::replace(unsigned int posicao, char letra)
+void String::inserir(const unsigned int &posicao, const char &letra)
 {
-    return;
+    if (!cheia() && posicao > this->tamanhoMax && posicao < 0)
+        return;
+
+    if (this[posicao] == charNull)
+    {
+
+    }
+    this->tamanho++;
 }
 
-void String::destroy()
+void String::inserir(const char &letra)
 {
-    return;
+    if (!cheia())
+        return;
+
+    this->minhaString[this->tamanho] = letra;
+    this->tamanho++;
 }
 
         // Apocalipticos
 char* String::toString() const
 {
-    char* aux = new char[(*this).length()-1];
-    for (int i = 0; i <= (*this).length(); i++)
-        aux[i] = (*this).charAt(i);
-    return aux;
+    return (new String(*this))->minhaString;
 }
 
         // getters e setters
 int String::length() const
 {
-    return (*this).tamanho;
+    return this->tamanho;
+}
+
+int String::getTamanhoMax() const
+{
+    return this->tamanhoMax;
+}
+
+char& String::operator[] (const int &indice) const
+{
+    char* oi = new char(this->charNull);
+    if (indice < 0 || indice > this->tamanho-1)
+        return (*oi);
+    return this->minhaString[indice];
 }
 
         // operators
-void String::operator= (String primeira)
+void String::operator= (const String &primeira)
 {
-    (*this).deletar(0, (*this).length()-1);
+    this->deletar(0, this->length()-1);
     for (int i = 0; i <= primeira.length(); i++)
     {
-        (*this).inserir((*this).length(), primeira.charAt(i));
+        this->inserir(primeira[i]);
     }
 }
 
-void String::operator+ (String outra)
+void String::operator+ (const String &outra)
 {
     for (int i = 0; i <= outra.length(); i++)
     {
-        (*this).inserir((*this).length(), outra.charAt(i));
+        this->inserir(this->tamanho, outra[i]);
     }
 }
 
-bool operator< (String primeira, String segunda)
+bool operator< (const String &primeira, const String &segunda)
 {
     return primeira.length() < segunda.length();
 }
 
-bool operator> (String primeira, String segunda)
+bool operator> (const String &primeira, const String &segunda)
 {
     return primeira.length() > segunda.length();
 }
 
-bool operator<= (String primeira, String segunda)
+bool operator<= (const String &primeira, const String &segunda)
 {
     return primeira.length() <= segunda.length();
 }
 
-bool operator>= (String primeira, String segunda)
+bool operator>= (const String &primeira, const String &segunda)
 {
     return primeira.length() >= segunda.length();
 }
 
-bool operator== (String primeira, String segunda) // verificar conteúdo também
+bool operator== (const String &primeira, const String &segunda) // verificar conteúdo também
 {
     return primeira.length() == segunda.length();
 }
 
-bool operator!= (String primeira, String segunda) // verificar conteúdo também
+bool operator!= (const String &primeira, const String &segunda) // verificar conteúdo também
 {
     return primeira.length() != segunda.length();
 }

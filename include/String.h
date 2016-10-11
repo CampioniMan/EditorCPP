@@ -6,19 +6,17 @@ class String
 {
     public:
         // Construtores
-        String(int novoTamanho);
-        String(String &original);
+        String(const unsigned int &novoTamanho);
         String(const String &original);
         virtual ~String();
 
         // Métodos normais
-        char charAt(int indice) const;
-        void deleteCharAt(unsigned int posicao);
+        void deleteCharAt(const unsigned int &posicao);
         void deletar(unsigned int posIni, unsigned int posFim);
-        void inserir(unsigned int posicao, char letra);
-        void inserir(char letra);
-        void replace(unsigned int posicao, char letra);
-        void destroy();
+        void inserir(const unsigned int &posicao, const char &letra);
+        void inserir(const char &letra);
+        bool cheia() const;
+        bool vazia() const;
 
         // Apocalipticos
         char* toString() const;
@@ -26,24 +24,27 @@ class String
 
         // getters e setters
         int length() const;
+        int getTamanhoMax() const;
 
         // operators
-        void operator= (String primeira);
-        void operator+ (String outra);
+        void operator= (const String &primeira);
+        void operator+ (const String &outra);
+        char& operator[] (const int &indice) const;
 
         // constantes
-        const char null = '\0';
+        const char charNull = '\0';
     protected:
     private:
         char* minhaString;
         int tamanho;
+        int tamanhoMax;
 
 };
-bool operator< (String primeira, String segunda);
-bool operator> (String primeira, String segunda);
-bool operator<= (String primeira, String segunda);
-bool operator>= (String primeira, String segunda);
-bool operator== (String primeira, String segunda);
-bool operator!= (String primeira, String segunda);
+bool operator< (const String &primeira, const String &segunda);
+bool operator> (const String &primeira, const String &segunda);
+bool operator<= (const String &primeira, const String &segunda);
+bool operator>= (const String &primeira, const String &segunda);
+bool operator== (const String &primeira, const String &segunda);
+bool operator!= (const String &primeira, const String &segunda);
 
 #endif // STRING_H
