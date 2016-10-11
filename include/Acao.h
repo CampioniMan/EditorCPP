@@ -1,6 +1,8 @@
 #include "String.h"
 #ifndef ACAO_H
 #define ACAO_H
+#include <iostream>
+#include <stdlib.h>
 
 class Acao
 {
@@ -10,17 +12,19 @@ class Acao
         virtual ~Acao();
 
         Acao* clone() const;
-        void operator= (Acao primeira);
+        void operator= (Acao *primeira) const;
 
         String getPalavra() const;
         String getTipo() const;
         unsigned int getX() const;
         unsigned int getY() const;
 
-        void setPalavra(String palavra);
-        void setTipo(String tipo);
-        void setX(unsigned int posX);
-        void setY(unsigned int posX);
+        void setPalavra(String &novaPalavra);
+        void setTipo(String &novoTipo);
+        void setX(unsigned int novoX);
+        void setY(unsigned int novoY);
+
+        static Acao acaoNull();
     protected:
         String palavraMudou, tipo;
         unsigned int X, Y;

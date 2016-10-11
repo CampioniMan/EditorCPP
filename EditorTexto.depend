@@ -57,8 +57,9 @@
 1475631352 source:c:\wamp64\www\editorcpp\src\string.cpp
 	"String.h"
 
-1476110602 source:z:\editorcpp\main.cpp
+1476182948 source:z:\editorcpp\main.cpp
 	<iostream>
+	<stdlib.h>
 	"String.h"
 	"Acao.h"
 	"ListaDuplaCirc.h"
@@ -66,25 +67,35 @@
 
 1476117119 z:\editorcpp\include\\string.h
 
-1476117354 z:\editorcpp\include\\acao.h
+1476217801 z:\editorcpp\include\\acao.h
 	"String.h"
+	<iostream>
+	<stdlib.h>
 
 1475587138 z:\editorcpp\include\\listaduplacirc.h
 	<String.h>
 
-1475587138 z:\editorcpp\include\\pilha.h
+1476218888 z:\editorcpp\include\\pilha.h
 	<Acao.h>
+	<cstddef>
+	<iostream>
 
-1475587139 source:z:\editorcpp\src\acao.cpp
+1476217816 source:z:\editorcpp\src\acao.cpp
 	"Acao.h"
+	"String.h"
+	<iostream>
+	<stdlib.h>
 
 1475587139 source:z:\editorcpp\src\listaduplacirc.cpp
 	"ListaDuplaCirc.h"
 
-1475587139 source:z:\editorcpp\src\pilha.cpp
+1476218381 source:z:\editorcpp\src\pilha.cpp
+	<cstddef>
+	<iostream>
+	<stdlib.h>
 	"Pilha.h"
 
-1475780446 source:z:\editorcpp\src\string.cpp
+1476117107 source:z:\editorcpp\src\string.cpp
 	"String.h"
 	<stdio.h>
 

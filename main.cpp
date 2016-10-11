@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 #include "String.h"
 #include "Acao.h"
 #include "ListaDuplaCirc.h"
@@ -9,11 +10,16 @@ using namespace std;
 
 int main()
 {
-    char c[3] = " ";
-    cin >> c;
+    char *c = new char[5]();
 
-    if( *c == 22 )
-        cout << "Apertou" << endl;
+    *(c + 0) = 'a';
+    *(c + 1) = 'b';
+
+    //cin >> c;
+
+    //if( *c == 22 )
+        cout << *(c + 0) << endl;
+        cout << *(c + 1) << endl;
 
     //int trem;
     //trem = 4;

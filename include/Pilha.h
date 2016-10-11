@@ -1,27 +1,31 @@
 #ifndef PILHA_H
 #define PILHA_H
 #include <Acao.h>
+#include <cstddef>
+#include <iostream>
 
 class Pilha
 {
     public:
         // Construtores
-        Pilha(int tamanhoMax);
-        Pilha(Pilha &original);
+        Pilha(unsigned int tamanhoMax);
+        Pilha(const Pilha &original);
         virtual ~Pilha();
-        void destroy();
+        Pilha* clone() const;
 
         // Métodos normais
-        void empilhar(Acao feita); // remove a base da pilha e empilha o novo
+        Acao empilhar(Acao feita); // remove a base da pilha e empilha o novo
         Acao desempilhar();
         bool ehCheia() const;
         bool ehVazia() const;
 
         // getters e setters
-        Acao espiar() const;
+        Acao getTopo() const;
         int length() const;
+
+        void operator= (Pilha *primeira) const;
     protected:
-        void empilhar(Acao feita, bool vaiRemoverPrimeiro);
+        Acao valorDe(const int &indice) const;
     private:
         Acao* acoes;
         int tamanhoMax;
