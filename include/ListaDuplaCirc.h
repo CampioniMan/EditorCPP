@@ -1,28 +1,38 @@
 #ifndef LISTADUPLACIRC_H
 #define LISTADUPLACIRC_H
-#include <String.h>
+#include "String.h"
+#include "NoLista.h"
 
 class ListaDuplaCirc
 {
     public:
         ListaDuplaCirc();// tem que ter 1 linha em branco no fim
-        void destroy();
-        ListaDuplaCirc(ListaDuplaCirc &original);
+        ListaDuplaCirc(const ListaDuplaCirc &original);
         virtual ~ListaDuplaCirc();
         // mexe com atual
         void inserir(String novoElemento);
-        String remover();
-        String removerDepois();
+        bool remover(const String &elemento);
+        bool removerDepois(const String &elemento);
         void avancar();
         void voltar();
-        // getters e setters(???)
-        String Atual() const;
-bool operator= (ListaDuplaCirc outra);
+        void iniciarPercursoSequencial();
+        bool podePercorrer();
+        bool existe() const;
+        bool estaVazia() const;
+        NoLista* primeiraOcorrenciaDe(const String &procurada);
+        // getters e setters()
+        NoLista* getValorAtual() const;
+        int getIndiceAtual() const;
+        NoLista* getValorPrimeiro() const;
+        int getIndicePrimeiro() const;
+
+        bool operator= (ListaDuplaCirc outra);
+        String operator[] (const int &indice) const;
 
     protected:
     private:
-        int atual; // não serão ints provavelmente
-        int primeiro;
+        NoLista *atual; // não serão ints provavelmente
+        NoLista *primeiro;
 };
 
 #endif // LISTADUPLACIRC_H

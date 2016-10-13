@@ -57,7 +57,7 @@ Acao Pilha::empilhar(Acao feita)
     }
 
     *(this->acoes + this->tamanhoAtual++) = feita;
-    return this->getTopo().acaoNull();
+    return Acao::acaoNull();
 }
 
 Acao Pilha::desempilhar()

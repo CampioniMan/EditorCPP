@@ -59,9 +59,14 @@
 
 1476110004 32f5b91867dd6dd30ba64f6f0b3308aefe79b
 
-1476182948 source:z:\editorcpp\main.cpp
+1476390731 source:z:\editorcpp\main.cpp
 	<iostream>
 	<stdlib.h>
+	<stdio.h>
+	"String.h"
+	"Acao.h"
+	"ListaDuplaCirc.h"
+	"Pilha.h"
 
 1475780446 
 
@@ -95,22 +100,23 @@
 	<cstddef>
 	<iostream>
 
-1476217816 source:z:\editorcpp\src\acao.cpp
+1476389240 source:z:\editorcpp\src\acao.cpp
 	"Acao.h"
 	"String.h"
 	<iostream>
 	<stdlib.h>
 
-1475587139 source:z:\editorcpp\src\listaduplacirc.cpp
+1476396037 source:z:\editorcpp\src\listaduplacirc.cpp
 	"ListaDuplaCirc.h"
+	"NoLista.h"
 
-1476218381 source:z:\editorcpp\src\pilha.cpp
+1476395830 source:z:\editorcpp\src\pilha.cpp
 	<cstddef>
 	<iostream>
 	<stdlib.h>
 	"Pilha.h"
 
-1476117107 source:z:\editorcpp\src\string.cpp
+1476389240 source:z:\editorcpp\src\string.cpp
 	"String.h"
 	<stdio.h>
 
@@ -156,4 +162,29 @@
 	<Acao.h>
 	<cstddef>
 	<iostream>
+
+1476389240 z:\editorcpp\include\string.h
+
+1476389240 z:\editorcpp\include\acao.h
+	"String.h"
+	<iostream>
+	<stdlib.h>
+
+1476395206 z:\editorcpp\include\listaduplacirc.h
+	"String.h"
+	"NoLista.h"
+
+1476389240 z:\editorcpp\include\pilha.h
+	<Acao.h>
+	<cstddef>
+	<iostream>
+
+1476396050 source:z:\editorcpp\src\nolista.cpp
+	<iostream>
+	<stdlib.h>
+	<stdio.h>
+	"NoLista.h"
+
+1476396018 z:\editorcpp\include\nolista.h
+	"String.h"
 

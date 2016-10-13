@@ -13,13 +13,10 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-<<<<<<< 6e832f5b91867dd6dd30ba64f6f0b3308aefe79b
-					<Add directory="Z:/EditorCPP/include/" />
 					<Add directory="Z:/EditorCPP/src/" />
-=======
 					<Add directory="F:/4oSemestreAtivo/Maligno/EditorCPP/include/" />
 					<Add directory="F:/4oSemestreAtivo/Maligno/EditorCPP/src/" />
->>>>>>> String melhorada
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add directory="Z:/EditorCPP/src/" />
@@ -33,6 +30,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -45,11 +43,13 @@
 		</Compiler>
 		<Unit filename="include/Acao.h" />
 		<Unit filename="include/ListaDuplaCirc.h" />
+		<Unit filename="include/NoLista.h" />
 		<Unit filename="include/Pilha.h" />
 		<Unit filename="include/String.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Acao.cpp" />
 		<Unit filename="src/ListaDuplaCirc.cpp" />
+		<Unit filename="src/NoLista.cpp" />
 		<Unit filename="src/Pilha.cpp" />
 		<Unit filename="src/String.cpp" />
 		<Extensions>
