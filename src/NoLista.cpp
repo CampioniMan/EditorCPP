@@ -2,68 +2,90 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "NoLista.h"
-
-NoLista::NoLista() : dado()
-{
-
-}
-NoLista::NoLista(String novoDado) : dado(novoDado)
-{
-
-}
-
-NoLista::NoLista(const String &novoDado, NoLista* Proximo, NoLista* Anterior) : dado(novoDado), prox(Proximo), ante(Anterior)
+#include "String.h"
+template <class Tipo>
+NoLista<Tipo>::NoLista() : dado()
 {
 
 }
 
-NoLista::~NoLista()
+template <class Tipo>
+NoLista<Tipo>::NoLista(Tipo novoDado) : dado(novoDado)
 {
 
 }
 
-NoLista* NoLista::getProximo() const
+template <class Tipo>
+NoLista<Tipo>::NoLista(const Tipo &novoDado, NoLista* Proximo, NoLista* Anterior) : dado(novoDado), prox(Proximo), ante(Anterior)
+{
+
+}
+
+template <class Tipo>
+NoLista<Tipo>::NoLista(const NoLista<Tipo> &novoDado) : dado(novoDado.getDado()), prox(novoDado.getProximo()), ante(novoDado.getAnterior())
+{
+
+}
+
+template <class Tipo>
+NoLista<Tipo>::~NoLista()
+{
+
+}
+
+template <class Tipo>
+NoLista<Tipo>* NoLista<Tipo>::getProximo() const
 {
     return prox;
 }
 
-String NoLista::getDado() const
+template <class Tipo>
+Tipo NoLista<Tipo>::getDado() const
 {
     return dado;
 }
 
-NoLista* NoLista::getAnterior() const
+template <class Tipo>
+NoLista<Tipo>* NoLista<Tipo>::getAnterior() const
 {
     return ante;
 }
 
-void NoLista::setProximo(NoLista *NovoProx)
+template <class Tipo>
+void NoLista<Tipo>::setProximo(NoLista *NovoProx)
 {
     this->prox = NovoProx;
 }
 
-void NoLista::setDado(String novoDado)
+template <class Tipo>
+void NoLista<Tipo>::setDado(Tipo novoDado)
 {
     this->dado = novoDado;
 }
 
-void NoLista::setAnterior(NoLista *NovoAnte)
+template <class Tipo>
+void NoLista<Tipo>::setAnterior(NoLista *NovoAnte)
 {
     this->ante = NovoAnte;
 }
 
-void NoLista::setProximo(NoLista NovoProx)
+template <class Tipo>
+void NoLista<Tipo>::setProximo(NoLista NovoProx)
 {
     *this->prox = NovoProx;
 }
 
-void NoLista::setAnterior(NoLista NovoAnte)
+template <class Tipo>
+void NoLista<Tipo>::setAnterior(NoLista NovoAnte)
 {
      *this->ante = NovoAnte;
 }
 
-NoLista* NoLista::NoListaNull()
+template <class Tipo>
+NoLista<Tipo>* NoLista<Tipo>::NoListaNull()
 {
     NoLista* nulo = NULL;
     return nulo;
 }
+
+template class NoLista<String>;

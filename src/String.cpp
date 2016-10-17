@@ -1,5 +1,6 @@
 #include "String.h"
 #include <stdio.h>
+using namespace std;
 
 String::String(const String &original) : minhaString(original.minhaString), tamanho(original.length()), tamanhoMax(original.getTamanhoMax())
 {
@@ -9,6 +10,12 @@ String::String(const String &original) : minhaString(original.minhaString), tama
 String::String() : tamanhoMax(256), tamanho(0), minhaString(new char[257]())
 {
 
+}
+
+String::String(std::string novaString) : tamanhoMax(novaString.length()), tamanho(novaString.length()), minhaString(new char[novaString.length()+1]())
+{
+    for (int i = 0; i < novaString.length(); i++)
+        minhaString[i] = novaString[i];
 }
 
 String::~String()
@@ -97,9 +104,12 @@ void String::inserir(const char &letra)
 }
 
         // Apocalipticos
-char* String::toString() const
+string String::toString() const
 {
-    return (new String(*this))->minhaString;
+    string ret = "";
+    for (int i = 0; i < this->length(); i++)
+        ret += this->minhaString[i];
+    return ret;
 }
 
         // getters e setters

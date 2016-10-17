@@ -1,7 +1,7 @@
 #include "Acao.h"
-#include "String.h"
 #include <iostream>
 #include <stdlib.h>
+#include "String.h"
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 //---------------------------------------------------------CONSTRUTORES/DESTRUTOR--------------------------------------------------------------------//
@@ -21,6 +21,11 @@ Acao::Acao(const Acao &original) : palavraMudou(original.palavraMudou), tipo(ori
     this->tipo = original.tipo;
     this->X = original.X;
     this->Y = original.Y;
+}
+
+Acao::Acao() : palavraMudou(), tipo(), X(0), Y(0)
+{
+
 }
 
 Acao::~Acao()

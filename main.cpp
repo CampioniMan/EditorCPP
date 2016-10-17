@@ -1,31 +1,24 @@
-#include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
-#include "String.h"
-#include "Acao.h"
+#include "iostream"
+#include "stdlib.h"
+#include "stdio.h"
 #include "ListaDuplaCirc.h"
-#include "Pilha.h"
+#include "String.h"
 
 using namespace std;
 //using conio.h;
 
 int main()
 {
-    char *c = new char[5]();
+    ListaDuplaCirc<String> oi;
 
-    *(c + 0) = 'a';
-    *(c + 1) = 'b';
 
-    //cin >> c;
+    String oil("gewegw");
+    String oi2("rhnhrhrh");
+    String oi3("utfyutf");
+    oi.inserir(oil);
+    oi.inserir(oi2);
+    oi.inserir(oi3);
 
-    //if( *c == 22 )
-        cout << *(c + 0) << endl;
-        cout << *(c + 1) << endl;
-
-    //int trem;
-    //trem = 4;
-    //String oi(trem);
-    //cout << "Aperte enter para encerrar o programa" << endl;
     return 0;
 }
 

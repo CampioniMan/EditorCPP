@@ -1,6 +1,10 @@
+
+using namespace std;
+#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
 #ifndef STRING_H
 #define STRING_H
-
 
 class String
 {
@@ -9,6 +13,7 @@ class String
         String(const unsigned int &novoTamanho);
         String(const String &original);
         String();
+        String(std::string novaString);
         virtual ~String();
 
         // Métodos normais
@@ -20,7 +25,7 @@ class String
         bool vazia() const;
 
         // Apocalipticos
-        char* toString() const;
+        string toString() const;
         String clone() const;
 
         // getters e setters
@@ -33,7 +38,7 @@ class String
         char& operator[] (const int &indice) const;
 
         // constantes
-        const char charNull = '\0';
+        const static char charNull = '\0';
     protected:
     private:
         char* minhaString;

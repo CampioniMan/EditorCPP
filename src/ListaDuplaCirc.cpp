@@ -1,102 +1,175 @@
+#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
 #include "ListaDuplaCirc.h"
 #include "NoLista.h"
+using namespace std;
+
+template <class Tipo>
+const int ListaDuplaCirc<Tipo>::PERCORRER_AUTO;
+
+template <class Tipo>
+const int ListaDuplaCirc<Tipo>::PERCORRER_MANUAL ;
 
 // construtores
-ListaDuplaCirc::ListaDuplaCirc()
+template <class Tipo>
+ListaDuplaCirc<Tipo>::ListaDuplaCirc() : primeiro(NoLista<Tipo>::NoListaNull()), atual()
 {
 
 }
 
-ListaDuplaCirc::ListaDuplaCirc(const ListaDuplaCirc &original) : atual(original.getValorAtual()), primeiro(original.getValorPrimeiro())
+template <class Tipo>
+ListaDuplaCirc<Tipo>::ListaDuplaCirc(const ListaDuplaCirc<Tipo> &original)
 {
 
 }
 
-ListaDuplaCirc::~ListaDuplaCirc()
+template <class Tipo>
+ListaDuplaCirc<Tipo>::~ListaDuplaCirc()
 {
 
 }
 
 // métodos gerais
-void ListaDuplaCirc::inserir(String novoElemento)
+template <class Tipo>
+void ListaDuplaCirc<Tipo>::inserir(Tipo novoElemento)
 {
-    NoLista* novo = new NoLista(novoElemento);
+    NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
+
+
 
     if (this->estaVazia())
     {
         this->primeiro = novo;
         novo->setAnterior(novo);
         novo->setProximo(novo);
+        this->tam = 1;
     }
     else
     {
-        novo->setAnterior(this->primeiro->getAnterior());
+
+        NoLista<Tipo>* ultimo = primeiro->getAnterior();
+
+    cout << this->primeiro->getAnterior()->getDado().toString() << endl;
+    cout << this->primeiro->getDado().toString() << endl;
+    cout << this->primeiro->getAnterior()->getDado().toString() << endl;
+
         novo->setProximo(this->primeiro);
+        novo->setAnterior(ultimo);
+        this->primeiro->setAnterior(novo);
+        ultimo->setProximo(novo);
+        this->tam++;
     }
+
 }
 
-bool ListaDuplaCirc::remover(const String &elemento)
+template <class Tipo>
+bool ListaDuplaCirc<Tipo>::remover(const Tipo &elemento)
 {
-    NoLista* removido = primeiraOcorrenciaDe(elemento);
+    NoLista<Tipo>* removido = new NoLista<Tipo>(primeiraOcorrenciaDe(elemento));
     removido->getAnterior()->setProximo(removido->getProximo());
     removido->getProximo()->setAnterior(removido->getAnterior());
     return true;
 }
 
-bool ListaDuplaCirc::removerDepois(const String &elemento) //(???)
-{
-
-}
-
-NoLista* ListaDuplaCirc::primeiraOcorrenciaDe(const String &procurada)
+template <class Tipo>
+Tipo ListaDuplaCirc<Tipo>::primeiraOcorrenciaDe(const Tipo &procurada)
 {
     this->iniciarPercursoSequencial();
     while(this->podePercorrer())
     {
         if (this->atual->getDado() == procurada)
-            return this->atual;
+            return this->atual->getDado();
     }
-    return NoLista::NoListaNull();
+    return Tipo();
 }
 
-void ListaDuplaCirc::iniciarPercursoSequencial()
+template <class Tipo>
+void ListaDuplaCirc<Tipo>::iniciarPercursoSequencial()
 {
-
+    this->iniciarPercursoSequencial(true, this->PERCORRER_AUTO);
 }
 
-bool ListaDuplaCirc::podePercorrer()
+template <class Tipo>
+void ListaDuplaCirc<Tipo>::iniciarPercursoSequencial(bool paraFrente, const int &opcao)
 {
-
+    this->atual = this->primeiro->getAnterior();
+    this->indoParaFrente = paraFrente;
+    this->estaPercorrendoAuto = opcao;
 }
 
-void ListaDuplaCirc::avancar()
+template <class Tipo>
+bool ListaDuplaCirc<Tipo>::podePercorrer()
+{
+    if (this->estaPercorrendoAuto == this->PERCORRER_AUTO)
+    {
+        if (this->indoParaFrente)
+            this->avancar();
+        else
+            this->voltar();
+    }
+
+    return (this->atual != this->primeiro->getAnterior());
+}
+
+template <class Tipo>
+void ListaDuplaCirc<Tipo>::avancar()
 {
     this->atual = this->atual->getProximo();
 }
 
-void ListaDuplaCirc::voltar()
+template <class Tipo>
+void ListaDuplaCirc<Tipo>::voltar()
 {
     this->atual = this->atual->getAnterior();
 }
 
-bool ListaDuplaCirc::estaVazia() const
+template <class Tipo>
+bool ListaDuplaCirc<Tipo>::estaVazia() const
 {
-    return (this->primeiro == NoLista::NoListaNull());
+    return (this->primeiro == NoLista<Tipo>::NoListaNull());
 }
 
-NoLista* ListaDuplaCirc::getValorAtual() const
+template <class Tipo>
+Tipo ListaDuplaCirc<Tipo>::getValorAtual() const
 {
-
+    return this->atual->getDado();
 }
 
-NoLista* ListaDuplaCirc::getValorPrimeiro() const
+template <class Tipo>
+Tipo ListaDuplaCirc<Tipo>::getValorPrimeiro() const
 {
+    return this->primeiro->getDado();
+}
 
+template <class Tipo>
+NoLista<Tipo> ListaDuplaCirc<Tipo>::getPrimeiro() const
+{
+    return *this->primeiro;
+}
+
+template <class Tipo>
+NoLista<Tipo> ListaDuplaCirc<Tipo>::getAtual() const
+{
+    return *this->atual;
 }
 
 // operators
-bool ListaDuplaCirc::operator= (ListaDuplaCirc outra)
+template <class Tipo>
+bool ListaDuplaCirc<Tipo>::operator= (const ListaDuplaCirc &outra)
 {
-
 }
 
+template <class Tipo>
+Tipo ListaDuplaCirc<Tipo>::operator[] (const int &indice) const
+{
+    NoLista<Tipo>* atualReserva = this->atual;
+    int contador = 0;
+    while (atualReserva != this->primeiro && contador < indice)
+    {
+        atualReserva = atualReserva->getProximo();
+    }
+    return atualReserva->getDado();
+}
+
+template class ListaDuplaCirc<String>;

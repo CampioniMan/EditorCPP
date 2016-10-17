@@ -11,7 +11,7 @@ Pilha::Pilha(unsigned int novoTamanhoMax) : tamanhoMax(novoTamanhoMax)
 {
     this->tamanhoMax = novoTamanhoMax;
     this->tamanhoAtual = 0;
-    this->acoes = (Acao*)malloc(this->tamanhoMax*sizeof(char));
+    this->acoes = new Acao[this->tamanhoMax];
 }
 
 Pilha::Pilha(const Pilha &original) : tamanhoMax(original.tamanhoMax), tamanhoAtual(original.tamanhoAtual), acoes(original.acoes)

@@ -1,14 +1,13 @@
 #include "String.h"
 #ifndef ACAO_H
 #define ACAO_H
-#include <iostream>
-#include <stdlib.h>
 
 class Acao
 {
     public:
         Acao(String &novaPalavra, String &novoTipo, unsigned int novoX, unsigned int novoY);
         Acao(const Acao &original);
+        Acao();
         virtual ~Acao();
 
         Acao* clone() const;
