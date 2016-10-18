@@ -11,21 +11,17 @@ using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	int esperador = 0;
-
+	int c = 0;
 	ListaDuplaCirc<String>* lista;
 	lista = new ListaDuplaCirc<String>();
 
-	String nova("trem");
+	String nova("egrhgehhbfghtrhthtrhrthseryerghrthysrhrthrsthrthrthrthrtyherherhtrtrhtrhrgheraghagagtrtwfegeragrthtyjtyjtrherheari");
+	lista->inserir(nova);
+	cout << lista->getValorPrimeiro() << endl;
 
 	
-	cout << "String = " << nova << '\n';
-
-	
-
+	cin >> c;
 	//unsigned char oi = '²';
-	//printf("%i", oi);
-	cin >> esperador;
 	return 0;
 }
 

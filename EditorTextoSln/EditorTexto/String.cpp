@@ -22,7 +22,7 @@ String::String(const std::string &novaString) : tamanhoMax(novaString.length()),
 
 String::~String()
 {
-	delete[] minhaString;
+	//delete[] minhaString;
 }
 
 // Métodos normais
@@ -106,12 +106,12 @@ void String::inserir(const char &letra)
 }
 
 // Apocalipticos
-string String::toString() const
+char* String::toString() const
 {
-	string *ret = new string();
-	for (int i = 0; i < this->tamanho; i++)
-		*ret += (char)this->minhaString[i];
-	return *ret;
+	char *pont = new char[this->length()]();
+	for (int i = 0; i < this->length(); i++)
+		pont[i] += (char)this->minhaString[i];
+	return pont;
 }
 
 // getters e setters
@@ -183,7 +183,10 @@ bool operator!= (const String &primeira, const String &segunda) // verificar con
 
 ostream& operator<< (ostream &OS, const String &aString)
 {
-	return (OS << aString.toString());
+	char* oi = aString.toString();
+	for (int i = 0; i < aString.length() - 1; i++) 
+		OS << oi[i];
+	return (OS << oi[aString.length() - 1]);
 }
 
 istream& operator>> (istream &IS, String &aString)

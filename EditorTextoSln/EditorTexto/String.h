@@ -22,7 +22,7 @@ class String
 		bool vazia() const;
 
 		// Apocalipticos
-		string toString() const;
+		char* toString() const;
 		String clone() const;
 
 		// getters e setters
