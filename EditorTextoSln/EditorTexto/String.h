@@ -33,6 +33,12 @@ class String
 		void operator= (const String &primeira);
 		void operator+ (const String &outra);
 		char operator[] (const int &indice) const;
+		bool operator== (const String &outra);
+		bool operator!= (const String &outra);
+		bool operator< (const String &outra);
+		bool operator> (const String &outra);
+		bool operator<= (const String &outra);
+		bool operator>= (const String &outra);
 
 		friend ostream& operator<< (ostream &OS, const String &aString);
 		friend istream& operator>> (istream &IS, String &aString);
@@ -47,10 +53,4 @@ class String
 		int tamanhoMax;
 
 };
-bool operator< (const String &primeira, const String &segunda);
-bool operator> (const String &primeira, const String &segunda);
-bool operator<= (const String &primeira, const String &segunda);
-bool operator>= (const String &primeira, const String &segunda);
-bool operator== (const String &primeira, const String &segunda);
-bool operator!= (const String &primeira, const String &segunda);
 

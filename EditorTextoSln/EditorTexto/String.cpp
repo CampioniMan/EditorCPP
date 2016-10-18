@@ -14,7 +14,7 @@ String::String() : tamanhoMax(256), tamanho(0), minhaString(new char[257]())
 
 }
 
-String::String(const std::string &novaString) : tamanhoMax(novaString.length()), tamanho(novaString.length()), minhaString(new char[novaString.length() + 1]())
+String::String(const std::string &novaString) : tamanhoMax(256), tamanho(novaString.length()), minhaString(new char[257]())
 {
 	for (int i = 0; i < novaString.length(); i++)
 		minhaString[i] = novaString[i];
@@ -82,7 +82,7 @@ bool String::vazia() const
 
 void String::inserir(const unsigned int &posicao, const char &letra)
 {
-	if (!cheia() && posicao > this->tamanhoMax && posicao < 0)
+	if (cheia() && posicao > this->tamanhoMax && posicao < 0)
 		return;
 
 	if (this[posicao] == charNull)
@@ -91,14 +91,14 @@ void String::inserir(const unsigned int &posicao, const char &letra)
 		{
 			this[i + 1] = this[i];
 		}
-		this[posicao] = letra;
+		this[posicao] = (char)letra;
 	}
 	this->tamanho++;
 }
 
 void String::inserir(const char &letra)
 {
-	if (!cheia())
+	if (cheia())
 		return;
 
 	this->minhaString[this->tamanho] = letra;
@@ -109,6 +109,10 @@ void String::inserir(const char &letra)
 char* String::toString() const
 {
 	char *pont = new char[this->length()]();
+
+	if (this->vazia())
+		return pont;
+
 	for (int i = 0; i < this->length(); i++)
 		pont[i] += (char)this->minhaString[i];
 	return pont;
@@ -151,38 +155,41 @@ void String::operator+ (const String &outra)
 	}
 }
 
-bool operator< (const String &primeira, const String &segunda)
+bool String::operator< (const String &outra)
 {
-	return primeira.length() < segunda.length();
+	return this->length() < outra.length();
 }
 
-bool operator> (const String &primeira, const String &segunda)
+bool String::operator> (const String &outra)
 {
-	return primeira.length() > segunda.length();
+	return this->length() > outra.length();
 }
 
-bool operator<= (const String &primeira, const String &segunda)
+bool String::operator<= (const String &outra)
 {
-	return primeira.length() <= segunda.length();
+	return this->length() <= outra.length();
 }
 
-bool operator>= (const String &primeira, const String &segunda)
+bool String::operator>= (const String &outra)
 {
-	return primeira.length() >= segunda.length();
+	return this->length() >= outra.length();
 }
 
-bool operator== (const String &primeira, const String &segunda) // verificar conteúdo também
+bool String::operator== (const String &outra) // verificar conteúdo também
 {
-	return primeira.length() == segunda.length();
+	return this->length() == outra.length();
 }
 
-bool operator!= (const String &primeira, const String &segunda) // verificar conteúdo também
+bool String::operator!= (const String &outra) // verificar conteúdo também
 {
-	return primeira.length() != segunda.length();
+	return this->length() != outra.length();
 }
 
 ostream& operator<< (ostream &OS, const String &aString)
 {
+	if (aString.vazia())
+		return OS;
+
 	char *pont = new char[aString.length()]();
 	for (int i = 0; i < aString.length(); i++)
 		pont[i] += (char)aString.minhaString[i];

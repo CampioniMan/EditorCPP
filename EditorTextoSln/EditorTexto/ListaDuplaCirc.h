@@ -15,7 +15,7 @@ class ListaDuplaCirc
 		bool remover(const Tipo &elemento);
 		void avancar();
 		void voltar();
-		void iniciarPercursoSequencial(bool paraFrente, const int &opcao);
+		void iniciarPercursoSequencial(const bool &paraFrente = true, const int &opcao = ListaDuplaCirc::PERCORRER_AUTO);
 		bool podePercorrer();
 		bool existe() const;
 		bool estaVazia() const;
@@ -28,6 +28,8 @@ class ListaDuplaCirc
 		int getIndicePrimeiro() const;
 		NoLista<Tipo> getPrimeiro() const;
 		NoLista<Tipo> getAtual() const;
+		NoLista<Tipo> getAnterior() const;
+		NoLista<Tipo> getProximo() const;
 
 		//operators
 		bool operator= (const ListaDuplaCirc &outra);
@@ -41,25 +43,27 @@ class ListaDuplaCirc
 		bool indoParaFrente = true;
 		int estaPercorrendoAuto = 1;
 	private:
-		NoLista<Tipo> *atual;
+		NoLista<Tipo> *atual, *anterior, *proximo;
 		NoLista<Tipo> *primeiro;
 		int tam = 0;
 };
 
 template <class Tipo>
-ListaDuplaCirc<Tipo>::ListaDuplaCirc() : primeiro(NoLista<Tipo>::NoListaNull()), atual(NoLista<Tipo>::NoListaNull())
+ListaDuplaCirc<Tipo>::ListaDuplaCirc() : 
+primeiro(NoLista<Tipo>::NoListaNull()), atual(NoLista<Tipo>::NoListaNull()), anterior(NoLista<Tipo>::NoListaNull()), proximo(NoLista<Tipo>::NoListaNull())
 {
 
 }
 
 template <class Tipo>
-ListaDuplaCirc<Tipo>::ListaDuplaCirc(const ListaDuplaCirc<Tipo> &original)
+ListaDuplaCirc<Tipo>::ListaDuplaCirc(const ListaDuplaCirc<Tipo> &original) : 
+primeiro(original.getPrimeiro()), atual(original.getAtual()), anterior(original.getAnterior()), proximo(original.getProximo())
 {
 
 }
 
 template <class Tipo>
-ListaDuplaCirc<Tipo>::ListaDuplaCirc(Tipo novoPrimeiro) : primeiro(novoPrimeiro), atual(novoPrimeiro)
+ListaDuplaCirc<Tipo>::ListaDuplaCirc(Tipo novoPrimeiro) : primeiro(novoPrimeiro), atual(novoPrimeiro), anterior(novoPrimeiro), proximo(novoPrimeiro)
 {
 
 }
@@ -95,8 +99,12 @@ template <class Tipo>
 bool ListaDuplaCirc<Tipo>::remover(const Tipo &elemento)
 {
 	NoLista<Tipo>* removido = new NoLista<Tipo>(primeiraOcorrenciaDe(elemento));
-	removido->getAnterior()->setProximo(removido->getProximo());
-	removido->getProximo()->setAnterior(removido->getAnterior());
+	Tipo *tipoDefault = new Tipo();
+	if (removido->getDado() == *tipoDefault)
+		return false;
+	
+	anterior->setProximo(proximo);
+	proximo->setAnterior(anterior);
 	return true;
 }
 
@@ -113,9 +121,11 @@ Tipo ListaDuplaCirc<Tipo>::primeiraOcorrenciaDe(const Tipo &procurada)
 }
 
 template <class Tipo>
-void ListaDuplaCirc<Tipo>::iniciarPercursoSequencial(bool paraFrente = true, const int &opcao = ListaDuplaCirc::PERCORRER_AUTO)
+void ListaDuplaCirc<Tipo>::iniciarPercursoSequencial(const bool &paraFrente = true, const int &opcao = ListaDuplaCirc::PERCORRER_AUTO)
 {
 	this->atual = this->primeiro->getAnterior();
+	this->anterior = this->atual->getAnterior();
+	this->proximo = this->primeiro;
 	this->indoParaFrente = paraFrente;
 	this->estaPercorrendoAuto = opcao;
 }
@@ -123,6 +133,9 @@ void ListaDuplaCirc<Tipo>::iniciarPercursoSequencial(bool paraFrente = true, con
 template <class Tipo>
 bool ListaDuplaCirc<Tipo>::podePercorrer()
 {
+	if (this->estaVazia())
+		return false;
+
 	if (this->estaPercorrendoAuto == this->PERCORRER_AUTO)
 	{
 		if (this->indoParaFrente)
@@ -137,7 +150,9 @@ bool ListaDuplaCirc<Tipo>::podePercorrer()
 template <class Tipo>
 void ListaDuplaCirc<Tipo>::avancar()
 {
+	this->anterior = this->anterior->getProximo();
 	this->atual = this->atual->getProximo();
+	this->proximo = this->proximo->getProximo();
 }
 
 template <class Tipo>

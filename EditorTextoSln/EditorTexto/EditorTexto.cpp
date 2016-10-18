@@ -15,15 +15,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	ListaDuplaCirc<String>* lista;
 	lista = new ListaDuplaCirc<String>();
 
-	String nova("egrhgehi");
-	nova.inserir('d');
-	lista->inserir(nova);
+	String nova("tre");
+	String novissima(nova);
 
-	cout << lista->getValorPrimeiro() << endl;
+	novissima.inserir('d');
+	novissima.inserir('e');
+	novissima.inserir('f');
+	cout << novissima.getTamanhoMax() << endl;
+	cout << novissima.length() << endl;
+	lista->inserir(novissima);
+	lista->inserir(nova);
+	lista->remover(novissima);
+
+	cout << ":" << lista->getValorPrimeiro() << ":" << endl;
 
 	
 	cin >> c;
-	//unsigned char oi = '²';
 	return 0;
 }
 
