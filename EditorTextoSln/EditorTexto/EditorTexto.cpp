@@ -15,8 +15,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	ListaDuplaCirc<String>* lista;
 	lista = new ListaDuplaCirc<String>();
 
-	String nova("egrhgehhbfghtrhthtrhrthseryerghrthysrhrthrsthrthrthrthrtyherherhtrtrhtrhrgheraghagagtrtwfegeragrthtyjtyjtrherheari");
+	String nova("egrhgehi");
+	nova.inserir('d');
 	lista->inserir(nova);
+
 	cout << lista->getValorPrimeiro() << endl;
 
 	

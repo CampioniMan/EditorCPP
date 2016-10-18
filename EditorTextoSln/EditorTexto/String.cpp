@@ -183,10 +183,13 @@ bool operator!= (const String &primeira, const String &segunda) // verificar con
 
 ostream& operator<< (ostream &OS, const String &aString)
 {
-	char* oi = aString.toString();
+	char *pont = new char[aString.length()]();
+	for (int i = 0; i < aString.length(); i++)
+		pont[i] += (char)aString.minhaString[i];
+
 	for (int i = 0; i < aString.length() - 1; i++) 
-		OS << oi[i];
-	return (OS << oi[aString.length() - 1]);
+		OS << pont[i];
+	return (OS << pont[aString.length() - 1]);
 }
 
 istream& operator>> (istream &IS, String &aString)
