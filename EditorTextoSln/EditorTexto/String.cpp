@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "String.h"
 #include "stdio.h"
+#include <string>
 using namespace std;
 
 String::String(const String &original) : minhaString(original.minhaString), tamanho(original.length()), tamanhoMax(original.getTamanhoMax())
@@ -13,7 +14,7 @@ String::String() : tamanhoMax(256), tamanho(0), minhaString(new char[257]())
 
 }
 
-String::String(std::string novaString) : tamanhoMax(novaString.length()), tamanho(novaString.length()), minhaString(new char[novaString.length() + 1]())
+String::String(const std::string &novaString) : tamanhoMax(novaString.length()), tamanho(novaString.length()), minhaString(new char[novaString.length() + 1]())
 {
 	for (int i = 0; i < novaString.length(); i++)
 		minhaString[i] = novaString[i];
@@ -107,10 +108,10 @@ void String::inserir(const char &letra)
 // Apocalipticos
 string String::toString() const
 {
-	string ret = "";
-	for (int i = 0; i < this->length(); i++)
-		ret += this->minhaString[i];
-	return ret;
+	string *ret = new string();
+	for (int i = 0; i < this->tamanho; i++)
+		*ret += (char)this->minhaString[i];
+	return *ret;
 }
 
 // getters e setters
@@ -124,7 +125,7 @@ int String::getTamanhoMax() const
 	return this->tamanhoMax;
 }
 
-char& String::operator[] (const int &indice) const
+char String::operator[] (const int &indice) const
 {
 	char* oi = new char(this->charNull);
 	if (indice < 0 || indice > this->tamanho - 1)
@@ -180,3 +181,19 @@ bool operator!= (const String &primeira, const String &segunda) // verificar con
 	return primeira.length() != segunda.length();
 }
 
+ostream& operator<< (ostream &OS, const String &aString)
+{
+	return (OS << aString.toString());
+}
+
+istream& operator>> (istream &IS, String &aString)
+{
+	char* lida = new char[aString.tamanhoMax];
+
+	IS >> lida;
+
+	String *aux = new String(lida);
+	aString = *aux;
+
+	return IS;
+}

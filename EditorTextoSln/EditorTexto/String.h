@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+using namespace std;
 class String
 {
 	public:
@@ -9,7 +10,7 @@ class String
 		String(const unsigned int &novoTamanho);
 		String(const String &original);
 		String();
-		String(std::string novaString);
+		String(const std::string &novaString);
 		virtual ~String();
 
 		// Métodos normais
@@ -21,7 +22,7 @@ class String
 		bool vazia() const;
 
 		// Apocalipticos
-		std::string toString() const;
+		string toString() const;
 		String clone() const;
 
 		// getters e setters
@@ -31,7 +32,11 @@ class String
 		// operators
 		void operator= (const String &primeira);
 		void operator+ (const String &outra);
-		char& operator[] (const int &indice) const;
+		char operator[] (const int &indice) const;
+
+		friend ostream& operator<< (ostream &OS, const String &aString);
+		friend istream& operator>> (istream &IS, String &aString);
+		
 
 		// constantes
 		const static char charNull = '\0';
