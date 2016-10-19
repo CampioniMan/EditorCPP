@@ -18,16 +18,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	String nova("tre");
 	String novissima(nova);
 
-	novissima.inserir('d');
-	novissima.inserir('e');
-	novissima.inserir('f');
-	cout << novissima.getTamanhoMax() << endl;
-	cout << novissima.length() << endl;
-	lista->inserir(novissima);
-	lista->inserir(nova);
+	nova.inserir('d');
+	nova.inserir('e');
+	nova.inserir('f');
+
+	lista->inserirNoFinal(novissima);
+	lista->inserirNoFinal(nova);
 	lista->remover(novissima);
 
-	cout << ":" << lista->getValorPrimeiro() << ":" << endl;
+	cout << lista->length() << endl;
+	cout << ":" << lista->getValorPrimeiro().toString() << ":" << endl;
 
 	
 	cin >> c;
