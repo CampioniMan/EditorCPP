@@ -18,7 +18,7 @@ tamanhoMax(256), tamanho(0), minhaString(new char[257]())
 }
 
 String::String(const string &novaString) : 
-tamanhoMax((novaString.length()<=256)?256:novaString.length()), tamanho(novaString.length()), minhaString(new char[this->getTamanhoMax()+1]())
+tamanhoMax((novaString.size() <= 256) ? 256 : novaString.size()), tamanho(novaString.size()), minhaString(new char[this->getTamanhoMax() + 1]())
 {
 	int i = 0;
 	for (i = 0; i < novaString.length(); i++)
@@ -123,10 +123,11 @@ int String::getTamanhoMax() const
 	return this->tamanhoMax;
 }
 
-char String::operator[] (const int &indice) const
+char& String::operator[] (const int &indice) const
 {
+	static char nulao = char('\0');
 	if (indice < 0 || indice > this->tamanho - 1) // index out of bounds
-		return (char(this->charNull));
+		return nulao;
 
 	return this->minhaString[indice];
 }
@@ -145,38 +146,8 @@ void String::operator+ (const String &outra)
 {
 	for (int i = 0; i <= outra.length(); i++)
 	{
-		this->inserir(this->tamanho, outra[i]);
+		this->inserir(outra[i]);
 	}
-}
-
-bool String::operator< (const String &outra)
-{
-	return this->length() < outra.length();
-}
-
-bool String::operator> (const String &outra)
-{
-	return this->length() > outra.length();
-}
-
-bool String::operator<= (const String &outra)
-{
-	return this->length() <= outra.length();
-}
-
-bool String::operator>= (const String &outra)
-{
-	return this->length() >= outra.length();
-}
-
-bool String::operator== (const String &outra) // verificar conteúdo também
-{
-	return this->length() == outra.length();
-}
-
-bool String::operator!= (const String &outra) // verificar conteúdo também
-{
-	return this->length() != outra.length();
 }
 
 ostream& operator<< (ostream &OS, const String &aString)
@@ -203,4 +174,50 @@ istream& operator>> (istream &IS, String &aString)
 	aString = *aux;
 
 	return IS;
+}
+
+bool operator< (const String &pri, const String &seg)
+{
+	return pri.length() < seg.length();
+}
+
+bool operator> (const String &pri, const String &seg)
+{
+	return pri.length() > seg.length();
+}
+
+bool operator<= (const String &pri, const String &seg)
+{
+	return pri.length() <= seg.length();
+}
+
+bool operator>= (const String &pri, const String &seg)
+{
+	return pri.length() >= seg.length();
+}
+
+bool operator== (const String &pri, const String &seg) // verificar conteúdo também
+{
+	if (pri.length() != seg.length())
+		return false;
+
+	for (int i = 0; i < pri.tamanho; i++)
+	{
+		if (pri[i] != seg[i])
+			return false;
+	}
+	return true;
+}
+
+bool operator!= (const String &pri, const String &seg) // verificar conteúdo também
+{
+	if (pri.length() != seg.length())
+		return true;
+
+	for (int i = 0; i < pri.tamanho; i++)
+	{
+		if (pri[i] != seg[i])
+			return true;
+	}
+	return false;
 }

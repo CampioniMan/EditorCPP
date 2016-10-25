@@ -97,13 +97,6 @@ public:
 		*this->ante = NovoAnte;
 	}
 
-	
-	static NoLista<Tipo>* NoListaNull()
-	{
-		NoLista* nulo = NULL;
-		return nulo;
-	}
-
 protected:
 	Tipo dado;
 	NoLista<Tipo>* ante;

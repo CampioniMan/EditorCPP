@@ -32,20 +32,23 @@ class String
 		// operators
 		void operator= (const String &primeira);
 		void operator+ (const String &outra);
-		char operator[] (const int &indice) const;
-		bool operator== (const String &outra);
-		bool operator!= (const String &outra);
-		bool operator< (const String &outra);
-		bool operator> (const String &outra);
-		bool operator<= (const String &outra);
-		bool operator>= (const String &outra);
+		char& operator[] (const int &indice) const;
 
 		friend ostream& operator<< (ostream &OS, const String &aString);
 		friend istream& operator>> (istream &IS, String &aString);
+		friend bool operator!= (const String &pri, const String &seg);
+		friend bool operator== (const String &pri, const String &seg);
+		friend bool operator< (const String &pri, const String &seg);
+		friend bool operator> (const String &pri, const String &seg);
+		friend bool operator<= (const String &pri, const String &seg);
+		friend bool operator>= (const String &pri, const String &seg);
 		
 
 		// constantes
 		const static char charNull = '\0';
+
+		// amizades
+		friend String;
 
 	protected:
 	private:
@@ -55,3 +58,9 @@ class String
 
 };
 
+bool operator== (const String &pri, const String &seg);
+bool operator!= (const String &pri, const String &seg);
+bool operator< (const String &pri, const String &seg);
+bool operator> (const String &pri, const String &seg);
+bool operator<= (const String &pri, const String &seg);
+bool operator>= (const String &pri, const String &seg);

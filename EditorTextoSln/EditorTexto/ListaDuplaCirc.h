@@ -9,7 +9,7 @@ class ListaDuplaCirc
 
 		
 		ListaDuplaCirc() :
-		primeiro(NoLista<Tipo>::NoListaNull()), atual(NoLista<Tipo>::NoListaNull()), anterior(NoLista<Tipo>::NoListaNull()), proximo(NoLista<Tipo>::NoListaNull())
+			primeiro(NULL), atual(NULL), anterior(NULL), proximo(NULL)
 		{
 
 		}
@@ -33,13 +33,12 @@ class ListaDuplaCirc
 
 		}
 
+		// métodos gerais da classe
 		
 		int length() const
 		{
 			return this->tam;
 		}
-
-		// métodos gerais
 		
 		void inserirNoFinal(const Tipo &novoElemento)
 		{
@@ -53,48 +52,101 @@ class ListaDuplaCirc
 			}
 			else
 			{
-				this->primeiro->setAnterior(novo);
-				this->primeiro->getAnterior()->setProximo(novo);
 				novo->setAnterior(this->primeiro->getAnterior());
 				novo->setProximo(this->primeiro);
+				this->primeiro->getAnterior()->setProximo(novo);
+				this->primeiro->setAnterior(novo);
 			}
 			this->tam++;
 		}
 
+		void inserirNoComeco(const Tipo &novoElemento)
+		{
+			NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
+
+			if (estaVazia())
+			{
+				this->primeiro = novo;
+				novo->setProximo(novo);
+				novo->setAnterior(novo);
+			}
+			else
+			{
+				novo->setProximo(primeiro);
+				novo->setAnterior(primeiro->getAnterior());
+
+				this->primeiro->getAnterior()->setProximo(novo);
+				this->primeiro->setAnterior(novo);
+
+				this->primeiro = novo;
+			}
+			this->tam++;
+		}
 		
 		bool remover(const Tipo &elemento)
 		{
-			NoLista<Tipo>* removido = new NoLista<Tipo>(buscar(elemento));
-			Tipo *tipoDefault = new Tipo();
-			if (removido->getDado() == *tipoDefault)
+			if (this->estaVazia() || !this->existe(elemento) || elemento == Tipo())
 				return false;
 
-			anterior->setProximo(proximo);
-			proximo->setAnterior(anterior);
+			if (this->tam > 1)
+			{
+				anterior->setProximo(proximo);
+				proximo->setAnterior(anterior);
+				atual = proximo;
+				proximo = proximo->getProximo();
+				if (primeiro->getDado() == elemento)
+					this->primeiro = atual;
+			}
+			else
+			{
+				atual = NULL;
+				primeiro = NULL;
+				anterior = NULL;
+				proximo = NULL;
+			}
 			this->tam--;
 			return true;
 		}
-
 		
-		Tipo buscar(const Tipo &procurada)
+		int buscar(const Tipo &procurada)
 		{
+			NoLista<Tipo>* reserva = this->atual;
+			int index = 0;
 			this->iniciarPercursoSequencial();
 			while (this->podePercorrer())
 			{
 				if (this->atual->getDado() == procurada)
-					return this->atual->getDado();
+				{
+					this->voltarPara(reserva);
+					return index;
+				}
+				index++;
 			}
-			return Tipo();
+
+			this->voltarPara(reserva);
+			return -1;
 		}
 
-		
-		void iniciarPercursoSequencial(const bool &paraFrente = true, const int &opcao = ListaDuplaCirc::PERCORRER_AUTO)
+		bool existe(const Tipo &procurada) // já posiciona os ponteiros
 		{
-			this->atual = this->primeiro->getAnterior();
-			this->anterior = this->atual->getAnterior();
-			this->proximo = this->primeiro;
+			int index = 0;
+			this->iniciarPercursoSequencial();
+			while (this->podePercorrer())
+			{
+				if (this->atual->getDado() == procurada)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		void iniciarPercursoSequencial(const bool &paraFrente = true)
+		{
+			this->atual = NULL;
+			this->proximo = NULL;
+			this->anterior = NULL;
 			this->indoParaFrente = paraFrente;
-			this->estaPercorrendoAuto = opcao;
 		}
 
 		
@@ -103,15 +155,21 @@ class ListaDuplaCirc
 			if (this->estaVazia())
 				return false;
 
-			if (this->estaPercorrendoAuto == this->PERCORRER_AUTO)
+			bool ret = this->atual != this->primeiro->getAnterior();
+			if (this->atual == NULL)
 			{
-				if (this->indoParaFrente)
-					this->avancar();
-				else
-					this->voltar();
+				this->atual = this->primeiro->getAnterior();
+				this->proximo = this->primeiro;
+				this->anterior = this->primeiro->getAnterior()->getAnterior();
 			}
 
-			return (this->atual != this->primeiro->getAnterior());
+			if (this->indoParaFrente)
+				this->avancar();
+			else
+				this->voltar();
+			
+
+			return ret;
 		}
 
 		
@@ -126,12 +184,14 @@ class ListaDuplaCirc
 		void voltar()
 		{
 			this->atual = this->atual->getAnterior();
+			this->anterior = this->anterior->getAnterior();
+			this->proximo = this->proximo->getAnterior();
 		}
 
 		
 		bool estaVazia() const
 		{
-			return (this->primeiro == NoLista<Tipo>::NoListaNull());
+			return (this->primeiro == NULL);
 		}
 
 		
@@ -162,30 +222,36 @@ class ListaDuplaCirc
 		
 		bool operator= (const ListaDuplaCirc &outra)
 		{
+			return true;
 		}
 
 		
-		Tipo operator[] (const int &indice) const
+		Tipo& operator[] (const int &indice) const
 		{
 			NoLista<Tipo> *atualReserva = new NoLista<Tipo>;
 			*atualReserva = *this->primeiro;
 			int contador = 0;
 			while (contador < indice)
 			{
-				NoLista<Tipo> atualReserva(atualReserva->getProximo());
+				atualReserva = atualReserva->getProximo();
 				contador++;
 			}
 			return atualReserva->getDado();
 		}
 
-// constantes
-		const static int PERCORRER_AUTO = 1;
-		const static int PERCORRER_MANUAL = 0;
-
 		friend ListaDuplaCirc;
 	protected:
 		bool indoParaFrente = true;
-		int estaPercorrendoAuto = 1;
+
+		void voltarPara(NoLista<Tipo>* voltador)
+		{
+			if (voltador != NULL)
+			{
+				this->atual = voltador;
+				this->anterior = this->atual->getAnterior();
+				this->proximo = this->atual->getProximo();
+			}
+		}
 	private:
 		NoLista<Tipo> *atual, *anterior, *proximo;
 		NoLista<Tipo> *primeiro;

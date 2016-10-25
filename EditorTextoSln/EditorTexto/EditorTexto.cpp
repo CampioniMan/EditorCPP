@@ -8,27 +8,34 @@
 #include "Pilha.h"
 #include <stdio.h>
 
+
 using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	int c = 0;
-	ListaDuplaCirc<String>* lista;
-	lista = new ListaDuplaCirc<String>();
+	ListaDuplaCirc<String> lista;
+	lista = ListaDuplaCirc<String>();
 
-	String nova("tre");
-	String novissima(nova);
-	//char* c[] = (char**)MK_FP(0xB800, 0X0000);
-	nova.inserir('d');
-	nova.inserir('e');
-	nova.inserir('f');
+	String trem("trem");
+	String trem2("trem2");
+	String nova("nova");
+	String novissima("novissima");
+	//int * c = (int *)MK_FP(0xB800, 0X0000);
 
-	lista->inserirNoFinal(novissima);
-	lista->inserirNoFinal(nova);
-	//lista->remover(novissima);
+	lista.inserirNoComeco(nova);
+	lista.inserirNoFinal(novissima);
+	lista.inserirNoFinal(trem);
+	lista.inserirNoFinal(trem2);
+	String h("rrr");
+	lista[0] = h;
 
-	cout << lista->length() << endl;
-	cout << ":" << lista[0][1] << ":" << endl;
+	lista.iniciarPercursoSequencial();
+	while (lista.podePercorrer())
+		cout << lista.getValorAtual() << endl;
+
+	cout << lista.length() << endl;
+	//cout << ":" << lista[0] << ":" << endl;
 	
 	cin >> c;
 	return 0;
