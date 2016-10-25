@@ -6,6 +6,7 @@
 #include "Acao.h"
 #include "ListaDuplaCirc.h"
 #include "Pilha.h"
+#include <stdio.h>
 
 using namespace std;
 
@@ -17,18 +18,17 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	String nova("tre");
 	String novissima(nova);
-
+	//char* c[] = (char**)MK_FP(0xB800, 0X0000);
 	nova.inserir('d');
 	nova.inserir('e');
 	nova.inserir('f');
 
 	lista->inserirNoFinal(novissima);
 	lista->inserirNoFinal(nova);
-	lista->remover(novissima);
+	//lista->remover(novissima);
 
 	cout << lista->length() << endl;
-	cout << ":" << lista->getValorPrimeiro().toString() << ":" << endl;
-
+	cout << ":" << lista[0][1] << ":" << endl;
 	
 	cin >> c;
 	return 0;

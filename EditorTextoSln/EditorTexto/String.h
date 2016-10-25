@@ -46,6 +46,7 @@ class String
 
 		// constantes
 		const static char charNull = '\0';
+
 	protected:
 	private:
 		char* minhaString;

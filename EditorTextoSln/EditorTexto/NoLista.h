@@ -3,109 +3,110 @@ template <class Tipo>
 class NoLista
 {
 public:
-	NoLista();
-	NoLista(const Tipo &novoDado);
-	NoLista(const Tipo &novoDado, NoLista* Proximo, NoLista* Anterior);
-	NoLista(const NoLista<Tipo> &novoDado);
-	virtual ~NoLista();
+	
+	NoLista() : dado()
+	{
 
-	NoLista<Tipo>* getProximo() const;
-	Tipo getDado() const;
-	NoLista<Tipo>* getAnterior() const;
-	void setProximo(NoLista<Tipo> *NovoProx);
-	void setDado(Tipo novoDado);
-	void setAnterior(NoLista<Tipo> *NovoAnte);
-	void setProximo(NoLista<Tipo> NovoProx);
-	void setAnterior(NoLista<Tipo> NovoAnte);
-	static NoLista<Tipo>* NoListaNull();
+	}
+
+	
+	NoLista(const Tipo &novoDado) : dado(novoDado)
+	{
+
+	}
+
+	
+	NoLista(const Tipo &novoDado, NoLista* Proximo, NoLista* Anterior) : dado(novoDado), prox(Proximo), ante(Anterior)
+	{
+
+	}
+
+	
+	NoLista(const NoLista<Tipo> &novoDado) : dado(novoDado.getDado()), prox(novoDado.getProximo()), ante(novoDado.getAnterior())
+	{
+
+	}
+
+	
+	NoLista(NoLista<Tipo> *novoDado) // atualiza apenas a info
+	{
+		this->dado = Tipo(novoDado->getDado());
+		this->ante = NULL;
+		this->prox = NULL;
+	}
+
+	
+	NoLista(NoLista<Tipo> *novoDado, NoLista<Tipo> *novoProximo, NoLista<Tipo> *novoAnte) : dado(novoDado->getDado()), prox(novoProximo), ante(novoAnte)
+	{
+		/*this->dado = Tipo(novoDado->getDado());
+		this->prox = new NoLista<Tipo>(novoProximo);
+		this->ante = new NoLista<Tipo>(novoAnte);*/
+	}
+
+	
+	~NoLista()
+	{
+
+	}
+
+	
+	NoLista<Tipo>* getProximo() const
+	{
+		return prox;
+	}
+
+	
+	Tipo getDado() const
+	{
+		return dado;
+	}
+
+	
+	NoLista<Tipo>* getAnterior() const
+	{
+		return ante;
+	}
+
+	
+	void setProximo(NoLista *NovoProx)
+	{
+		this->prox = NovoProx;
+	}
+
+	
+	void setDado(Tipo novoDado)
+	{
+		this->dado = novoDado;
+	}
+
+	
+	void setAnterior(NoLista *NovoAnte)
+	{
+		this->ante = NovoAnte;
+	}
+
+	
+	void setProximo(NoLista NovoProx)
+	{
+		*this->prox = NovoProx;
+	}
+
+	
+	void setAnterior(NoLista NovoAnte)
+	{
+		*this->ante = NovoAnte;
+	}
+
+	
+	static NoLista<Tipo>* NoListaNull()
+	{
+		NoLista* nulo = NULL;
+		return nulo;
+	}
+
 protected:
 	Tipo dado;
 	NoLista<Tipo>* ante;
 	NoLista<Tipo>* prox;
 private:
 };
-
-template <class Tipo>
-NoLista<Tipo>::NoLista() : dado()
-{
-
-}
-
-template <class Tipo>
-NoLista<Tipo>::NoLista(const Tipo &novoDado) : dado(novoDado)
-{
-
-}
-
-template <class Tipo>
-NoLista<Tipo>::NoLista(const Tipo &novoDado, NoLista* Proximo, NoLista* Anterior) : dado(novoDado), prox(Proximo), ante(Anterior)
-{
-
-}
-
-template <class Tipo>
-NoLista<Tipo>::NoLista(const NoLista<Tipo> &novoDado) : dado(novoDado.getDado()), prox(novoDado.getProximo()), ante(novoDado.getAnterior())
-{
-
-}
-
-template <class Tipo>
-NoLista<Tipo>::~NoLista()
-{
-
-}
-
-template <class Tipo>
-NoLista<Tipo>* NoLista<Tipo>::getProximo() const
-{
-	return prox;
-}
-
-template <class Tipo>
-Tipo NoLista<Tipo>::getDado() const
-{
-	return dado;
-}
-
-template <class Tipo>
-NoLista<Tipo>* NoLista<Tipo>::getAnterior() const
-{
-	return ante;
-}
-
-template <class Tipo>
-void NoLista<Tipo>::setProximo(NoLista *NovoProx)
-{
-	this->prox = NovoProx;
-}
-
-template <class Tipo>
-void NoLista<Tipo>::setDado(Tipo novoDado)
-{
-	this->dado = novoDado;
-}
-
-template <class Tipo>
-void NoLista<Tipo>::setAnterior(NoLista *NovoAnte)
-{
-	this->ante = NovoAnte;
-}
-
-template <class Tipo>
-void NoLista<Tipo>::setProximo(NoLista NovoProx)
-{
-	*this->prox = NovoProx;
-}
-
-template <class Tipo>
-void NoLista<Tipo>::setAnterior(NoLista NovoAnte)
-{
-	*this->ante = NovoAnte;
-}
-
-template <class Tipo>
-NoLista<Tipo>* NoLista<Tipo>::NoListaNull()
-{
-	NoLista* nulo = NULL;
-	return nulo;
-}
