@@ -30,6 +30,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	String h("rrr");
 	lista[0] = h;
 
+	cout << lista[0] << endl;
+
 	lista.iniciarPercursoSequencial();
 	while (lista.podePercorrer())
 		cout << lista.getValorAtual() << endl;

@@ -16,6 +16,7 @@ class String
 		// Métodos normais
 		void deleteCharAt(const unsigned int &posicao);
 		void deletar(unsigned int posIni, unsigned int qtos);
+		void deletarTudo();
 		void inserir(const char &letra, const unsigned int &posicao);
 		void inserir(const char &letra);
 		bool cheia() const;

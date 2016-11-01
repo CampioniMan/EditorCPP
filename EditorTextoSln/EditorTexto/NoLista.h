@@ -10,21 +10,21 @@ public:
 	}
 
 	
-	NoLista(const Tipo &novoDado) : dado(novoDado)
+	NoLista(const Tipo &novoDado)
 	{
-
+		dado = new Tipo(novoDado);
 	}
 
 	
-	NoLista(const Tipo &novoDado, NoLista* Proximo, NoLista* Anterior) : dado(novoDado), prox(Proximo), ante(Anterior)
+	NoLista(const Tipo &novoDado, NoLista* Proximo, NoLista* Anterior) : prox(Proximo), ante(Anterior)
 	{
-
+		dado = new Tipo(novoDado);
 	}
 
 	
-	NoLista(const NoLista<Tipo> &novoDado) : dado(novoDado.getDado()), prox(novoDado.getProximo()), ante(novoDado.getAnterior())
+	NoLista(const NoLista<Tipo> &novoDado) : prox(novoDado.getProximo()), ante(novoDado.getAnterior())
 	{
-
+		dado = new Tipo(novoDado.getDado());
 	}
 
 	
@@ -56,9 +56,9 @@ public:
 	}
 
 	
-	Tipo getDado() const
+	Tipo& getDado() const
 	{
-		return dado;
+		return *dado;
 	}
 
 	
@@ -98,7 +98,7 @@ public:
 	}
 
 protected:
-	Tipo dado;
+	Tipo* dado;
 	NoLista<Tipo>* ante;
 	NoLista<Tipo>* prox;
 private:

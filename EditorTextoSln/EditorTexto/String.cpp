@@ -28,7 +28,8 @@ tamanhoMax((novaString.size() <= 256) ? 256 : novaString.size()), tamanho(novaSt
 
 String::~String()
 {
-	//delete[] minhaString;
+	//this->minhaString[this->length() - 1] = '\0';
+	//delete minhaString;
 }
 
 // Métodos normais
@@ -62,6 +63,13 @@ void String::deletar(unsigned int posIni, unsigned int qtos)
 		this->minhaString[i] = this->charNull;
 	this->tamanho -= qtos;
 
+} // "rrr"   --  ""
+
+void String::deletarTudo()
+{
+	this->minhaString = NULL;
+	this->minhaString = new char[this->tamanhoMax+1]();
+	this->tamanho = 0;
 }
 
 bool String::cheia() const
@@ -135,7 +143,7 @@ char& String::operator[] (const int &indice) const
 // operators
 void String::operator= (const String &primeira)
 {
-	this->deletar(0, this->length() - 1);
+	this->deletarTudo();
 	for (int i = 0; i <= primeira.length(); i++)
 	{
 		this->inserir(primeira[i]);
