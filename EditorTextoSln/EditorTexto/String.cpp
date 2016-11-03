@@ -26,6 +26,7 @@ tamanhoMax((novaString.size() <= 256) ? 256 : novaString.size()), tamanho(novaSt
 	this->minhaString[i] = (char)String::charNull;
 }
 
+
 String::String(const int &n,char novaString[]) :
 tamanhoMax((n <= 256) ? 256 : n), tamanho(n), minhaString(new char[this->getTamanhoMax() + 1]())
 {
@@ -212,6 +213,26 @@ String String::operator+ (const char &outra)
 	return ret;
 }
 
+String String::operator+ (const int &outra)
+{
+	string intEmStr = to_string(outra);
+
+	char *arrai = new char[this->tamanho + intEmStr.length() + 1]();
+
+	int i = 0;
+	for (i = 0; i < this->tamanho; i++)
+		arrai[i] = (char)this->minhaString[i];
+
+	int u = 0;
+	for (i = this->tamanho; i < this->tamanho + intEmStr.length(); i++, u++)
+		arrai[i] = (char)intEmStr.at(u);
+
+	arrai[i] = String::charNull;
+	String ret = String(i, arrai);
+	delete[] arrai;
+	return ret;
+}
+
 ostream& operator<< (ostream &OS, const String &aString)
 {
 	if (aString.vazia())
@@ -219,7 +240,9 @@ ostream& operator<< (ostream &OS, const String &aString)
 
 	char *pont = new char[aString.length()]();
 	for (int i = 0; i < aString.length(); i++)
+	{
 		pont[i] += (char)aString.minhaString[i];
+	}
 
 	for (int i = 0; i < aString.length() - 1; i++) 
 		OS << pont[i];

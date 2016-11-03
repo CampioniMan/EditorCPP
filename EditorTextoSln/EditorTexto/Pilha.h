@@ -1,5 +1,6 @@
 #pragma once
 #include "Acao.h"
+#include "stdafx.h"
 class Pilha
 {
 public:

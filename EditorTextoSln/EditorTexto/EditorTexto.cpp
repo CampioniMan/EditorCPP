@@ -14,29 +14,13 @@ using namespace std;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	int c = 0;
-	ListaDuplaCirc<String> lista;
-	lista = ListaDuplaCirc<String>();
+	
+	int i = 123;
 
-	char *oi = "ola";
-	String trem(oi);
-	String trem2("trem2");
-	String nova("nova");
-	String novissima("novissima");
-	//int * c = (int *)MK_FP(0xB800, 0X0000);
+	String re("rewrew");
+	String str = String(re + i);
 
-	lista.inserirNoComeco(nova);
-	lista.inserirNoFinal(novissima);
-	lista.inserirNoFinal(trem);
-	lista.inserirNoFinal(trem2);
-
-	cout << lista[2] << endl;
-
-	lista.iniciarPercursoSequencial();
-	while (lista.podePercorrer())
-		cout << lista.getValorAtual() << endl;
-
-	cout << lista.length() << endl;
-	//cout << ":" << lista[0] << ":" << endl;
+	cout << str << endl;
 	
 	cin >> c;
 	return 0;

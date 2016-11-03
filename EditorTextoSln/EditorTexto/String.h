@@ -1,17 +1,17 @@
 #pragma once
 #include <iostream>
 #include <stdlib.h>
-#include <stdio.h>
 using namespace std;
+
 class String
 {
 	public:
 		// Construtores
 		String(const unsigned int &novoTamanho);
 		String(const String &original);
+		String(const string &original);
 		String(const int &n, char novaString[]);
 		String();
-		String(const string &novaString);
 		virtual ~String();
 
 		// Métodos normais
@@ -36,6 +36,7 @@ class String
 		String operator+ (const String &outra);
 		String operator+ (const string &outra);
 		String operator+ (const char &outra);
+		String operator+ (const int &outra);
 		char& operator[] (const int &indice) const;
 
 		friend ostream& operator<< (ostream &OS, const String &aString);
