@@ -9,6 +9,7 @@ class String
 		// Construtores
 		String(const unsigned int &novoTamanho);
 		String(const String &original);
+		String(const int &n, char novaString[]);
 		String();
 		String(const string &novaString);
 		virtual ~String();
@@ -32,7 +33,9 @@ class String
 
 		// operators
 		void operator= (const String &primeira);
-		void operator+ (const String &outra);
+		String operator+ (const String &outra);
+		String operator+ (const string &outra);
+		String operator+ (const char &outra);
 		char& operator[] (const int &indice) const;
 
 		friend ostream& operator<< (ostream &OS, const String &aString);

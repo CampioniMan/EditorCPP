@@ -17,7 +17,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	ListaDuplaCirc<String> lista;
 	lista = ListaDuplaCirc<String>();
 
-	String trem("trem");
+	char *oi = "ola";
+	String trem(oi);
 	String trem2("trem2");
 	String nova("nova");
 	String novissima("novissima");
@@ -27,10 +28,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	lista.inserirNoFinal(novissima);
 	lista.inserirNoFinal(trem);
 	lista.inserirNoFinal(trem2);
-	String h("rrr");
-	lista[0] = h;
 
-	cout << lista[0] << endl;
+	cout << lista[2] << endl;
 
 	lista.iniciarPercursoSequencial();
 	while (lista.podePercorrer())

@@ -26,6 +26,15 @@ tamanhoMax((novaString.size() <= 256) ? 256 : novaString.size()), tamanho(novaSt
 	this->minhaString[i] = (char)String::charNull;
 }
 
+String::String(const int &n,char novaString[]) :
+tamanhoMax((n <= 256) ? 256 : n), tamanho(n), minhaString(new char[this->getTamanhoMax() + 1]())
+{
+	int i = 0;
+	for (i = 0; i < n; i++)
+		this->minhaString[i] = (char)novaString[i];
+	this->minhaString[i] = (char)String::charNull;
+}
+
 String::~String()
 {
 	//this->minhaString[this->length() - 1] = '\0';
@@ -150,12 +159,57 @@ void String::operator= (const String &primeira)
 	}
 }
 
-void String::operator+ (const String &outra)
+String String::operator+ (const String &outra)
 {
-	for (int i = 0; i <= outra.length(); i++)
-	{
-		this->inserir(outra[i]);
-	}
+	char *arrai = new char[this->tamanho + outra.length() + 2]();
+	int i = 0;
+
+	for (i = 0; i < this->length(); i++)
+		arrai[i] = (char)this->minhaString[i];
+
+	int u = 0;
+	for (i = this->length(); i < this->length()+outra.length(); i++, u++)
+		arrai[i] = (char)outra[u];
+
+	arrai[i] = String::charNull;
+
+	String ret = String(i, arrai);
+	delete[] arrai;
+
+	return ret;
+}
+
+String String::operator+ (const string &outra)
+{
+	char *arrai = new char[this->tamanho + outra.length() + 1]();
+
+	int i = 0;
+
+	for (i = 0; i < this->tamanho + 1; i++)
+		arrai[i] = (char)this->minhaString[i];
+
+	int u = 0;
+	for (i = this->tamanho; i < this->tamanho + outra.length(); i++, u++)
+		arrai[i] = (char)outra.at(u);
+
+	arrai[i] = String::charNull;
+	String ret = String(i, arrai);
+	delete[] arrai;
+
+	return ret;
+}
+
+String String::operator+ (const char &outra)
+{
+	char *arrai = new char[this->tamanho+2]();
+	int i;
+	for (i = 0; i < this->tamanho; i++)
+		arrai[i] = (char)this->minhaString[i];
+	arrai[i] = outra;
+	arrai[i+1] = String::charNull;
+	String ret = String(i+1, arrai);
+	delete[] arrai;
+	return ret;
 }
 
 ostream& operator<< (ostream &OS, const String &aString)
