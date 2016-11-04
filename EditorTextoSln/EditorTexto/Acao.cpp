@@ -3,33 +3,25 @@
 
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
-//---------------------------------------------------------CONSTRUTORES/DESTRUTOR--------------------------------------------------------------------//
+//-------------------------------------------------------------CONSTRUTORES/DESTRUTOR--------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-Acao::Acao(String &novaPalavra, String &novoTipo, unsigned int novoX, unsigned int novoY) : palavraMudou(novaPalavra), tipo(novoTipo), X(novoX), Y(novoY)
+Acao::Acao(const String &novaPalavra, const unsigned int novoTam, const String &novoTipo, const unsigned int novoX, const unsigned int novoY) : tipo(novoTipo), X(novoX), Y(novoY), tamanho(novoTam)
 {
-	this->palavraMudou = novaPalavra;
-	this->tipo = novoTipo;
-	this->X = novoX;
-	this->Y = novoY;
+	this->palavraMudou = (String*)malloc(novoTam * sizeof(String));
+	for (int i = 0; i < novoTam + 1; i++)
+	{
+		this->palavraMudou[i] = String(novaPalavra);
+	}
 }
 
-Acao::Acao(const Acao &original) : palavraMudou(original.palavraMudou), tipo(original.tipo), X(original.X), Y(original.Y)
-{
-	this->palavraMudou = original.palavraMudou;
-	this->tipo = original.tipo;
-	this->X = original.X;
-	this->Y = original.Y;
-}
+Acao::Acao(const Acao &original) : palavraMudou(original.palavraMudou), tamanho(original.tamanho), tipo(original.tipo), X(original.X), Y(original.Y){}
 
-Acao::Acao() : palavraMudou(), tipo(), X(0), Y(0)
-{
-
-}
+Acao::Acao() : palavraMudou(NULL), tamanho(0), tipo(""), X(0), Y(0){}
 
 Acao::~Acao()
 {
-	delete this;
+	free(this->palavraMudou);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -41,16 +33,33 @@ Acao* Acao::clone() const
 	return new Acao(*this);
 }
 
-void Acao::operator= (Acao *primeira) const
+void Acao::operator= (const Acao& primeira)
 {
-	primeira = this->clone();
+	Acao* a = new Acao();
+	if (this->getTamanho() < 0 || tipo.length() < 0)
+	{
+		this->palavraMudou = a->getPalavra();
+		this->tipo = a->getTipo();
+		this->X = a->getX();
+		this->Y = a->getY();
+		this->tamanho = a->getTamanho();
+	}
+	else
+	{ 
+		this->deletarTudo();
+		this->palavraMudou = primeira.getPalavra();
+		this->tipo = primeira.getTipo();
+		this->X = primeira.getX();
+		this->Y = primeira.getY();
+		this->tamanho = primeira.getTamanho();
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 //---------------------------------------------------------------GETTERS E SETTERS-----------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-String Acao::getPalavra() const
+String* Acao::getPalavra() const
 {
 	return this->palavraMudou;
 }
@@ -70,24 +79,34 @@ unsigned int Acao::getY() const
 	return this->Y;
 }
 
-void Acao::setPalavra(String &novaPalavra)
+unsigned int Acao::getTamanho() const
 {
-	this->palavraMudou = novaPalavra;
+	return this->tamanho;
 }
 
-void Acao::setTipo(String &novoTipo)
+void Acao::setPalavra(const String &novaPalavra)
+{
+	*(this->palavraMudou) = novaPalavra;
+}
+
+void Acao::setTipo(const String &novoTipo)
 {
 	this->tipo = novoTipo;
 }
 
-void Acao::setX(unsigned int novoX)
+void Acao::setX(const unsigned int novoX)
 {
 	this->X = novoX;
 }
 
-void Acao::setY(unsigned int novoY)
+void Acao::setY(const unsigned int novoY)
 {
 	this->Y = novoY;
+}
+
+void Acao::setTamanho(const unsigned int novoTam) 
+{
+	this->tamanho = novoTam;
 }
 
 Acao Acao::acaoNull()
@@ -96,3 +115,21 @@ Acao Acao::acaoNull()
 	return *acao;
 }
 
+void Acao::deletarTudo()
+{
+	if (palavraMudou->length() < 0 || tipo.length() < 0) return;
+	this->palavraMudou->deletarTudo();
+	this->tipo.deletarTudo();
+	this->X = 0;
+	this->Y = 0;
+}
+
+String Acao::toString() const
+{
+	String txt = String();
+	for (int i = 0; i < this->tamanho; i++)
+	{
+		txt = txt + this->palavraMudou[i];
+	}
+	return String(txt + " " + this->tipo + " " + (int)this->tamanho + (int)this->X + " " + (int)this->Y);
+}

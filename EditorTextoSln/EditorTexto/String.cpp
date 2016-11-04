@@ -155,11 +155,10 @@ char& String::operator[] (const int &indice) const
 // operators
 void String::operator= (const String &primeira)
 {
+	this->tamanhoMax = primeira.getTamanhoMax();
 	this->deletarTudo();
 	for (int i = 0; i <= primeira.length(); i++)
-	{
 		this->inserir(primeira[i]);
-	}
 }
 
 String operator+ (const String &th, const String &outra)

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-typedef struct 
+typedef struct
 {
 	int tam;
 	String *valor;
@@ -56,6 +56,7 @@ char selecionaMenu()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	/*
 	inicializarVariaveis();
 	int c = 0;
 	bool valido = false;
@@ -85,7 +86,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	default:
 		break;
 	}
+	*/
 
+	//Pilha oi = Pilha(2);
+	String s1 = String("Pedro"), s2 = String("^Z"), *s3 = (String*)malloc(3 * sizeof(String));
+	s3[0] = s1;
+	s3[1] = s2;
+	Acao a = Acao(*s3, 3, s2, 5, 2);
+
+	cout << a.toString() << endl;
+
+	int c = 0;
 	cin >> c;
 	return 0;
 }

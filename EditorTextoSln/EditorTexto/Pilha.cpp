@@ -1,16 +1,16 @@
 #include "stdafx.h"
 #include "Pilha.h"
+#include "Acao.h"
 
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 //-------------------------------------------------------------CONSTRUTORES/DESTRUTOR--------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-Pilha::Pilha(unsigned int novoTamanhoMax) : tamanhoMax(novoTamanhoMax)
+Pilha::Pilha(const unsigned int novoTamanhoMax) :tamanhoMax(novoTamanhoMax), tamanhoAtual(0)
 {
-	this->tamanhoMax = novoTamanhoMax;
-	this->tamanhoAtual = 0;
-	this->acoes = new Acao[this->tamanhoMax];
+	//Acao* a = (Acao*)malloc((novoTamanhoMax + 1) * sizeof(Acao));
+	this->acoes = (Acao*)malloc((novoTamanhoMax + 1) * sizeof(Acao));
 }
 
 Pilha::Pilha(const Pilha &original) : tamanhoMax(original.tamanhoMax), tamanhoAtual(original.tamanhoAtual), acoes(original.acoes)
@@ -22,7 +22,7 @@ Pilha::Pilha(const Pilha &original) : tamanhoMax(original.tamanhoMax), tamanhoAt
 
 Pilha::~Pilha()
 {
-	delete this;
+	free(this->acoes);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -43,7 +43,7 @@ void Pilha::operator= (Pilha *primeira) const
 //----------------------------------------------------------------MÉTODOS PRINCIPAIS---------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-Acao Pilha::empilhar(Acao feita)
+Acao Pilha::empilhar(const Acao& feita)
 {
 	if (&feita == NULL) throw "Ação Inválida";
 	if (this->ehCheia())
@@ -55,8 +55,17 @@ Acao Pilha::empilhar(Acao feita)
 		return acc;
 	}
 
-	*(this->acoes + this->tamanhoAtual++) = feita;
-	return Acao::acaoNull();
+	this->inserir(feita);
+	static Acao a = Acao();
+	return a;
+}
+
+void Pilha::inserir(const Acao& feita)
+{
+	(this->acoes + this->tamanhoAtual)->setPalavra(*feita.getPalavra());
+	(this->acoes + this->tamanhoAtual)->setTipo(feita.getTipo());
+	(this->acoes + this->tamanhoAtual)->setX(feita.getX());
+	(this->acoes + this->tamanhoAtual++)->setY(feita.getY());
 }
 
 Acao Pilha::desempilhar()
