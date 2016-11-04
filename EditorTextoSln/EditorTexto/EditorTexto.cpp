@@ -6,13 +6,8 @@
 #include "Acao.h"
 #include "ListaDuplaCirc.h"
 #include "Pilha.h"
-#include <stdio.h>
-#include <chrono>
 #include <thread>
-#include <windows.h>
 #include <fstream>
-#include <algorithm>
-
 
 using namespace std;
 
@@ -27,43 +22,6 @@ ListaDuplaCirc<String> lista;
 std::fstream arq;
 Vetor opcoes;
 
-void clsr()
-{
-	HANDLE hStdout;
-	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	COORD coordScreen = { 0, 0 };    // home for the cursor 
-	DWORD cCharsWritten;
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	DWORD dwConSize;
-
-	// Get the number of character cells in the current buffer. 
-
-	if (!GetConsoleScreenBufferInfo(hStdout, &csbi))
-		return;
-	dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
-
-	// Fill the entire screen with blanks.
-
-	if (!FillConsoleOutputCharacter(hStdout, (TCHAR) ' ',
-		dwConSize, coordScreen, &cCharsWritten))
-		return;
-
-	// Get the current text attribute.
-
-	if (!GetConsoleScreenBufferInfo(hStdout, &csbi))
-		return;
-
-	// Set the buffer's attributes accordingly.
-
-	if (!FillConsoleOutputAttribute(hStdout, csbi.wAttributes,
-		dwConSize, coordScreen, &cCharsWritten))
-		return;
-
-	// Put the cursor at its home coordinates.
-
-	SetConsoleCursorPosition(hStdout, coordScreen);
-}
 
 void dormir(unsigned int mili)
 {
@@ -77,7 +35,7 @@ void inicializarVariaveis()
 	opcoes.valor = new String[2]();
 	opcoes.valor[0] = String("Abrir um arquivo");
 	opcoes.valor[1] = String("Sair");
-	SetConsoleTitle(TEXT("CampStar"));
+	//SetConsoleTitle(TEXT("CampStar"));
 	dormir(500);
 	cout << "Modulos carregados" << endl; // maligno vai adorar
 	dormir(300);
@@ -101,12 +59,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	inicializarVariaveis();
 	int c = 0;
 	bool valido = false;
+	char opcao = ' ';
 	while (!valido)
 	{
-		clsr();
+		system("cls");
 		cout << "Bem vindo ao editor de texto CampStar" << endl;
 		cout << "-------------------------------------" << endl;
-		switch (selecionaMenu())
+		switch (opcao = selecionaMenu())
 		{
 		case '1':
 			cout << "Digitou 1\n";
@@ -119,6 +78,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		default:
 			continue;
 		}
+	}
+
+	switch (opcao)
+	{
+	default:
+		break;
 	}
 
 	cin >> c;
