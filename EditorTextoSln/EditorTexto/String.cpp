@@ -12,14 +12,15 @@ tamanho(original.length()), tamanhoMax(original.getTamanhoMax())
 }
 
 String::String() : 
-tamanhoMax(256), tamanho(0), minhaString(new char[257]())
+tamanhoMax(1024), tamanho(0)
 {
-
+	this->minhaString = new char[1025]();
 }
 
 String::String(const string &novaString) : 
-tamanhoMax((novaString.size() <= 256) ? 256 : novaString.size()), tamanho(novaString.size()), minhaString(new char[this->getTamanhoMax() + 1]())
+tamanhoMax((novaString.size() <= 512) ? 1024 : novaString.size()*2), tamanho(novaString.size())
 {
+	this->minhaString = new char[this->getTamanhoMax() + 1]();
 	int i = 0;
 	for (i = 0; i < novaString.length(); i++)
 		this->minhaString[i] = (char)novaString.at(i);
@@ -28,8 +29,9 @@ tamanhoMax((novaString.size() <= 256) ? 256 : novaString.size()), tamanho(novaSt
 
 
 String::String(const int &n,char novaString[]) :
-tamanhoMax((n <= 256) ? 256 : n), tamanho(n), minhaString(new char[this->getTamanhoMax() + 1]())
+tamanhoMax((n <= 1024) ? 1024 : n), tamanho(n)
 {
+	this->minhaString = new char[this->getTamanhoMax() + 1]();
 	int i = 0;
 	for (i = 0; i < n; i++)
 		this->minhaString[i] = (char)novaString[i];
@@ -44,9 +46,9 @@ String::~String()
 
 // Métodos normais
 String::String(const unsigned int &novoTamanhoMax) : 
-tamanhoMax(novoTamanhoMax), tamanho(0), minhaString(new char[novoTamanhoMax + 1]())
+tamanhoMax(novoTamanhoMax), tamanho(0)
 {
-
+	this->minhaString = new char[novoTamanhoMax + 1]();
 }
 
 void String::deleteCharAt(const unsigned int &posicao)
@@ -160,16 +162,16 @@ void String::operator= (const String &primeira)
 	}
 }
 
-String String::operator+ (const String &outra)
+String operator+ (const String &th, const String &outra)
 {
-	char *arrai = new char[this->tamanho + outra.length() + 2]();
+	char *arrai = new char[th.tamanho + outra.length() + 2]();
 	int i = 0;
 
-	for (i = 0; i < this->length(); i++)
-		arrai[i] = (char)this->minhaString[i];
+	for (i = 0; i < th.length(); i++)
+		arrai[i] = (char)th.minhaString[i];
 
 	int u = 0;
-	for (i = this->length(); i < this->length()+outra.length(); i++, u++)
+	for (i = th.length(); i < th.length() + outra.length(); i++, u++)
 		arrai[i] = (char)outra[u];
 
 	arrai[i] = String::charNull;
@@ -180,17 +182,17 @@ String String::operator+ (const String &outra)
 	return ret;
 }
 
-String String::operator+ (const string &outra)
+String operator+ (const String &th, const string &outra)
 {
-	char *arrai = new char[this->tamanho + outra.length() + 1]();
+	char *arrai = new char[th.tamanho + outra.length() + 1]();
 
 	int i = 0;
 
-	for (i = 0; i < this->tamanho + 1; i++)
-		arrai[i] = (char)this->minhaString[i];
+	for (i = 0; i < th.tamanho + 1; i++)
+		arrai[i] = (char)th.minhaString[i];
 
 	int u = 0;
-	for (i = this->tamanho; i < this->tamanho + outra.length(); i++, u++)
+	for (i = th.tamanho; i < th.tamanho + outra.length(); i++, u++)
 		arrai[i] = (char)outra.at(u);
 
 	arrai[i] = String::charNull;
@@ -200,12 +202,12 @@ String String::operator+ (const string &outra)
 	return ret;
 }
 
-String String::operator+ (const char &outra)
+String operator+ (const String &th, const char &outra)
 {
-	char *arrai = new char[this->tamanho+2]();
+	char *arrai = new char[th.tamanho + 2]();
 	int i;
-	for (i = 0; i < this->tamanho; i++)
-		arrai[i] = (char)this->minhaString[i];
+	for (i = 0; i < th.tamanho; i++)
+		arrai[i] = (char)th.minhaString[i];
 	arrai[i] = outra;
 	arrai[i+1] = String::charNull;
 	String ret = String(i+1, arrai);
@@ -213,23 +215,109 @@ String String::operator+ (const char &outra)
 	return ret;
 }
 
-String String::operator+ (const int &outra)
+String operator+ (const String &th, const int &outra)
 {
 	string intEmStr = to_string(outra);
 
-	char *arrai = new char[this->tamanho + intEmStr.length() + 1]();
+	char *arrai = new char[th.tamanho + intEmStr.length() + 1]();
 
 	int i = 0;
-	for (i = 0; i < this->tamanho; i++)
-		arrai[i] = (char)this->minhaString[i];
+	for (i = 0; i < th.tamanho; i++)
+		arrai[i] = (char)th.minhaString[i];
 
 	int u = 0;
-	for (i = this->tamanho; i < this->tamanho + intEmStr.length(); i++, u++)
+	for (i = th.tamanho; i < th.tamanho + intEmStr.length(); i++, u++)
 		arrai[i] = (char)intEmStr.at(u);
 
 	arrai[i] = String::charNull;
 	String ret = String(i, arrai);
 	delete[] arrai;
+	return ret;
+}
+
+String operator+ (const String &th, const char* &outra)
+{
+	string charEmStr = outra;
+	String ret = th + charEmStr;
+	return ret;
+}
+
+String operator+ (const std::string &outra, const String &th)
+{
+	char *arrai = new char[th.tamanho + outra.length() + 1]();
+
+	int i = 0;
+
+	for (i = 0; i < outra.size(); i++)
+		arrai[i] = (char)outra.at(i);
+
+	int u = 0;
+	for (i = outra.size(); i < th.tamanho + outra.size(); i++, u++)
+		arrai[i] = (char)th.minhaString[u];
+
+	arrai[i] = String::charNull;
+	String ret = String(i, arrai);
+	delete[] arrai;
+
+	return ret;
+}
+
+String operator+ (const char &outra, const String &th)
+{
+	char *arrai = new char[th.tamanho + 2]();
+	int i;
+	arrai[0] = outra;
+	for (i = 1; i < th.tamanho+1; i++)
+		arrai[i] = (char)th.minhaString[i-1];
+	arrai[i] = String::charNull;
+	String ret = String(i, arrai);
+	delete[] arrai;
+	return ret;
+}
+
+String operator+ (const char* &outra, const String &th)
+{
+	string charEmStr = outra;
+	String ret = charEmStr + th;
+	return ret;
+}
+
+String operator+ (const int &outra, const String &th)
+{
+	string intEmStr = to_string(outra);
+
+	char *arrai = new char[th.tamanho + intEmStr.length() + 1]();
+
+	int i = 0;
+	for (i = 0; i < th.tamanho; i++)
+		arrai[i] = (char)intEmStr.at(i);
+
+	int u = 0;
+	for (i = th.tamanho; i < th.tamanho + intEmStr.length(); i++, u++)
+		arrai[i] = (char)th.minhaString[i];
+
+	arrai[i] = String::charNull;
+	String ret = String(i, arrai);
+	delete[] arrai;
+	return ret;
+}
+
+
+String::operator char*() const
+{
+	static char *ret = new char[this->tamanho+1]();
+	for (int i = 0; i < this->tamanho; i++)
+		ret[i] = (char)this->minhaString[i];
+	ret[this->tamanho] = String::charNull;
+	return ret;
+}
+
+String::operator const char*() const
+{
+	static char *ret = new char[this->tamanho + 1]();
+	for (int i = 0; i < this->tamanho; i++)
+		ret[i] = (char)this->minhaString[i];
+	ret[this->tamanho] = String::charNull;
 	return ret;
 }
 

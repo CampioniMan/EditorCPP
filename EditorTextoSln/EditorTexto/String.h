@@ -33,11 +33,21 @@ class String
 
 		// operators
 		void operator= (const String &primeira);
-		String operator+ (const String &outra);
-		String operator+ (const string &outra);
-		String operator+ (const char &outra);
-		String operator+ (const int &outra);
+		friend String operator+ (const String &th, const String &outra);
+		friend String operator+ (const String &th, const std::string &outra);
+		friend String operator+ (const String &th, const char &outra);
+		friend String operator+ (const String &th, const char* &outra);
+		friend String operator+ (const String &th, const int &outra);
+
+		friend String operator+ (const String &outra, const String &th);
+		friend String operator+ (const std::string &outra, const String &th);
+		friend String operator+ (const char &outra, const String &th);
+		friend String operator+ (const char* &outra, const String &th);
+		friend String operator+ (const int &outra, const String &th);
+
 		char& operator[] (const int &indice) const;
+		operator char*() const;
+		operator const char*() const;
 
 		friend ostream& operator<< (ostream &OS, const String &aString);
 		friend istream& operator>> (istream &IS, String &aString);
