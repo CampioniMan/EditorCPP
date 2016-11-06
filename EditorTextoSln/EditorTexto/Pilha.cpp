@@ -55,11 +55,11 @@ Acao Pilha::empilhar(const Acao& feita)
 		return acc;
 	}
 
-	this->inserir(feita);
+	//this->inserir(feita);
 	static Acao a = Acao();
 	return a;
 }
-
+/*
 void Pilha::inserir(const Acao& feita)
 {
 	(this->acoes + this->tamanhoAtual)->setPalavra(*feita.getPalavra());
@@ -67,7 +67,7 @@ void Pilha::inserir(const Acao& feita)
 	(this->acoes + this->tamanhoAtual)->setX(feita.getX());
 	(this->acoes + this->tamanhoAtual++)->setY(feita.getY());
 }
-
+*/
 Acao Pilha::desempilhar()
 {
 	if (this->ehVazia()) throw "Pilha Vazia";

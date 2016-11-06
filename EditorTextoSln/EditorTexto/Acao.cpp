@@ -6,16 +6,19 @@
 //-------------------------------------------------------------CONSTRUTORES/DESTRUTOR--------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-Acao::Acao(const String &novaPalavra, const unsigned int novoTam, const String &novoTipo, const unsigned int novoX, const unsigned int novoY) : tipo(novoTipo), X(novoX), Y(novoY), tamanho(novoTam)
+Acao::Acao(const String *novaPalavra, const unsigned int novoTam, const String &novoTipo, const unsigned int novoX, const unsigned int novoY) : tipo(novoTipo), X(novoX), Y(novoY), tamanho(novoTam)
 {
 	this->palavraMudou = (String*)malloc(novoTam * sizeof(String));
-	for (int i = 0; i < novoTam + 1; i++)
-	{
-		this->palavraMudou[i] = String(novaPalavra);
-	}
+	for (int i = 0; i < novoTam; i++)
+		*(this->palavraMudou + i) = *(novaPalavra + i);
 }
 
-Acao::Acao(const Acao &original) : palavraMudou(original.palavraMudou), tamanho(original.tamanho), tipo(original.tipo), X(original.X), Y(original.Y){}
+Acao::Acao(const Acao &original) : tamanho(original.tamanho), tipo(original.tipo), X(original.X), Y(original.Y)
+{
+	this->palavraMudou = (String*)malloc(original.tamanho * sizeof(String));
+	for (int i = 0; i < original.tamanho; i++)
+		*(this->palavraMudou + i) = *(original.palavraMudou + i);
+}
 
 Acao::Acao() : palavraMudou(NULL), tamanho(0), tipo(""), X(0), Y(0){}
 
@@ -84,9 +87,19 @@ unsigned int Acao::getTamanho() const
 	return this->tamanho;
 }
 
-void Acao::setPalavra(const String &novaPalavra)
+void Acao::setPalavra(const String &novaPalavra, const unsigned int pos)
 {
-	*(this->palavraMudou) = novaPalavra;
+	*(this->palavraMudou + pos) = novaPalavra;
+}
+
+void Acao::setPalavra(const string &novaPalavra, const unsigned int pos)
+{
+	*(this->palavraMudou + pos) = novaPalavra;
+}
+
+void Acao::setPalavra(const char *novaPalavra, const unsigned int pos)
+{
+	*(this->palavraMudou + pos) = String(novaPalavra);
 }
 
 void Acao::setTipo(const String &novoTipo)
@@ -131,5 +144,5 @@ String Acao::toString() const
 	{
 		txt = txt + this->palavraMudou[i];
 	}
-	return String(txt + " " + this->tipo + " " + (int)this->tamanho + (int)this->X + " " + (int)this->Y);
+	return String(txt + " " + this->tipo + " " + (int)this->tamanho + " " + (int)this->X + " " + (int)this->Y);
 }

@@ -54,6 +54,20 @@ char selecionaMenu()
 	return ret[0];
 }
 
+void pulaLinha(unsigned int qtas)
+{
+	for (int i = 0; i < qtas; i++)
+		cout << "\n" << endl;
+}
+
+int esperaEnter()
+{
+	cout << "Pressione [ENTER] para continuar" << endl;
+	char carac = ' ';
+	scanf_s("%c", &carac);
+	return 0;
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	/*
@@ -89,15 +103,30 @@ int _tmain(int argc, _TCHAR* argv[])
 	*/
 
 	//Pilha oi = Pilha(2);
-	String s1 = String("Pedro"), s2 = String("^Z"), *s3 = (String*)malloc(3 * sizeof(String));
-	s3[0] = s1;
-	s3[1] = s2;
-	Acao a = Acao(*s3, 3, s2, 5, 2);
+	String s1 = String("Pedro"), s2 = String("Daniel"), s3 = String("Regis"), s4 = String("^Z"), *s5 = (String*)malloc(3 * sizeof(String));
+	*(s5 + 0) = s1;
+	*(s5 + 1) = s2;
+	*(s5 + 2) = s3;
+
+	//cout << (s5 + 0)->toString() << (s5 + 1)->toString() << (s5 + 2)->toString() << endl;
+
+	Acao a = Acao(s5, 3, s4, 5, 2),
+		 b = *a.clone(), 
+		 c = a;
 
 	cout << a.toString() << endl;
-
-	int c = 0;
-	cin >> c;
-	return 0;
+	//a.setX(90);
+	a.setPalavra("Alex", 2);
+	pulaLinha(1);
+	///////////////////////////////////////////////////////////////////////////////////
+	cout << b.toString() << endl;
+	//b.setX(90);
+	pulaLinha(1);
+	///////////////////////////////////////////////////////////////////////////////////
+	cout << c.toString() << endl;
+	//c.setX(90);
+	pulaLinha(1);
+	///////////////////////////////////////////////////////////////////////////////////
+	return esperaEnter();
 }
 

@@ -3,7 +3,7 @@
 class Acao
 {
 public:
-	Acao(const String &novaPalavra, const unsigned int novoTam, const String &novoTipo, const unsigned int novoX, const unsigned int novoY);
+	Acao(const String *novaPalavra, const unsigned int novoTam, const String &novoTipo, const unsigned int novoX, const unsigned int novoY);
 	Acao(const Acao &original);
 	Acao();
 	virtual ~Acao();
@@ -17,7 +17,9 @@ public:
 	unsigned int getY() const;
 	unsigned int getTamanho() const;
 
-	void setPalavra(const String &novaPalavra);
+	void setPalavra(const String &novaPalavra, const unsigned int pos);
+	void setPalavra(const string &novaPalavra, const unsigned int pos);
+	void setPalavra(const char *novaPalavra, const unsigned int pos);
 	void setTipo(const String &novoTipo);
 	void setX(const unsigned int novoX);
 	void setY(const unsigned int novoY);
