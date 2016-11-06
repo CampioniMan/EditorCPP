@@ -15,6 +15,7 @@ Acao::Acao(const String *novaPalavra, const unsigned int novoTam, const String &
 
 Acao::Acao(const Acao &original) : tamanho(original.tamanho), tipo(original.tipo), X(original.X), Y(original.Y)
 {
+	//free(this->palavraMudou);
 	this->palavraMudou = (String*)malloc(original.tamanho * sizeof(String));
 	for (int i = 0; i < original.tamanho; i++)
 		*(this->palavraMudou + i) = *(original.palavraMudou + i);
@@ -38,24 +39,7 @@ Acao* Acao::clone() const
 
 void Acao::operator= (const Acao& primeira)
 {
-	Acao* a = new Acao();
-	if (this->getTamanho() < 0 || tipo.length() < 0)
-	{
-		this->palavraMudou = a->getPalavra();
-		this->tipo = a->getTipo();
-		this->X = a->getX();
-		this->Y = a->getY();
-		this->tamanho = a->getTamanho();
-	}
-	else
-	{ 
-		this->deletarTudo();
-		this->palavraMudou = primeira.getPalavra();
-		this->tipo = primeira.getTipo();
-		this->X = primeira.getX();
-		this->Y = primeira.getY();
-		this->tamanho = primeira.getTamanho();
-	}
+	*this = Acao(primeira);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -100,6 +84,14 @@ void Acao::setPalavra(const string &novaPalavra, const unsigned int pos)
 void Acao::setPalavra(const char *novaPalavra, const unsigned int pos)
 {
 	*(this->palavraMudou + pos) = String(novaPalavra);
+}
+
+void Acao::setFrase(const String &novoTipo)
+{
+	free(this->palavraMudou);
+	this->palavraMudou = (String*)malloc(this->tamanho * sizeof(String));
+	for (int i = 0; i < this->tamanho; i++)
+		*(this->palavraMudou + i) = (novoTipo + i);
 }
 
 void Acao::setTipo(const String &novoTipo)

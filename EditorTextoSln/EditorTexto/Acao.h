@@ -20,6 +20,7 @@ public:
 	void setPalavra(const String &novaPalavra, const unsigned int pos);
 	void setPalavra(const string &novaPalavra, const unsigned int pos);
 	void setPalavra(const char *novaPalavra, const unsigned int pos);
+	void setFrase(const String &novoTipo);
 	void setTipo(const String &novoTipo);
 	void setX(const unsigned int novoX);
 	void setY(const unsigned int novoY);

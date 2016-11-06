@@ -23,10 +23,8 @@ public:
 	void operator= (Pilha *primeira) const;
 protected:
 	Acao valorDe(const int &indice) const;
-	void inserir(const Acao& feita);
 private:
-	Acao* acoes;
-	int tamanhoMax;
-	int tamanhoAtual;
+	Acao *acoes;
+	unsigned int tamanhoMax, tamanhoAtual;
 };
 

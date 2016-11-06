@@ -10,7 +10,9 @@
 Pilha::Pilha(const unsigned int novoTamanhoMax) :tamanhoMax(novoTamanhoMax), tamanhoAtual(0)
 {
 	//Acao* a = (Acao*)malloc((novoTamanhoMax + 1) * sizeof(Acao));
-	this->acoes = (Acao*)malloc((novoTamanhoMax + 1) * sizeof(Acao));
+	this->acoes = (Acao*)malloc((novoTamanhoMax) * sizeof(Acao));
+	for (int i = 0; i < novoTamanhoMax; i++)
+		*(this->acoes + i) = Acao();
 }
 
 Pilha::Pilha(const Pilha &original) : tamanhoMax(original.tamanhoMax), tamanhoAtual(original.tamanhoAtual), acoes(original.acoes)
@@ -55,19 +57,11 @@ Acao Pilha::empilhar(const Acao& feita)
 		return acc;
 	}
 
-	//this->inserir(feita);
+	*(this->acoes + this->tamanhoAtual++) = feita;
 	static Acao a = Acao();
 	return a;
 }
-/*
-void Pilha::inserir(const Acao& feita)
-{
-	(this->acoes + this->tamanhoAtual)->setPalavra(*feita.getPalavra());
-	(this->acoes + this->tamanhoAtual)->setTipo(feita.getTipo());
-	(this->acoes + this->tamanhoAtual)->setX(feita.getX());
-	(this->acoes + this->tamanhoAtual++)->setY(feita.getY());
-}
-*/
+
 Acao Pilha::desempilhar()
 {
 	if (this->ehVazia()) throw "Pilha Vazia";
@@ -95,7 +89,7 @@ Acao Pilha::valorDe(const int &indice) const
 
 Acao Pilha::getTopo() const
 {
-	return *(this->acoes + this->tamanhoAtual);
+	return *(this->acoes + this->tamanhoAtual-1);
 }
 
 int Pilha::length() const
