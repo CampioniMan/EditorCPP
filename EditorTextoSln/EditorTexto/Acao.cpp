@@ -8,20 +8,18 @@
 
 Acao::Acao(const String *novaPalavra, const unsigned int novoTam, const String &novoTipo, const unsigned int novoX, const unsigned int novoY) : tipo(novoTipo), X(novoX), Y(novoY), tamanho(novoTam)
 {
-	this->palavraMudou = (String*)malloc(novoTam * sizeof(String));
-	for (int i = 0; i < novoTam; i++)
-		*(this->palavraMudou + i) = *(novaPalavra + i);
+	this->alocaPalavra(novaPalavra, novoTam);
 }
 
 Acao::Acao(const Acao &original) : tamanho(original.tamanho), tipo(original.tipo), X(original.X), Y(original.Y)
 {
-	//free(this->palavraMudou);
-	this->palavraMudou = (String*)malloc(original.tamanho * sizeof(String));
-	for (int i = 0; i < original.tamanho; i++)
-		*(this->palavraMudou + i) = *(original.palavraMudou + i);
+	this->alocaPalavra(original.palavraMudou, original.tamanho);
 }
 
-Acao::Acao() : palavraMudou(NULL), tamanho(0), tipo(""), X(0), Y(0){}
+Acao::Acao() : tamanho(1), tipo(""), X(0), Y(0)
+{
+	this->alocaPalavra(new String(), 1);
+}
 
 Acao::~Acao()
 {
@@ -39,7 +37,15 @@ Acao* Acao::clone() const
 
 void Acao::operator= (const Acao& primeira)
 {
-	*this = Acao(primeira);
+	int i = this->tamanho;
+	this->tamanho = primeira.tamanho;
+	this->X = primeira.X;
+	this->Y = primeira.Y;
+	this->tipo = primeira.tipo;
+
+	if (this->tamanho != 1 && i > 0)
+		free(this->palavraMudou);
+	this->alocaPalavra(primeira.palavraMudou, primeira.tamanho);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -114,6 +120,10 @@ void Acao::setTamanho(const unsigned int novoTam)
 	this->tamanho = novoTam;
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------//
+//---------------------------------------------------------------MÉTODOS AUXILIARES-----------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 Acao Acao::acaoNull()
 {
 	Acao *acao = NULL;
@@ -129,12 +139,17 @@ void Acao::deletarTudo()
 	this->Y = 0;
 }
 
+void Acao::alocaPalavra(const String *novaPalavra, const unsigned int tam)
+{
+	this->palavraMudou = (String*)malloc(tam * sizeof(String));
+	for (int i = 0; i < tam; i++)
+		*(this->palavraMudou + i) = *(novaPalavra + i);
+}
+
 String Acao::toString() const
 {
 	String txt = String();
 	for (int i = 0; i < this->tamanho; i++)
-	{
-		txt = txt + this->palavraMudou[i];
-	}
+		txt = txt + *(this->palavraMudou + i);
 	return String(txt + " " + this->tipo + " " + (int)this->tamanho + " " + (int)this->X + " " + (int)this->Y);
 }

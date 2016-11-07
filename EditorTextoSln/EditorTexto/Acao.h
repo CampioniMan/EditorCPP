@@ -30,6 +30,7 @@ public:
 	String toString() const;
 protected:
 	void deletarTudo();
+	void alocaPalavra(const String *novaPalavra, const unsigned int tam);
 private:
 	String *palavraMudou, tipo;
 	unsigned int X, Y, tamanho;

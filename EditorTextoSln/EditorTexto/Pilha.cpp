@@ -9,17 +9,20 @@
 
 Pilha::Pilha(const unsigned int novoTamanhoMax) :tamanhoMax(novoTamanhoMax), tamanhoAtual(0)
 {
-	//Acao* a = (Acao*)malloc((novoTamanhoMax + 1) * sizeof(Acao));
-	this->acoes = (Acao*)malloc((novoTamanhoMax) * sizeof(Acao));
+	Acao* pont = (Acao*)malloc((novoTamanhoMax) * sizeof(Acao));
 	for (int i = 0; i < novoTamanhoMax; i++)
-		*(this->acoes + i) = Acao();
+		*(pont + i) = Acao();
+	this->alocaPalavra(pont, novoTamanhoMax);
 }
 
-Pilha::Pilha(const Pilha &original) : tamanhoMax(original.tamanhoMax), tamanhoAtual(original.tamanhoAtual), acoes(original.acoes)
+Pilha::Pilha(const Pilha &original) : tamanhoMax(original.tamanhoMax), tamanhoAtual(original.tamanhoAtual)
 {
-	this->tamanhoMax = original.tamanhoMax;
-	for (int i = 0; i < original.tamanhoAtual; i++)
-		this->empilhar(original.valorDe(i));
+	this->alocaPalavra(original.acoes, original.tamanhoMax);
+}
+
+Pilha::Pilha() : tamanhoMax(1), tamanhoAtual(0)
+{
+	this->alocaPalavra(new Acao(), 1);
 }
 
 Pilha::~Pilha()
@@ -58,14 +61,13 @@ Acao Pilha::empilhar(const Acao& feita)
 	}
 
 	*(this->acoes + this->tamanhoAtual++) = feita;
-	static Acao a = Acao();
-	return a;
+	return Acao();
 }
 
 Acao Pilha::desempilhar()
 {
 	if (this->ehVazia()) throw "Pilha Vazia";
-	return *(this->acoes + this->tamanhoAtual--);
+	return *(this->acoes + --this->tamanhoAtual);
 }
 
 bool Pilha::ehCheia() const
@@ -75,7 +77,7 @@ bool Pilha::ehCheia() const
 
 bool Pilha::ehVazia() const
 {
-	return this->tamanhoAtual <= this->tamanhoMax;
+	return this->tamanhoAtual <= 0;
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -97,3 +99,17 @@ int Pilha::length() const
 	return this->tamanhoAtual;
 }
 
+void Pilha::alocaPalavra(const Acao *novaAcao, const unsigned int tam)
+{
+	this->acoes = (Acao*)malloc(tam * sizeof(Acao));
+	for (int i = 0; i < tam; i++)
+		*(this->acoes + i) = *(novaAcao + i);
+}
+
+String Pilha::toString() const
+{
+	String txt = String();
+	for (int i = 0; i < this->tamanhoAtual; i++)
+		txt = txt + (this->acoes + i)->toString();
+	return String(txt + " " + (int)this->tamanhoAtual + " " + (int)this->tamanhoMax + "\n");
+}

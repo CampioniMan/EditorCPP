@@ -66,6 +66,12 @@ void print(String txt, unsigned int pulLi)
 	if (pulLi > 0) pulaLinha(1);
 }
 
+void print(unsigned int numb, unsigned int pulLi)
+{
+	cout << numb << endl;
+	if (pulLi > 0) pulaLinha(1);
+}
+
 int esperaEnter()
 {
 	cout << "Pressione [ENTER] para continuar" << endl;
@@ -76,7 +82,7 @@ int esperaEnter()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	/*
+	
 	inicializarVariaveis();
 	int c = 0;
 	bool valido = false;
@@ -106,35 +112,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	default:
 		break;
 	}
-	*/
-
-	//Pilha oi = Pilha(2);
-	String s1 = String("Pedro"), s2 = String("Daniel"), s3 = String("Regis"), s4 = String("^Z"), *s5 = (String*)malloc(3 * sizeof(String));
-	*(s5 + 0) = s1;
-	*(s5 + 1) = s2;
-	*(s5 + 2) = s3;
-
-	String s6 = String("Alex"), s7 = String("Rominho"), s8 = String("Bruno"), s9 = String("^Y"), *s10 = (String*)malloc(3 * sizeof(String));
-	*(s10 + 0) = s6;
-	*(s10 + 1) = s7;
-	*(s10 + 2) = s8;
-
-	//cout << (s5 + 0)->toString() << (s5 + 1)->toString() << (s5 + 2)->toString() << endl;
-
-	Acao a = Acao(s5, 3, s4, 5, 2), b = Acao(s10, 3, s9, 50, 20);
-
-	print(a.toString(), 0);
-	print(b.toString(), 1);
-
-	b = a;
-
-	print(a.toString(), 0);
-	print(b.toString(), 1);
-
-	Pilha p = Pilha(5);
-	p.empilhar(a);
-	print(p.getTopo().toString(), 1);
-
 	return esperaEnter();
 }
 
