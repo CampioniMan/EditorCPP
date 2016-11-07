@@ -1,34 +1,132 @@
 #pragma once
-#include "Acao.h"
-#include "stdafx.h"
+using namespace std;
+#include "NoLista.h"
+
+template <class Tipo>
 class Pilha
 {
 public:
-	// Construtores
-	Pilha(const unsigned int tamanhoMax);
-	Pilha(const Pilha &original);
-	Pilha();
-	virtual ~Pilha();
+	// ------------------------------------------------------------------------------------------------------------------------------------------------------ -//
+	//-------------------------------------------------------------CONSTRUTORES/DESTRUTOR--------------------------------------------------------------------//
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-	Pilha* clone() const;
-	void operator= (Pilha *primeira) const;
+	Pilha(const unsigned int novoTamanhoMax) : tamanhoMax(novoTamanhoMax), tamanhoAtual(0)
+	{
+		NoLista<Tipo> *pont = (NoLista<Tipo>*)malloc(novoTamanhoMax * sizeof(NoLista<Tipo>));
+		for (int i = 0; i < novoTamanhoMax; i++)
+			*(pont + i) = NoLista<Tipo>();
+		this->alocaNo(pont, novoTamanhoMax);
+	}
 
-	// Métodos normais
-	Acao empilhar(const Acao& feita); // remove a base da pilha e empilha o novo
-	Acao desempilhar();
-	bool ehCheia() const;
-	bool ehVazia() const;
+	Pilha(const Pilha<Tipo> &original) : tamanhoMax(original.tamanhoMax), tamanhoAtual(original.tamanhoAtual)
+	{
+		this->alocaNo(original.nos, original.tamanhoMax);
+	}
 
-	// getters e setters
-	Acao getTopo() const;
-	int length() const;
+	Pilha() : tamanhoMax(1), tamanhoAtual(0)
+	{
+		this->alocaNo(new NoLista<Tipo>(), 1);
+	}
 
-	String toString() const;
+	~Pilha()
+	{
+		free(this->nos);
+	}
+
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+	//--------------------------------------------------------------CONSTRUTORES DE CÓPIA--------------------------------------------------------------------//
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+	Pilha<Tipo>* clone() const
+	{
+		return new Pilha<Tipo>(*this);
+	}
+
+	void operator= (Pilha<Tipo> *primeira) const
+	{
+		primeira = this->clone();
+	}
+
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+	//----------------------------------------------------------------MÉTODOS PRINCIPAIS---------------------------------------------------------------------//
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+	NoLista<Tipo> empilhar(const Tipo& feita)
+	{
+		if (&feita == NULL) throw "Ação Inválida";
+
+		NoLista<Tipo> no = NoLista<Tipo>(feita);
+		if (this->ehCheia())
+		{
+			NoLista<Tipo> acc = *(this->nos + 0);
+			for (int i = 0; i < this->tamanhoAtual; i++)
+				*(this->nos + i) = *(this->nos + (i + 1));
+			this->tamanhoAtual--;
+			this->empilhar(feita);
+			return acc;
+		}
+
+		*(this->nos + this->tamanhoAtual++) = no;
+		return NoLista<Tipo>();
+	}
+
+	NoLista<Tipo> desempilhar()
+	{
+		if (this->ehVazia()) throw "Pilha Vazia";
+		return *(this->nos + --this->tamanhoAtual);
+	}
+
+	bool ehCheia() const
+	{
+		return this->tamanhoAtual >= this->tamanhoMax;
+	}
+
+	bool ehVazia() const
+	{
+		return this->tamanhoAtual <= 0;
+	}
+
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+	//---------------------------------------------------------------GETTERS E SETTERS-----------------------------------------------------------------------//
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+	NoLista<Tipo> getTopo() const
+	{
+		return *(this->nos + this->tamanhoAtual - 1);
+	}
+
+	int length() const
+	{
+		return this->tamanhoAtual;
+	}
+
+	String toString() const
+	{
+		String txt = String();
+		for (int i = 0; i < this->tamanhoAtual; i++)
+			txt = txt + (this->nos + i)->getDado()->toString();
+		return String(txt + " " + (int)this->tamanhoAtual + " " + (int)this->tamanhoMax + "\n");
+	}
 protected:
-	Acao valorDe(const int &indice) const;
-	void Pilha::alocaPalavra(const Acao *novaAcao, const unsigned int tam);
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+	//----------------------------------------------------------------MÉTODOS AUXILIARES---------------------------------------------------------------------//
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+	NoLista<Tipo> valorDe(const int &indice) const
+	{
+		return *(this->acoes + indice);
+	}
+
+	void alocaNo(const NoLista<Tipo> *novoNo, const unsigned int tam)
+	{
+		this->nos = (NoLista<Tipo>*)malloc(tam * sizeof(NoLista<Tipo>));
+		for (int i = 0; i < tam; i++)
+			*(this->nos + i) = *(novoNo + i);
+	}
 private:
-	Acao *acoes;
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+	//-------------------------------------------------------------------ATRIBUTOS---------------------------------------------------------------------------//
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
+	NoLista<Tipo> *nos;
 	unsigned int tamanhoMax, tamanhoAtual;
 };
 

@@ -3,14 +3,17 @@
 class Acao
 {
 public:
+	// Construtores
 	Acao(const String *novaPalavra, const unsigned int novoTam, const String &novoTipo, const unsigned int novoX, const unsigned int novoY);
 	Acao(const Acao &original);
 	Acao();
 	virtual ~Acao();
 
+	// Construtores de Cópia
 	Acao* clone() const;
 	void operator= (const Acao& primeira);
 
+	// Getters e Setters
 	String* getPalavra() const;
 	String getTipo() const;
 	unsigned int getX() const;
@@ -29,9 +32,11 @@ public:
 	static Acao acaoNull();
 	String toString() const;
 protected:
+	// Métodods Auxiliares
 	void deletarTudo();
 	void alocaPalavra(const String *novaPalavra, const unsigned int tam);
 private:
+	// Atributos
 	String *palavraMudou, tipo;
 	unsigned int X, Y, tamanho;
 };

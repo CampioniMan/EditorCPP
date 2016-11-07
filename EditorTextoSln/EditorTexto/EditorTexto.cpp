@@ -82,7 +82,6 @@ int esperaEnter()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	
 	inicializarVariaveis();
 	int c = 0;
 	bool valido = false;
