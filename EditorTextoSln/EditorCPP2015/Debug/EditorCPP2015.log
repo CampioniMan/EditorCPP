@@ -1,0 +1,8 @@
+﻿  EditorCPP2015.cpp
+f:\4osemestreativo\maligno\editorcpp2015\editorcpp2015\editorcpp2015.cpp(76): warning C4018: '<': signed/unsigned mismatch
+f:\4osemestreativo\maligno\editorcpp2015\editorcpp2015\editorcpp2015.cpp(97): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  f:\4osemestreativo\maligno\editorcpp2015\editorcpp2015\editorcpp2015.cpp(97): note: placeholders and their parameters expect 2 variadic arguments, but 1 were provided
+  f:\4osemestreativo\maligno\editorcpp2015\editorcpp2015\editorcpp2015.cpp(97): note: the missing variadic argument 2 is required by format string '%c'
+  f:\4osemestreativo\maligno\editorcpp2015\editorcpp2015\editorcpp2015.cpp(97): note: this argument is used as a buffer size
+f:\4osemestreativo\maligno\editorcpp2015\editorcpp2015\editorcpp2015.cpp(164): warning C4065: switch statement contains 'default' but no 'case' labels
+  EditorCPP2015.vcxproj -> F:\4oSemestreAtivo\Maligno\EditorCPP2015\Debug\EditorCPP2015.exe
