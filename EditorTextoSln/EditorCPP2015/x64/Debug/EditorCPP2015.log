@@ -1,26 +1,7 @@
-﻿  stdafx.cpp
-  String.cpp
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\string.cpp(30): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\string.cpp(64): warning C4018: '>': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\string.cpp(76): warning C4018: '>=': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\string.cpp(76): warning C4018: '>': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\string.cpp(79): warning C4018: '<': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\string.cpp(107): warning C4018: '>': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\string.cpp(110): warning C4018: '>=': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\string.cpp(262): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  Pilha.cpp
-  NoLista.cpp
-  ListaDuplaCirc.cpp
-  EditorCPP2015.cpp
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(77): warning C4018: '<': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(98): warning C4473: 'scanf_s' : not enough arguments passed for format string
-  f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(98): note: placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-  f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(98): note: the missing variadic argument 2 is required by format string '%c'
-  f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(98): note: this argument is used as a buffer size
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(164): warning C4065: switch statement contains 'default' but no 'case' labels
-  Acao.cpp
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\acao.cpp(100): warning C4018: '<': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\acao.cpp(146): warning C4018: '<': signed/unsigned mismatch
-f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\acao.cpp(153): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
+﻿  EditorCPP2015.cpp
+f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(85): warning C4018: '<': signed/unsigned mismatch
+f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(106): warning C4473: 'scanf_s' : not enough arguments passed for format string
+  f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(106): note: placeholders and their parameters expect 2 variadic arguments, but 1 were provided
+  f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(106): note: the missing variadic argument 2 is required by format string '%c'
+  f:\4osemestreativo\maligno\editorcpp\editortextosln\editorcpp2015\editorcpp2015.cpp(106): note: this argument is used as a buffer size
   EditorCPP2015.vcxproj -> F:\4oSemestreAtivo\Maligno\EditorCPP\EditorTextoSln\x64\Debug\EditorCPP2015.exe

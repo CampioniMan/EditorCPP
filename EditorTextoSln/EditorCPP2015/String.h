@@ -38,16 +38,19 @@ class String
 		friend String operator+ (const String &th, const std::string &outra);
 		friend String operator+ (const String &th, const char &outra);
 		friend String operator+ (const String &th, const char* &outra);
+		friend String operator+ (const String &th, const char* outra);
 		friend String operator+ (const String &th, const int &outra);
 
 		friend String operator+ (const String &outra, const String &th);
 		friend String operator+ (const std::string &outra, const String &th);
 		friend String operator+ (const char &outra, const String &th);
 		friend String operator+ (const char* &outra, const String &th);
+		friend String operator+ (const char* outra, const String &th);
 		friend String operator+ (const int &outra, const String &th);
 
 		char& operator[] (const int &indice) const;
 		operator char*() const;
+		operator string() const;
 		operator const char*() const;
 
 		friend ostream& operator<< (ostream &OS, const String &aString);
@@ -58,6 +61,13 @@ class String
 		friend bool operator> (const String &pri, const String &seg);
 		friend bool operator<= (const String &pri, const String &seg);
 		friend bool operator>= (const String &pri, const String &seg);
+
+		friend bool operator!= (const String &pri, const char* seg);
+		friend bool operator== (const String &pri, const char* seg);
+		friend bool operator< (const String &pri, const char* seg);
+		friend bool operator> (const String &pri, const char* seg);
+		friend bool operator<= (const String &pri, const char* seg);
+		friend bool operator>= (const String &pri, const char* seg);
 		
 
 		// constantes

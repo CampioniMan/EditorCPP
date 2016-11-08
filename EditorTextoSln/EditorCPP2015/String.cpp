@@ -309,6 +309,20 @@ String operator+ (const int &outra, const String &th)
 	return ret;
 }
 
+String operator+ (const String &th, const char* outra)
+{
+	string charEmStr = outra;
+	String ret = th + charEmStr;
+	return ret;
+}
+
+String operator+ (const char* outra, const String &th)
+{
+	string charEmStr = outra;
+	String ret = charEmStr + th;
+	return ret;
+}
+
 
 String::operator char*() const
 {
@@ -325,6 +339,14 @@ String::operator const char*() const
 	for (int i = 0; i < this->tamanho; i++)
 		ret[i] = (char)this->minhaString[i];
 	ret[this->tamanho] = String::charNull;
+	return ret;
+}
+
+String::operator string() const
+{
+	string ret = string();
+	for (int i = 0; i < this->tamanho; i++)
+		ret.push_back((char)this->minhaString[i]);
 	return ret;
 }
 
@@ -392,6 +414,75 @@ bool operator== (const String &pri, const String &seg) // verificar conteúdo tam
 bool operator!= (const String &pri, const String &seg) // verificar conteúdo também
 {
 	if (pri.length() != seg.length())
+		return true;
+
+	for (int i = 0; i < pri.tamanho; i++)
+	{
+		if (pri[i] != seg[i])
+			return true;
+	}
+	return false;
+}
+
+bool operator< (const String &pri, const char* seg)
+{
+	int i = 0;
+	for (i = 0; seg[i] != String::charNull; i++)
+	{}
+	return pri.length() < i;
+}
+
+bool operator> (const String &pri, const char* seg)
+{
+	int i = 0;
+	for (i = 0; seg[i] != String::charNull; i++)
+	{
+	}
+	return pri.length() > i;
+}
+
+bool operator<= (const String &pri, const char* seg)
+{
+	int i = 0;
+	for (i = 0; seg[i] != String::charNull; i++)
+	{
+	}
+	return pri.length() <= i;
+}
+
+bool operator>= (const String &pri, const char* seg)
+{
+	int i = 0;
+	for (i = 0; seg[i] != String::charNull; i++)
+	{
+	}
+	return pri.length() >= i;
+}
+
+bool operator== (const String &pri, const char* seg) // verificar conteúdo também
+{
+	int i = 0;
+	for (i = 0; seg[i] != String::charNull; i++)
+	{
+	}
+	if (pri.length() != i)
+		return false;
+
+	for (int i = 0; i < pri.tamanho; i++)
+	{
+		if (pri[i] != seg[i])
+			return false;
+	}
+	return true;
+}
+
+bool operator!= (const String &pri, const char* seg) // verificar conteúdo também
+{
+	int i = 0;
+	for (i = 0; seg[i] != String::charNull; i++)
+	{
+	}
+	if (pri.length() != i)
 		return true;
 
 	for (int i = 0; i < pri.tamanho; i++)

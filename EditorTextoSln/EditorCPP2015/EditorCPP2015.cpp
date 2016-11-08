@@ -6,6 +6,8 @@
 #include "Acao.h"
 #include "ListaDuplaCirc.h"
 #include "Pilha.h"
+#include <iomanip>
+#include <sstream>
 #include <fstream>
 #include <ostream>
 #include <thread>
@@ -23,6 +25,11 @@ void gotoxy(int x, int y)
 	pos.Y = y;
 
 	SetConsoleCursorPosition(stdOutput, pos);
+}
+
+inline bool fexists(const std::string& name) {
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
 }
 
 using namespace std;
@@ -47,12 +54,13 @@ void dormir(unsigned int mili)
 
 void inicializarVariaveis()
 {
-	setlocale(LC_ALL, ""); // Restore the CRT.
+	//setlocale(LC_ALL, ""); // Restore the CRT.
 	cout << "Carregando módulos..." << endl;
-	opcoes.tam = 2;
-	opcoes.valor = new String[2]();
+	opcoes.tam = 3;
+	opcoes.valor = new String[opcoes.tam]();
 	opcoes.valor[0] = "Abrir um arquivo";
-	opcoes.valor[1] = "Sair";
+	opcoes.valor[1] = "Criar um arquivo";
+	opcoes.valor[2] = "Sair";
 	SetConsoleTitle(TEXT("CampStar"));
 	dormir(500);
 	cout << "Modulos carregados" << endl; // maligno vai adorar
@@ -102,7 +110,7 @@ int esperaEnter()
 bool salvarArquivo(const String& dir, ListaDuplaCirc<String> *lst)
 {
 	ofstream arq = ofstream();
-	arq.open(dir);
+	arq.open((char*)dir);
 	if (arq.fail())
 		return false;
 	lst->iniciarPercursoSequencial();
@@ -117,13 +125,16 @@ bool salvarArquivo(const String& dir, ListaDuplaCirc<String> *lst)
 bool abrirArquivo(const String& dir, ListaDuplaCirc<String> *lst)
 {
 	ifstream arq = ifstream();
-	arq.open(dir);
-	if (arq.fail())
+	arq.open((char*)dir);
+	if (!arq.is_open())
 		return false;
+
 	String linha;
-	while ((arq.read(linha, 2048 * sizeof(char))))
+	std::string line;
+	while (!arq.eof())
 	{
-		lst->inserirNoFinal(linha);
+		std::getline(arq, line);
+		lst->inserirNoFinal(line);
 	}
 	arq.close();
 	return true;
@@ -143,25 +154,53 @@ int main()
 		switch (opcao = selecionaMenu())
 		{
 		case '1':
+			system("cls");
 			cout << "Você selecionou a opção '1'\n";
+			cout << "Digite o diretório do arquivo que deseja-se abrir:";
 			cin >> file_path;
-			abrirArquivo(file_path, &lista);
-			valido = true;
+			if (abrirArquivo(file_path, &lista))
+			{
+				system("cls");
+				lista.iniciarPercursoSequencial();
+				while (lista.podePercorrer())
+					cout << lista.getValorAtual() + '\n';
+				gotoxy(0, 0);
+				system("notepad "+file_path);
+				//dormir(15000);
+			}
+			opcao = ' ';
 			break;
 		case '2':
-			cout << "Digitou 2\n";
+			system("cls");
+			cout << "Você selecionou a opção '2'\n";
+			cout << "Digite a pasta do arquivo de saída:";
+			cin >> file_path;
+			if (!fexists(file_path))
+				valido = true;
+			else
+			{
+				cout << "Deseja sobreescrever o arquivo(Y/[N])?\n";
+				String resposta = "N";
+				cin >> resposta;
+				if (resposta == "Y")
+				{
+					system("notepad "+file_path);
+				}
+			}
+			opcao = ' ';
+			break;
+		case '3':
+			cout << '\n' << "Você selecionou a opção '3'\n";
 			valido = true;
+			opcao = ' ';
 			break;
 		default:
+			opcao = ' ';
 			continue;
 		}
 	}
 
-	switch (opcao)
-	{
-	default:
-		break;
-	}
+	esperaEnter();
 	return esperaEnter();
 }
 
