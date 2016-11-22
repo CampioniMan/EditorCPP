@@ -30,7 +30,7 @@ void inicializarVariaveis()
 {
 	//setlocale(LC_ALL, ""); // Restore the CRT.
 	cout << "Carregando módulos..." << endl;
-	NotepadCPP::setTamanho(81, 30);
+	NotepadCPP::setTamanho(80, 30);
 	opcoes.tam = 3;
 	opcoes.valor = new String[opcoes.tam]();
 	opcoes.valor[0] = "Abrir um arquivo";

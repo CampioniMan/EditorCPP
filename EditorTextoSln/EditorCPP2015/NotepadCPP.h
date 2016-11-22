@@ -48,7 +48,7 @@ private:
 	Acao Adicionar(const ListaDuplaCirc<String> &lst, const Acao &dis);
 	Acao Remover(const ListaDuplaCirc<String> &lst, const Acao &dis);
 
-	int ehSobreescrever, corFundoAtual, corLetraAtual;
+	int ehSobreescrever, corFundoAtual, corLetraAtual, topo, base;
 	String dir;
 	ListaDuplaCirc<String> lista;
 	Pilha<Acao> acoesFeitas;

@@ -42,11 +42,11 @@ Intense White    -           15
 
 */
 
-NotepadCPP::NotepadCPP() : ehSobreescrever(ABRIR_EXISTENTE), corFundoAtual(0), corLetraAtual(7)
+NotepadCPP::NotepadCPP() : ehSobreescrever(ABRIR_EXISTENTE), corFundoAtual(0), corLetraAtual(7), topo(0), base(24)
 {
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_C_EVENT, true);
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_BREAK_EVENT, true);
-	hidecursor();
+	//hidecursor();
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_CLOSE_EVENT, true);
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_LOGOFF_EVENT, true);
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_SHUTDOWN_EVENT, true);
@@ -61,21 +61,21 @@ NotepadCPP::~NotepadCPP()
 	
 }
 
-NotepadCPP::NotepadCPP(const String& diretorio) : dir(diretorio), ehSobreescrever(ABRIR_EXISTENTE), corFundoAtual(0), corLetraAtual(7)
+NotepadCPP::NotepadCPP(const String& diretorio) : dir(diretorio), ehSobreescrever(ABRIR_EXISTENTE), corFundoAtual(0), corLetraAtual(7), topo(0), base(24)
 {
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_C_EVENT, true);
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_BREAK_EVENT, true);
-	hidecursor();
+	//hidecursor();
 	lista = ListaDuplaCirc<String>();
 	acoesFeitas = Pilha<Acao>();
 	acoesDesfeitas = Pilha<Acao>();
 }
 
-NotepadCPP::NotepadCPP(const String& diretorio, const int ehSobre) : ehSobreescrever(ehSobre), corFundoAtual(0), corLetraAtual(7)
+NotepadCPP::NotepadCPP(const String& diretorio, const int ehSobre) : ehSobreescrever(ehSobre), corFundoAtual(0), corLetraAtual(7), topo(0), base(24)
 {
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_C_EVENT, true);
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_BREAK_EVENT, true);
-	hidecursor();
+	//hidecursor();
 	acoesFeitas = Pilha<Acao>();
 	this->dir = String(diretorio);
 	lista = ListaDuplaCirc<String>();
@@ -149,15 +149,12 @@ void NotepadCPP::setForeGroundAndBackGroundColor(int BackGroundColor)
 void NotepadCPP::gotoxy(int x, int y)
 {
 	//setForeGroundAndBackGroundColor(0);
-	HANDLE stdOutput;
 	COORD pos;
-
-	stdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	pos.X = x;
 	pos.Y = y;
 
-	SetConsoleCursorPosition(stdOutput, pos);
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 	//setForeGroundAndBackGroundColor(1);
 }
 
@@ -361,29 +358,20 @@ void NotepadCPP::printarNaTela()
 {
 	int x = getACPx();
 	int y = getACPy();
-	String aux = lista.getAtual();
 	ClearScreen();
-	lista.iniciarPercursoSequencial();
-	while (lista.podePercorrer())
+	int indice = topo;
+	if (base > lista.length() - 1)
 	{
-		if (lista[y] == lista.getAtual())
-		{
-			int i = 0;
-			for (; i < x; i++)
-				cout << lista.getAtual()[i];
-			setForeGroundAndBackGroundColor(4);
-			cout << lista.getAtual()[i++];
-			setForeGroundAndBackGroundColor(0);
-			for (; i < lista.getAtual().length(); i++)
-				cout << lista.getAtual()[i];
-			cout << endl;
-		}
-		else
-		{
-			cout << lista.getAtual() << endl;
-		}
+		indice = lista.length() - 26;
+		topo = indice;
+		base = lista.length()-1;
 	}
-	lista.existe(aux); // posicionando os ponteiros
+
+	while (indice <= base-1)
+	{
+		cout << lista[indice++] << endl;
+	}
+	cout << lista[indice++];
 	gotoxy(x, y);
 }
 
@@ -406,23 +394,42 @@ void NotepadCPP::run()
 				c = _getch();
 				switch (c) {
 				case KEY_UP:
-					if (lista.getIndexAtual() != 0)
+					if (lista.getIndexAtual() > 0)
 					{
 						lista.voltar();
 						int lDepo = lista.getAtual().length();
 						if (lDepo-1 < indiceAtual)
 							indiceAtual = lDepo - 1;
-						gotoxy(indiceAtual, getACPy() - 1);
+						if (lista.getIndexAtual() < this->topo)
+						{
+							if (this->topo > 0)
+							{
+								this->base--;
+								this->topo--;
+							}
+						}
+						else
+							gotoxy(indiceAtual, getACPy() - 1);
 					}
 					break;
 				case KEY_DOWN:
-					if (lista.getIndexAtual() != lista.length()-1)//if (lista[lista.getIndiceAtual()] != lista[-1])
+					if (lista.getIndexAtual() < lista.length()-1)//if (lista[lista.getIndiceAtual()] != lista[-1])
 					{
 						lista.avancar();
 						int lDepo = lista.getAtual().length();
 						if (lDepo - 1 < indiceAtual)
 							indiceAtual = lDepo - 1;
-						gotoxy(indiceAtual, getACPy()+1);
+						if (lista.getIndexAtual() > this->base)
+						{
+							if (lista.length() >= this->base)
+							{
+								this->base++;
+								this->topo++;
+							}
+						}
+						else
+							gotoxy(indiceAtual, getACPy()+1);
+						
 					}
 					break;
 				case KEY_RIGHT:
