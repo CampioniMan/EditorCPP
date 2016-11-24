@@ -31,6 +31,14 @@ String::String(const char* original)
 	*this = aux; // utilizando o operator
 }
 
+String::String(const char caracter)
+{
+	this->minhaString = new char[81]();
+	*this->minhaString = caracter;
+	this->tamanho = 1;
+	this->tamanhoMax = 512;
+}
+
 String::String(const string &novaString) : 
 tamanhoMax((novaString.size() <= 512) ? 1024 : novaString.size()*2), tamanho(novaString.size())
 {

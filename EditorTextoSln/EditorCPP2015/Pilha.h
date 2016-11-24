@@ -143,6 +143,7 @@ protected:
 
 	NoLista<Tipo> getTopo() const
 	{
+		if (this->tamanhoAtual == 0) *(this->nos + this->tamanhoAtual);
 		return *(this->nos + this->tamanhoAtual - 1);
 	}
 private:

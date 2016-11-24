@@ -123,7 +123,7 @@ Acao NotepadCPP::CtrlH(const Acao &dis)
 
 Acao NotepadCPP::adicionar(const Acao &dis)
 {
-	if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX() - 1)
+	if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX())
 		this->acoesFeitas.empilhar(this->acoesFeitas.desempilhar().getDado() + dis);
 	
 	return this->acoesFeitas.getTopo().getDado();
@@ -591,7 +591,7 @@ void NotepadCPP::run()
 			{
 				
 			}
-			else if ( c== CTRL_Z)
+			else if (c == CTRL_Z)
 			{
 				Acao a = this->acoesFeitas.desempilhar().getDado();
 
@@ -602,7 +602,6 @@ void NotepadCPP::run()
 				String desfeita = this->lista[*a.getPosY()];
 				if (this->lista[*a.getPosY()].length() < MAXIMO_STRING)
 					this->lista[*a.getPosY()] = *a.getString();
-				break;
 			}
 		}
 	}
@@ -616,8 +615,8 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 		aux.inserir(c, indiceAtual++);
 	else
 		aux[indiceAtual++] = c;
-	acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICAO, getACPy(), getACPx()));
-	adicionar(Acao(String(c), ACAO_ADICAO, getACPy(), getACPx()));
+	//acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICAO, getACPy(), getACPx()));
+	adicionar(Acao(String((char)c), ACAO_ADICAO, getACPy(), getACPx()));
 	lista.setAtual(aux);
 	gotoxy(indiceAtual, getACPy());
 }

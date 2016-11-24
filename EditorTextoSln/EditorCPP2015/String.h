@@ -11,6 +11,7 @@ class String
 		String(const String &original);
 		String(const string &original);
 		String(const char* original);
+		String(const char caracter);
 		String(const int &novoTamanho);
 		String(const int &n, char novaString[]);
 		String();
