@@ -7,32 +7,28 @@
 //-------------------------------------------------------------CONSTRUTORES/DESTRUTOR--------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-Acao::Acao(const String *novasLinhas, const String &novoTipo, const unsigned int *novaLinhaOcorren, const unsigned int novoTam) : tipo(novoTipo), tamanho(novoTam)
+Acao::Acao(const String *novasLinhas, const String &novoTipo, const unsigned int *novoPosY, const unsigned int novoTam, const unsigned int novoPosX) : tipo(novoTipo), tamanho(novoTam), posX(novoPosX)
 {
-	this->aloca(novasLinhas, novaLinhaOcorren, novoTam);
+	this->aloca(novasLinhas, novoPosY, novoTam);
 }
 
-Acao::Acao(const String &novaLinha, const String &novoTipo, const unsigned int novaLinhaOcorren) : tipo(novoTipo), tamanho(1)
+Acao::Acao(const String &novaLinha, const String &novoTipo, const unsigned int novoPosY, const unsigned int novoPosX) : tipo(novoTipo), posX(novoPosX)
 {
 	this->palavraMudou = (String*)malloc(sizeof(String));
-	this->linhaOcorrencia = (unsigned int*)malloc(sizeof(unsigned int));
+	this->posY = (unsigned int*)malloc(sizeof(unsigned int));
 
 	this->setString(novaLinha, 0);
-	this->setLinhaOcorrencia(novaLinhaOcorren, 0);
+	this->setPosY(novoPosY, 0);
 }
 
-Acao::Acao(const Acao &original) : tipo(original.tipo), tamanho(original.tamanho)
+Acao::Acao(const Acao &original) : tipo(original.tipo), tamanho(original.tamanho), posX(original.posX)
 {
-	this->aloca(original.palavraMudou, original.linhaOcorrencia, original.tamanho);
+	this->aloca(original.palavraMudou, original.posY, original.tamanho);
 }
 
-Acao::Acao() : tipo(""), tamanho(1)
+Acao::Acao()
 {
-	this->palavraMudou = (String*)malloc(sizeof(String));
-	this->linhaOcorrencia = (unsigned int*)malloc(sizeof(unsigned int));
-
-	this->setString(String(""), 0);
-	this->setLinhaOcorrencia(0, 0);
+	*this = Acao(String(""), String(""), 0, 0);
 }
 
 Acao::~Acao()
@@ -44,7 +40,7 @@ Acao::~Acao()
 //-------------------------------------------------------------CONSTRUTORES DE CÓPIA---------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-Acao* Acao::clone() const
+Acao* Acao::clone()
 {
 	return new Acao(*this);
 }
@@ -53,15 +49,16 @@ void Acao::operator= (const Acao& primeira)
 {
 	int i = this->tamanho;
 	this->tamanho = primeira.tamanho;
-	this->linhaOcorrencia = primeira.linhaOcorrencia;
+	this->posY = primeira.posY;
 	this->tipo = primeira.tipo;
+	this->posX = primeira.posX;
 
 	if (this->tamanho != 1 && i > 0)
 	{
 		free(this->palavraMudou);
-		free(this->linhaOcorrencia);
+		free(this->posY);
 	}
-	this->aloca(primeira.palavraMudou, primeira.linhaOcorrencia, primeira.tamanho);
+	this->aloca(primeira.palavraMudou, primeira.posY, primeira.tamanho);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -78,14 +75,19 @@ String Acao::getTipo() const
 	return this->tipo;
 }
 
-unsigned int* Acao::getLinhasOcorrencias() const
+unsigned int Acao::getPosX() const
 {
-	return this->linhaOcorrencia;
+	return this->posX;
 }
 
-unsigned int Acao::getLinhaOcorrencia(const unsigned int pos) const
+unsigned int* Acao::getPosY() const
 {
-	return *(this->linhaOcorrencia + pos);
+	return this->posY;
+}
+
+unsigned int Acao::getPosY(const unsigned int pos) const
+{
+	return *(this->posY + pos);
 }
 
 unsigned int Acao::getTamanho() const
@@ -121,17 +123,22 @@ void Acao::setTipo(const String &novoTipo)
 	this->tipo = novoTipo;
 }
 
-void Acao::setLinhasOcorrencias(const unsigned int* novasLinhas)
+void Acao::setPosX(const unsigned int novoPosX)
 {
-	free(this->linhaOcorrencia);
-	this->linhaOcorrencia = (unsigned int*)malloc(this->tamanho * sizeof(unsigned int));
-	for (int i = 0; i < this->tamanho; i++)
-		*(this->linhaOcorrencia + i) = *(novasLinhas + i);
+	this->posX = novoPosX;
 }
 
-void Acao::setLinhaOcorrencia(const unsigned int novoLinha, const unsigned int pos)
+void Acao::setPosY(const unsigned int* novoPosY)
 {
-	*(this->linhaOcorrencia + pos) = novoLinha;
+	free(this->posY);
+	this->posY = (unsigned int*)malloc(this->tamanho * sizeof(unsigned int));
+	for (int i = 0; i < this->tamanho; i++)
+		*(this->posY + i) = *(novoPosY + i);
+}
+
+void Acao::setPosY(const unsigned int novoPosY, const unsigned int pos)
+{
+	*(this->posY + pos) = novoPosY;
 }
 
 void Acao::setTamanho(const unsigned int novoTam)
@@ -145,33 +152,28 @@ void Acao::setTamanho(const unsigned int novoTam)
 //---------------------------------------------------------------MÉTODOS AUXILIARES-----------------------------------------------------------------------//
 //--------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-Acao Acao::acaoNull()
-{
-	Acao *acao = NULL;
-	return *acao;
-}
-
 void Acao::deletarTudo()
 {
 	if (palavraMudou->length() < 0 || tipo.length() < 0) return;
 	this->palavraMudou->deletarTudo();
 	this->tipo.deletarTudo();
-	this->linhaOcorrencia = 0;
+	this->posY = 0;
+	this->posX = 0;
 }
 
-void Acao::aloca(const String *novasLinhas, const unsigned int *novaLinhaOcorren, unsigned int novoTam, unsigned int ehStr, unsigned int ehLinhas)
+void Acao::aloca(const String *novasString, const unsigned int *novoPosY, unsigned int novoTam, unsigned int ehStr, unsigned int ehLinhas)
 {
 	if (ehStr > 0)
 	{
 		this->palavraMudou = (String*)malloc(novoTam * sizeof(String));
 		for (int i = 0; i < novoTam; i++)
-			*(this->palavraMudou + i) = *(novasLinhas + i);
+			*(this->palavraMudou + i) = *(novoPosY + i);
 	}
 	if (ehLinhas > 0)
 	{
-		this->linhaOcorrencia = (unsigned int*)malloc(novoTam * sizeof(unsigned int));
+		this->posY = (unsigned int*)malloc(novoTam * sizeof(unsigned int));
 		for (int i = 0; i < novoTam; i++)
-			*(this->linhaOcorrencia + i) = *(novaLinhaOcorren + i);
+			*(this->posY + i) = *(novoPosY + i);
 	}
 }
 
@@ -183,5 +185,5 @@ String Acao::toString() const
 	{
 		txt = txt + *(this->palavraMudou + i);
 	}
-	return String((String)txt + (string)" " + this->tipo + (string)" " + (int)this->tamanho + (string)" " + (int)this->linhaOcorrencia);
+	return String((String)txt + (string)" " + this->tipo + (string)" " + (int)this->tamanho + (string)" " + (int)this->posY);
 }
