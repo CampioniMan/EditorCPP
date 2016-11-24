@@ -12,7 +12,7 @@ Acao::Acao(const String *novasLinhas, const String &novoTipo, const unsigned int
 	this->aloca(novasLinhas, novaLinhaOcorren, novoTam);
 }
 
-Acao::Acao(const String &novaLinha, const String &novoTipo, const unsigned int novaLinhaOcorren) : tipo(novoTipo)
+Acao::Acao(const String &novaLinha, const String &novoTipo, const unsigned int novaLinhaOcorren) : tipo(novoTipo), tamanho(1)
 {
 	this->palavraMudou = (String*)malloc(sizeof(String));
 	this->linhaOcorrencia = (unsigned int*)malloc(sizeof(unsigned int));

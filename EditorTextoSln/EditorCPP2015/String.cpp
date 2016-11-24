@@ -195,6 +195,17 @@ void String::operator= (const String &primeira)
 		this->inserir(primeira[i]);
 }
 
+String String::operator*(const int & qtos)
+{
+	String ret(qtos * sizeof(this->minhaString) + 1);
+
+	for (int i = 0; i < qtos; i++)
+		for (int index = 0; index < this->tamanho; index++)
+			ret[index + i * this->tamanho] = (*this)[index];
+	ret[ret.length()-1] = String::charNull;
+	return ret;
+}
+
 String operator+ (const String &th, const String &outra)
 {
 	char *arrai = new char[th.tamanho + outra.length() + 1]();

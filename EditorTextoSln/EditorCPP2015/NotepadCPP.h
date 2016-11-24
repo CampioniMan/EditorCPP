@@ -35,6 +35,7 @@ private:
 	bool abrirArquivo(const String& dir);
 	bool criarArquivo(const String& dir);
 	bool limparArquivo(const String& dir);
+	void inserirNaAtual(char c, int &indiceAtual);
 	void inserirComRecursion(const char &ASerInserido);
 	int primeiraComEspaco(int);
 	void printarNaTela();

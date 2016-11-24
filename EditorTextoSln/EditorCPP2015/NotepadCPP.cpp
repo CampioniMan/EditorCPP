@@ -16,6 +16,7 @@
 #define DELETE 83
 #define BACKSPACE 8
 #define MAXIMO_STRING 78
+#define SETAS_CRASE -32
 
 /*
 
@@ -362,12 +363,21 @@ void NotepadCPP::printarNaTela()
 	int indice = topo;
 	if (base > lista.length() - 1)
 	{
-		indice = lista.length() - 26;
-		topo = indice;
-		base = lista.length()-1;
+		if (topo == 0)
+		{
+			indice = lista.length() - 25;
+			indice = topo;
+			base = lista.length() - 1;
+		}
+		else
+		{
+			indice = lista.length() - 25;
+			topo = indice;
+			base = lista.length() - 1;
+		}
 	}
 
-	while (indice <= base-1)
+	while (indice < base)
 	{
 		cout << lista[indice++] << endl;
 	}
@@ -389,139 +399,128 @@ void NotepadCPP::run()
 			printarNaTela();
 			while (!_kbhit()) {}
 			char c = _getch();
-			if (c == -32) // setas
+			if (c == SETAS_CRASE) // setas
 			{
 				c = _getch();
-				switch (c) {
-				case KEY_UP:
-					if (lista.getIndexAtual() > 0)
-					{
-						lista.voltar();
-						int lDepo = lista.getAtual().length();
-						if (lDepo-1 < indiceAtual)
-							indiceAtual = lDepo - 1;
-						if (lista.getIndexAtual() < this->topo)
-						{
-							if (this->topo > 0)
-							{
-								this->base--;
-								this->topo--;
-							}
-						}
-						else
-							gotoxy(indiceAtual, getACPy() - 1);
-					}
-					break;
-				case KEY_DOWN:
-					if (lista.getIndexAtual() < lista.length()-1)//if (lista[lista.getIndiceAtual()] != lista[-1])
-					{
-						lista.avancar();
-						int lDepo = lista.getAtual().length();
-						if (lDepo - 1 < indiceAtual)
-							indiceAtual = lDepo - 1;
-						if (lista.getIndexAtual() > this->base)
-						{
-							if (lista.length() >= this->base)
-							{
-								this->base++;
-								this->topo++;
-							}
-						}
-						else
-							gotoxy(indiceAtual, getACPy()+1);
-						
-					}
-					break;
-				case KEY_RIGHT:
-					if (indiceAtual < lista.getAtual().length()) // vai 1 a mais para a direita
-					{
-						gotoxy(++indiceAtual, getACPy());
-					}
-					else
-					{
-						if (lista.getIndexAtual() != lista.length() - 1)
-						{
-							lista.avancar();
-							indiceAtual = 0;
-							gotoxy(indiceAtual, getACPy() + 1);
-						}
-					}
-					break;
-				case KEY_LEFT:
-					if (indiceAtual > 0)
-						gotoxy(--indiceAtual, getACPy());
-					else
-					{
-						if (lista.getIndexAtual() != 0)
+				switch (c) 
+				{
+					case KEY_UP:
+						if (lista.getIndexAtual() > 0)
 						{
 							lista.voltar();
-							indiceAtual = lista.getAtual().length();
-							gotoxy(indiceAtual, getACPy() - 1);
+							int lDepo = lista.getAtual().length();
+							if (lDepo - 1 < indiceAtual)
+								indiceAtual = lDepo - 1;
+							if (lista.getIndexAtual() < this->topo)
+							{
+								if (this->topo > 0)
+								{
+									this->base--;
+									this->topo--;
+								}
+							}
+							else
+								gotoxy(indiceAtual, getACPy() - 1);
 						}
-					}
-					break;
-				case END:
-					indiceAtual = lista.getAtual().length();
-					gotoxy(indiceAtual, getACPy());
-					break;
+						break;
+					case KEY_DOWN:
+						if (lista.getIndexAtual() < lista.length() - 1)//if (lista[lista.getIndiceAtual()] != lista[-1])
+						{
+							lista.avancar();
+							int lDepo = lista.getAtual().length();
+							if (lDepo - 1 < indiceAtual)
+								indiceAtual = lDepo - 1;
+							if (lista.getIndexAtual() > this->base)
+							{
+								if (lista.length() >= this->base)
+								{
+									this->base++;
+									this->topo++;
+								}
+							}
+							else
+								gotoxy(indiceAtual, getACPy() + 1);
 
-				case HOME:
-					indiceAtual = 0;
-					gotoxy(indiceAtual, getACPy());
-					break;
-				case CTRL_S:
+						}
+						break;
+					case KEY_RIGHT:
+						if (indiceAtual < lista.getAtual().length()) // vai 1 a mais para a direita
+						{
+							gotoxy(++indiceAtual, getACPy());
+						}
+						else
+						{
+							if (lista.getIndexAtual() != lista.length() - 1)
+							{
+								lista.avancar();
+								indiceAtual = 0;
+								gotoxy(indiceAtual, getACPy() + 1);
+							}
+						}
+						break;
+					case KEY_LEFT:
+						if (indiceAtual > 0)
+							gotoxy(--indiceAtual, getACPy());
+						else
+						{
+							if (lista.getIndexAtual() != 0)
+							{
+								lista.voltar();
+								indiceAtual = lista.getAtual().length();
+								gotoxy(indiceAtual, getACPy() - 1);
+							}
+						}
+						break;
+					case END:
+						indiceAtual = lista.getAtual().length();
+						gotoxy(indiceAtual, getACPy());
+						break;
+
+					case HOME:
+						indiceAtual = 0;
+						gotoxy(indiceAtual, getACPy());
+						break;
+					case CTRL_S:
 					{
 						cout << "Ctrl+S" << endl;
 						break;
 					}
-				case CTRL_C:
+					case CTRL_C:
 					{
 						cout << "Ctrl+C" << endl;
 						break;
 					}
-				case CTRL_Z:
+					case CTRL_Z:
 					{
 						cout << "Ctrl+Z" << endl;
 						break;
 					}
-				case CTRL_Y:
+					case CTRL_Y:
 					{
 						cout << "Ctrl+Y" << endl;
 						break;
 					}
-				case DELETE:
+					case DELETE:
 					{
 						cout << "delete" << endl;
 						break;
 					}
-				case 17:
+					case 17:
 					{
 						setForeGroundAndBackGroundColor(0);
 						break;
 					}
-				default:
-					break;
+					default:
+					{
+						inserirNaAtual(SETAS_CRASE, indiceAtual);
+						inserirNaAtual(c, indiceAtual);
+						break;
+					}
 				}
 			}
 			else if (c >= 32) // caracter imprimível
 			{
-				/*
-					se a linha atual está cheia
-					  enquanto não puder inserir na atual
-						catar o último caracter e removê-lo
-						adicionar no proximo
-					  
-				*/
-				String aux = lista.getAtual();
-				
-				if (aux.length() != indiceAtual+1)
-					aux.inserir(c, indiceAtual++);
-				else
-					aux[indiceAtual++] = c;
-				Acao novaAcao = Acao(lista.getAtual(), ACAO_ADICAO, getACPy());
-				acoesFeitas.empilhar(novaAcao);
-				lista.setAtual(aux);
-				gotoxy(indiceAtual, getACPy());
+				inserirNaAtual(c, indiceAtual);
 			}
 			else if (c == BACKSPACE)
 			{
@@ -560,6 +559,19 @@ void NotepadCPP::run()
 			}
 		}
 	}
+}
+
+void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
+{
+	String aux = lista.getAtual();
+
+	if (aux.length() != indiceAtual + 1)
+		aux.inserir(c, indiceAtual++);
+	else
+		aux[indiceAtual++] = c;
+	acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICAO, getACPy()));
+	lista.setAtual(aux);
+	gotoxy(indiceAtual, getACPy());
 }
 
 void NotepadCPP::inserirComRecursion(const char &ASerInserido)
