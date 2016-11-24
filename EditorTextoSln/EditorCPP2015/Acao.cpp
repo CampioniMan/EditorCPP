@@ -66,14 +66,14 @@ Acao operator+ (const Acao& primeiro, const Acao& segundo)
 	Acao a = Acao();
 	if (segundo.tipo == primeiro.tipo)
 	{
-		String txt = String();
+		string txt = string();
 		for (int i = 0; i < primeiro.getTamanho(); i++)
-			txt = txt + primeiro.getString(i);
+			txt = txt + primeiro.getString(i).toString();
 
 		for (int i = 0; i < segundo.getTamanho(); i++)
-			txt = txt + segundo.getString(i);
+			txt = txt + segundo.getString(i).toString();
 
-		a = Acao(txt, segundo.getTipo(), primeiro.getPosY(0), primeiro.getPosX());
+		a = Acao(String(txt), segundo.getTipo(), primeiro.getPosY(0), segundo.getPosX());
 	}
 	return a;
 }

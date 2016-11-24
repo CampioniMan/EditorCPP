@@ -123,7 +123,9 @@ Acao NotepadCPP::CtrlH(const Acao &dis)
 
 Acao NotepadCPP::adicionar(const Acao &dis)
 {
-	if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX())
+	if (this->acoesFeitas.ehVazia()) this->acoesFeitas.empilhar(dis);
+
+	else if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX() - 1)
 		this->acoesFeitas.empilhar(this->acoesFeitas.desempilhar().getDado() + dis);
 	
 	return this->acoesFeitas.getTopo().getDado();
