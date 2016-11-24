@@ -11,6 +11,7 @@
 #define CTRL_S 19
 #define CTRL_Z 26
 #define CTRL_Y 25
+#define CTRL_B 2
 #define END 79
 #define HOME 71
 #define DELETE 83
@@ -83,51 +84,65 @@ NotepadCPP::NotepadCPP(const String& diretorio, const int ehSobre) : ehSobreescr
 	acoesDesfeitas = Pilha<Acao>();
 }
 
-Acao NotepadCPP::CtrlY(const ListaDuplaCirc<String> &lst, const Acao &dis)
+Acao NotepadCPP::CtrlY(const Acao &dis, unsigned int posX)
 {
 	String *ptr = (String*)malloc(dis.getTamanho() * sizeof(String));
 	for (int i = 0; i < dis.getTamanho(); i++)
 	{
-		*(ptr + i) = lst[dis.getLinhaOcorrencia(i)];
-		lst[dis.getLinhaOcorrencia(i)] = *(dis.getString() + i);
+		*(ptr + i) = this->lista[dis.getPosY(i)];
+		this->lista[dis.getPosY(i)] = *(dis.getString() + i);
 	}
-	return Acao(ptr, String("Z"), dis.getLinhasOcorrencias(), dis.getTamanho());
+	return Acao(ptr, String("Z"), dis.getPosY(), dis.getTamanho(), posX);
 }
 
-Acao NotepadCPP::CtrlZ(const ListaDuplaCirc<String> &lst, const Acao &dis)
+Acao NotepadCPP::CtrlZ(const Acao &dis, unsigned int posX)
 {
 	String *ptr = (String*)malloc(dis.getTamanho() * sizeof(String));
 	for (int i = 0; i < dis.getTamanho(); i++)
 	{
-		*(ptr + i) = lst[dis.getLinhaOcorrencia(i)];
-		lst[dis.getLinhaOcorrencia(i)] = *(dis.getString() + i);
+		*(ptr + i) = this->lista[dis.getPosY(i)];
+		this->lista[dis.getPosY(i)] = *(dis.getString() + i);
 	}
-	return Acao(ptr, String("Y"), dis.getLinhasOcorrencias(), dis.getTamanho());
+	return Acao(ptr, String("Y"), dis.getPosY(), dis.getTamanho(), posX);
 }
 
-Acao NotepadCPP::CtrlC(const ListaDuplaCirc<String> &lst, const Acao &dis)
+Acao NotepadCPP::CtrlC(const Acao &dis)
 {
 	return Acao();
 }
 
-Acao NotepadCPP::CtrlX(const ListaDuplaCirc<String> &lst, const Acao &dis)
+Acao NotepadCPP::CtrlX(const Acao &dis)
 {
 	return Acao();
 }
 
-Acao NotepadCPP::CtrlH(const ListaDuplaCirc<String> &lst, const Acao &dis)
+Acao NotepadCPP::CtrlH(const Acao &dis)
 {
 	return Acao();
 }
 
-Acao NotepadCPP::Adicionar(const ListaDuplaCirc<String> &lst, const Acao &dis)
+Acao NotepadCPP::adicionar(const Acao &dis)
 {
-	return Acao();
+	if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX() - 1)
+		this->acoesFeitas.empilhar(this->acoesFeitas.desempilhar().getDado() + dis);
+	
+	return this->acoesFeitas.getTopo().getDado();
 }
 
-Acao NotepadCPP::Remover(const ListaDuplaCirc<String> &lst, const Acao &dis)
+Acao NotepadCPP::removerParaTras(const Acao &dis)
 {
-	return Acao();
+	if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX() + 1)
+		this->acoesFeitas.empilhar(dis + this->acoesFeitas.desempilhar().getDado());
+
+	return this->acoesFeitas.getTopo().getDado();
+}
+
+Acao NotepadCPP::removerParaFrente(const Acao &dis)
+{
+	if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX() && this->acoesFeitas.getTopo().getDado().getTipo() == dis.getTipo())
+		this->acoesFeitas.empilhar(this->acoesFeitas.desempilhar().getDado() + dis);
+
+	return this->acoesFeitas.getTopo().getDado();
 }
 
 bool NotepadCPP::fexists(const std::string& name) {
@@ -388,7 +403,7 @@ void NotepadCPP::printarNaTela()
 void NotepadCPP::run()
 {
 	String vaiSalvar = 'N';
-	int indiceAtual = 0;
+	int indiceAtual = 0, qtosCtrlC = 0, posXIni = 0, posYIni = 0, posXFim = 0, posYFim = 0;
 	if (this->abrirArquivo(this->dir))
 	{
 		lista.iniciarPercursoSequencial();
@@ -487,12 +502,27 @@ void NotepadCPP::run()
 					}
 					case CTRL_C:
 					{
-						cout << "Ctrl+C" << endl;
-						break;
-					}
-					case CTRL_Z:
-					{
-						cout << "Ctrl+Z" << endl;
+						if (++qtosCtrlC == 2)
+						{
+							posXFim = this->getACPx();
+							posYFim = this->getACPy();
+
+							if (posYIni == posYFim) toClipboard(this->lista[posYIni].substr(posXIni, posXFim));
+							else if (posYFim == posYIni + 1) toClipboard(this->lista[posYIni].substr(posXIni, this->lista[posYIni].length()) + this->lista[posYFim].substr(0, posXFim));
+							else
+							{
+								String txt = String(this->lista[posYIni].substr(posXIni, this->lista[posYIni].length()));
+								for (int i = posYIni + 1; i < posYFim; i++)
+									txt = txt + this->lista[i];
+								toClipboard(txt + this->lista[posYFim].substr(0, posXFim));
+							}
+						}
+
+						else
+						{
+							posXIni = this->getACPx();
+							posYIni = this->getACPy();
+						}
 						break;
 					}
 					case CTRL_Y:
@@ -557,6 +587,23 @@ void NotepadCPP::run()
 				//Acao novaAcao = Acao(lista.getAtual(), ACAO_ADICAO, getACPy());
 				//acoesFeitas.empilhar(novaAcao);
 			}
+			else if (c == CTRL_B)
+			{
+				
+			}
+			else if ( c== CTRL_Z)
+			{
+				Acao a = this->acoesFeitas.desempilhar().getDado();
+
+				//for (int i = 0; i < a.getTamanho(); i++)
+				//{
+
+				//}
+				String desfeita = this->lista[*a.getPosY()];
+				if (this->lista[*a.getPosY()].length() < MAXIMO_STRING)
+					this->lista[*a.getPosY()] = *a.getString();
+				break;
+			}
 		}
 	}
 }
@@ -569,7 +616,8 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 		aux.inserir(c, indiceAtual++);
 	else
 		aux[indiceAtual++] = c;
-	acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICAO, getACPy()));
+	acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICAO, getACPy(), getACPx()));
+	adicionar(Acao(String(c), ACAO_ADICAO, getACPy(), getACPx()));
 	lista.setAtual(aux);
 	gotoxy(indiceAtual, getACPy());
 }

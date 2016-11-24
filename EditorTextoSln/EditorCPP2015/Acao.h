@@ -15,9 +15,11 @@ public:
 	// Construtores de Cópia
 	Acao* clone();
 	void operator= (const Acao& primeira);
+	friend Acao operator+ (const Acao& segundo, const Acao& primeiro);
 
 	// Getters e Setters
 	String* getString() const;
+	String getString(const unsigned int pos) const;
 	String getTipo() const;
 	unsigned int getPosX() const;
 	unsigned int* getPosY() const;
@@ -39,7 +41,7 @@ public:
 protected:
 	// Métodods Auxiliares
 	void deletarTudo();
-	void aloca(const String *novasString, const unsigned int *novoPosY, unsigned int novoTam = 1, unsigned int ehStr = 0, unsigned int ehLinhas = 1);
+	void aloca(const String *novasString, const unsigned int *novoPosY, unsigned int novoTam = 1, unsigned int ehStr = 1, unsigned int ehLinhas = 1);
 private:
 	// Atributos
 	String *palavraMudou, tipo;

@@ -12,7 +12,7 @@ Acao::Acao(const String *novasLinhas, const String &novoTipo, const unsigned int
 	this->aloca(novasLinhas, novoPosY, novoTam);
 }
 
-Acao::Acao(const String &novaLinha, const String &novoTipo, const unsigned int novoPosY, const unsigned int novoPosX) : tipo(novoTipo), posX(novoPosX)
+Acao::Acao(const String &novaLinha, const String &novoTipo, const unsigned int novoPosY, const unsigned int novoPosX) : tipo(novoTipo), posX(novoPosX), tamanho(1)
 {
 	this->palavraMudou = (String*)malloc(sizeof(String));
 	this->posY = (unsigned int*)malloc(sizeof(unsigned int));
@@ -33,7 +33,7 @@ Acao::Acao()
 
 Acao::~Acao()
 {
-	free(this->palavraMudou);
+//	free(this->palavraMudou);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -61,6 +61,23 @@ void Acao::operator= (const Acao& primeira)
 	this->aloca(primeira.palavraMudou, primeira.posY, primeira.tamanho);
 }
 
+Acao operator+ (const Acao& primeiro, const Acao& segundo)
+{
+	Acao a = Acao();
+	if (segundo.tipo == primeiro.tipo)
+	{
+		String txt = String();
+		for (int i = 0; i < primeiro.getTamanho(); i++)
+			txt = txt + primeiro.getString(i);
+
+		for (int i = 0; i < segundo.getTamanho(); i++)
+			txt = txt + segundo.getString(i);
+
+		a = Acao(txt, segundo.getTipo(), primeiro.getPosY(0), primeiro.getPosX());
+	}
+	return a;
+}
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
 //---------------------------------------------------------------GETTERS E SETTERS-----------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -68,6 +85,11 @@ void Acao::operator= (const Acao& primeira)
 String* Acao::getString() const
 {
 	return this->palavraMudou;
+}
+
+String Acao::getString(const unsigned int pos) const
+{
+	return *(this->palavraMudou + pos);
 }
 
 String Acao::getTipo() const

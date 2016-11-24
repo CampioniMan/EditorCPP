@@ -197,7 +197,7 @@ void String::operator= (const String &primeira)
 
 String String::operator*(const int & qtos)
 {
-	String ret(qtos * sizeof(this->minhaString) + 1);
+	String ret((int)(qtos * sizeof(this->minhaString) + 1));
 
 	for (int i = 0; i < qtos; i++)
 		for (int index = 0; index < this->tamanho; index++)

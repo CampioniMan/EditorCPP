@@ -41,13 +41,14 @@ private:
 	void printarNaTela();
 	int getACPx();
 	int getACPy();
-	Acao CtrlZ(const ListaDuplaCirc<String> &lst, const Acao &dis);
-	Acao CtrlY(const ListaDuplaCirc<String> &lst, const Acao &dis);
-	Acao CtrlX(const ListaDuplaCirc<String> &lst, const Acao &dis);
-	Acao CtrlC(const ListaDuplaCirc<String> &lst, const Acao &dis);
-	Acao CtrlH(const ListaDuplaCirc<String> &lst, const Acao &dis);
-	Acao Adicionar(const ListaDuplaCirc<String> &lst, const Acao &dis);
-	Acao Remover(const ListaDuplaCirc<String> &lst, const Acao &dis);
+	Acao CtrlZ(const Acao &dis, unsigned int posX);
+	Acao CtrlY(const Acao &dis, unsigned int posX);
+	Acao CtrlX(const Acao &dis);
+	Acao CtrlC(const Acao &dis);
+	Acao CtrlH(const Acao &dis);
+	Acao adicionar(const Acao &dis);
+	Acao removerParaTras(const Acao &dis);
+	Acao removerParaFrente(const Acao &dis);
 
 	int ehSobreescrever, corFundoAtual, corLetraAtual, topo, base;
 	String dir;
