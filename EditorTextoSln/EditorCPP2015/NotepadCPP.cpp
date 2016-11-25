@@ -547,27 +547,39 @@ void NotepadCPP::run()
 			else if (c == BACKSPACE)
 			{
 				String aux = lista.getAtual();
-				if (indiceAtual == 0)
+				if (indiceAtual == 0) // 0 no X
 				{
-					String anteAux = lista[lista.getIndexAtual() - 1];
-					if (aux.length() + anteAux.length() <= MAXIMO_STRING)
+					if (lista.getIndexAtual() != 0) // não é o primeiro
 					{
-						lista[lista.getIndexAtual() - 1] = anteAux + aux;
-						lista.removaAtual();
-						indiceAtual = anteAux.length();
-						gotoxy(indiceAtual, getACPy() - 1);
-						lista.voltar();
-					}
-					else if (anteAux.length() < MAXIMO_STRING)
-					{
-						int qtasPegar = MAXIMO_STRING - anteAux.length();
-						lista[lista.getIndexAtual() - 1] = anteAux + aux.substr(0, qtasPegar);
-						String oioioioio = lista[lista.getIndexAtual() - 1];
-						aux.deletar(0, qtasPegar);
-						lista[lista.getIndexAtual()] = aux;
-						indiceAtual = anteAux.length();
-						gotoxy(indiceAtual, getACPy()-1);
-						//lista.voltar();
+						String anteAux = lista[lista.getIndexAtual() - 1];
+						if (aux.length() + anteAux.length() <= MAXIMO_STRING)
+						{
+							lista[lista.getIndexAtual() - 1] = anteAux + aux;
+							lista.removaAtual();
+							indiceAtual = anteAux.length();
+							if (lista.getIndexAtual() != lista.length() - 1 && topo == 0) // se não for o último e o topo é o primeiro
+							{
+								gotoxy(indiceAtual, getACPy());
+							}
+							else
+							{
+								gotoxy(indiceAtual, getACPy()-1);
+							}
+							lista.voltar();
+						}
+						else if (anteAux.length() < MAXIMO_STRING)
+						{
+							int qtasPegar = MAXIMO_STRING - anteAux.length();
+							lista[lista.getIndexAtual() - 1] = anteAux + aux.substr(0, qtasPegar);
+							String oioioioio = lista[lista.getIndexAtual() - 1];
+							aux.deletar(0, qtasPegar);
+							lista[lista.getIndexAtual()] = aux;
+							indiceAtual = anteAux.length();
+							gotoxy(indiceAtual, getACPy() - 1);
+							lista.avancar();
+							lista.voltar();
+							lista.avancar();
+						}
 					}
 				}
 				else

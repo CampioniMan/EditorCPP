@@ -152,6 +152,22 @@ void String::inserir(const char &letra)
 	this->tamanho++;
 }
 
+void String::inserir(const String &letra, const unsigned int &posicao) // não precisa verificar o tamanhoMax
+{
+	if (cheia())
+		return;
+
+	*this = this->substr(0, posicao) + letra + this->substr(posicao, this->tamanho-1);
+}
+
+void String::inserir(const String &letra)
+{
+	if (cheia())
+		return;
+
+	*this = this->minhaString + letra;
+}
+
 String String::substr(int posIni, int qtos)
 {
 	String ret(qtos);
