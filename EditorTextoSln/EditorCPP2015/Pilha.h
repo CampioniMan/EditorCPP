@@ -131,6 +131,7 @@ protected:
 		}
 
 		(this->nos + this->tamanhoAtual - 1)->setProximo(no);
+		no.setAnterior((this->nos + this->tamanhoAtual - 1));
 		*(this->nos + this->tamanhoAtual++) = no;
 		return NoLista<Tipo>();
 	}

@@ -15,6 +15,7 @@ public:
 	// Construtores de Cópia
 	Acao* clone();
 	void operator= (const Acao& primeira);
+	int ehMesmoTipo(const Acao& outra) const;
 	friend Acao operator+ (const Acao& segundo, const Acao& primeiro);
 
 	// Getters e Setters
@@ -49,7 +50,8 @@ private:
 	void(*func)(const ListaDuplaCirc<String> &lst, const Acao &dis);
 };
 
-const static String ACAO_ADICAO = "A";
+const static String ACAO_ADDLI = "ALI";
+const static String ACAO_ADDLE = "ALE";
 const static String ACAO_REMOVE = "R";
 const static String ACAO_CTRL_Z = "Z";
 const static String ACAO_CTRL_Y = "Y";

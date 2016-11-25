@@ -61,6 +61,12 @@ void Acao::operator= (const Acao& primeira)
 	this->aloca(primeira.palavraMudou, primeira.posY, primeira.tamanho);
 }
 
+int Acao::ehMesmoTipo(const Acao& outra) const
+{
+	if (this->tipo == outra.tipo) return 1;
+	return 0;
+}
+
 Acao operator+ (const Acao& primeiro, const Acao& segundo)
 {
 	Acao a = Acao();

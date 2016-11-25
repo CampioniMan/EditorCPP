@@ -121,16 +121,6 @@ Acao NotepadCPP::CtrlH(const Acao &dis)
 	return Acao();
 }
 
-Acao NotepadCPP::adicionar(const Acao &dis)
-{
-	if (this->acoesFeitas.ehVazia()) this->acoesFeitas.empilhar(dis);
-
-	else if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX() - 1)
-		this->acoesFeitas.empilhar(this->acoesFeitas.desempilhar().getDado() + dis);
-	
-	return this->acoesFeitas.getTopo().getDado();
-}
-
 Acao NotepadCPP::removerParaTras(const Acao &dis)
 {
 	if (this->acoesFeitas.getTopo().getDado().getPosX() == dis.getPosX() + 1)
@@ -595,15 +585,14 @@ void NotepadCPP::run()
 			}
 			else if (c == CTRL_Z)
 			{
-				Acao a = this->acoesFeitas.desempilhar().getDado();
-
-				//for (int i = 0; i < a.getTamanho(); i++)
-				//{
-
-				//}
-				String desfeita = this->lista[*a.getPosY()];
-				if (this->lista[*a.getPosY()].length() < MAXIMO_STRING)
-					this->lista[*a.getPosY()] = *a.getString();
+				if (!this->acoesFeitas.ehVazia())
+				{
+					Acao a = this->acoesFeitas.desempilhar().getDado();
+					String desfeita = this->lista[*a.getPosY()];
+					if (this->lista[*a.getPosY()].length() < MAXIMO_STRING)
+						this->lista[*a.getPosY()] = *a.getString();
+					this->gotoxy(a.getPosX(), a.getPosY(0));
+				}
 			}
 		}
 	}
@@ -617,10 +606,11 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 		aux.inserir(c, indiceAtual++);
 	else
 		aux[indiceAtual++] = c;
-	//acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICAO, getACPy(), getACPx()));
-	adicionar(Acao(String((char)c), ACAO_ADICAO, getACPy(), getACPx()));
-	lista.setAtual(aux);
-	gotoxy(indiceAtual, getACPy());
+
+	if (this->acoesFeitas.getTopo().getDado().getPosX() == this->getACPx() && 
+		this->acoesFeitas.getTopo().getDado().getPosY(0) == this->getACPy()) this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADDLI, getACPy(), getACPx()));
+	this->lista.setAtual(aux);
+	this->gotoxy(indiceAtual, getACPy());
 }
 
 void NotepadCPP::inserirComRecursion(const char &ASerInserido)
