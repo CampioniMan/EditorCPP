@@ -41,8 +41,8 @@ private:
 	void printarNaTela();
 	int getACPx();
 	int getACPy();
-	Acao CtrlZ(const Acao &dis, unsigned int posX);
-	Acao CtrlY(const Acao &dis, unsigned int posX);
+	void CtrlZ(const Acao &dis);
+	void CtrlY(const Acao &dis);
 	Acao CtrlX(const Acao &dis);
 	Acao CtrlC(const Acao &dis);
 	Acao CtrlH(const Acao &dis);

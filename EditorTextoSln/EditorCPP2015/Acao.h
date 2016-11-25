@@ -50,8 +50,7 @@ private:
 	void(*func)(const ListaDuplaCirc<String> &lst, const Acao &dis);
 };
 
-const static String ACAO_ADDLI = "ALI";
-const static String ACAO_ADDLE = "ALE";
+const static String ACAO_ADICIONAR = "A";
 const static String ACAO_REMOVE = "R";
 const static String ACAO_CTRL_Z = "Z";
 const static String ACAO_CTRL_Y = "Y";

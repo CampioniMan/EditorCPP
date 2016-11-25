@@ -142,6 +142,11 @@ protected:
 		return *(this->nos + --this->tamanhoAtual);
 	}
 
+	void esvaziar()
+	{
+		while (!this->ehVazia()) this->desempilhar();
+	}
+
 	NoLista<Tipo> getTopo() const
 	{
 		if (this->tamanhoAtual == 0) return *(this->nos + this->tamanhoAtual);
