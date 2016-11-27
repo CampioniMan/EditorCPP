@@ -59,7 +59,7 @@ public:
 
 	void inserirNoFinal(const Tipo &novoElemento)
 	{
-		static NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
+		NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
 
 		if (this->estaVazia())
 		{
@@ -82,7 +82,7 @@ public:
 
 	void inserirDepois(const Tipo &novoElemento)
 	{
-		static NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
+		NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
 
 		if (this->estaVazia())
 		{
@@ -105,7 +105,7 @@ public:
 
 	void inserirNoComeco(const Tipo &novoElemento)
 	{
-		static NoLista<Tipo> *novo = new NoLista<Tipo>(novoElemento);
+		NoLista<Tipo> *novo = new NoLista<Tipo>(novoElemento);
 
 		if (estaVazia())
 		{

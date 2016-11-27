@@ -41,7 +41,7 @@ class String
 
 		// operators
 		void operator= (const String &primeira);
-		String operator*(const int &qtos);
+		String operator*(const int &qtos) const;
 		friend String operator+ (const String &th, const String &outra);
 		friend String operator+ (const String &th, const std::string &outra);
 		friend String operator+ (const String &th, const char &outra);

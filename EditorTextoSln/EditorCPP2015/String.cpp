@@ -245,7 +245,7 @@ void String::operator= (const String &primeira)
 		this->inserir(primeira[i]);
 }
 
-String String::operator*(const int & qtos)
+String String::operator*(const int & qtos) const
 {
 	String ret((int)(qtos * sizeof(this->minhaString) + 1));
 

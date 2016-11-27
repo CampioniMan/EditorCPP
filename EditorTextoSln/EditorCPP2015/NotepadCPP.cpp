@@ -388,6 +388,11 @@ void NotepadCPP::printarNaTela()
 		indice++;
 	}
 	cout << lista[indice++];
+	while (indice < 24)
+	{
+		cout << String(" ") * MAXIMO_STRING << endl;
+		indice++;
+	}
 	gotoxy(x, y);
 }
 
@@ -608,7 +613,7 @@ void NotepadCPP::run()
 					lista.setAtual(aux);
 					gotoxy(indiceAtual, getACPy());
 				}
-				//Acao novaAcao = Acao(lista.getAtual(), ACAO_ADICAO, getACPy());
+				//Acao novaAcao = Acao(lista.getAtual(), Acao::ACAO_ADICAO, getACPy());
 				//acoesFeitas.empilhar(novaAcao);
 			}
 			else if (c == CTRL_B)
@@ -654,9 +659,9 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 		else
 			aux[indiceAtual++] = c;
 
-		//if (this->acoesFeitas.getTopo().getDado().getPosX() == this->getACPx() &&
-		//	this->acoesFeitas.getTopo().getDado().getPosY(0) == this->getACPy()) 
-		//  this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
+		if (this->acoesFeitas.getTopo().getDado().getPosX() == this->getACPx() &&
+			this->acoesFeitas.getTopo().getDado().getPosY(0) == this->getACPy()) 
+		  this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
 		this->lista.setAtual(aux);
 		this->gotoxy(indiceAtual, getACPy());
 	}
