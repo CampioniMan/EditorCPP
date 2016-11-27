@@ -2,7 +2,6 @@
 #include "NotepadCPP.h"
 #include "ListaDuplaCirc.h"
 #include <sys/stat.h>
-#include <Wincon.h>
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_LEFT 75
@@ -364,7 +363,7 @@ void NotepadCPP::printarNaTela()
 {
 	int x = getACPx();
 	int y = getACPy();
-	ClearScreen();
+	gotoxy(0, 0);
 	int indice = topo;
 	if (base > lista.length() - 1)
 	{
@@ -384,7 +383,8 @@ void NotepadCPP::printarNaTela()
 
 	while (indice < base)
 	{
-		cout << lista[indice++] << endl;
+		cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length())) << endl;
+		indice++;
 	}
 	cout << lista[indice++];
 	gotoxy(x, y);
@@ -396,6 +396,7 @@ void NotepadCPP::run()
 	int indiceAtual = 0, qtosCtrlC = 0, posXIni = 0, posYIni = 0, posXFim = 0, posYFim = 0;
 	if (this->abrirArquivo(this->dir))
 	{
+		ClearScreen();
 		lista.iniciarPercursoSequencial();
 		lista.podePercorrer();
 		gotoxy(0,0);
@@ -413,9 +414,11 @@ void NotepadCPP::run()
 						if (lista.getIndexAtual() > 0)
 						{
 							lista.voltar();
+
 							int lDepo = lista.getAtual().length();
-							if (lDepo - 1 < indiceAtual)
-								indiceAtual = lDepo - 1;
+							if (lDepo < indiceAtual)
+								indiceAtual = lDepo;
+
 							if (lista.getIndexAtual() < this->topo)
 							{
 								if (this->topo > 0)
@@ -433,8 +436,8 @@ void NotepadCPP::run()
 						{
 							lista.avancar();
 							int lDepo = lista.getAtual().length();
-							if (lDepo - 1 < indiceAtual)
-								indiceAtual = lDepo - 1;
+							if (lDepo < indiceAtual)
+								indiceAtual = lDepo;
 							if (lista.getIndexAtual() > this->base)
 							{
 								if (lista.length() >= this->base)
@@ -611,16 +614,35 @@ void NotepadCPP::run()
 void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 {
 	String aux = lista.getAtual();
+	if (aux.cheia()) // máximo da string já alcançada
+	{
+		int indiceLoop = lista.getIndexAtual(); // obtendo os atuais
+		while (aux.cheia())
+		{
+			String removida = aux.deleteCharAt(aux.length() - 1); // removendo o último caracter
+			aux.inserir(c, indiceAtual++); // inserindo o novo carater
 
-	if (aux.length() != indiceAtual + 1)
-		aux.inserir(c, indiceAtual++);
+			lista[indiceLoop] = aux; // setando com o novo caracter e sem o último
+
+			if (indiceLoop != lista.length() - 1)
+				aux = lista[indiceLoop++]; // indo para o próximo
+			else
+				lista.inserirNoFinal(String(c));
+		}
+		this->gotoxy(indiceAtual, getACPy());
+	}
 	else
-		aux[indiceAtual++] = c;
+	{
+		if (aux.length() != indiceAtual + 1)
+			aux.inserir(c, indiceAtual++);
+		else
+			aux[indiceAtual++] = c;
 
-	if (this->acoesFeitas.getTopo().getDado().getPosX() == this->getACPx() && 
-		this->acoesFeitas.getTopo().getDado().getPosY(0) == this->getACPy()) this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
-	this->lista.setAtual(aux);
-	this->gotoxy(indiceAtual, getACPy());
+		if (this->acoesFeitas.getTopo().getDado().getPosX() == this->getACPx() &&
+			this->acoesFeitas.getTopo().getDado().getPosY(0) == this->getACPy()) this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
+		this->lista.setAtual(aux);
+		this->gotoxy(indiceAtual, getACPy());
+	}
 }
 
 void NotepadCPP::inserirComRecursion(const char &ASerInserido)

@@ -23,20 +23,20 @@ tamanhoMax(novoTamanho), tamanho(0)
 	this->minhaString = new char[novoTamanho+1]();
 }
 
-String::String(const char* original)
+String::String(const char* original) : tamanho(tamanhoDe(original)+1), tamanhoMax((tamanho <= 1024) ? 1024 : tamanho * 2)
 {
-	String aux;
-	for (int i = 0; original[i] != '\0'; i++)
-		aux.inserir(original[i]);
-	*this = aux; // utilizando o operator
+	this->minhaString = new char[this->tamanhoMax+1]();
+	int i;
+	for (i = 0; i < tamanho; i++)
+		this->minhaString[i] = original[i];
+	this->minhaString[i] = '\0';
 }
 
-String::String(const char caracter)
+String::String(const char &caracter) : tamanho(1), tamanhoMax(512)
 {
-	this->minhaString = new char[81]();
-	*this->minhaString = caracter;
-	this->tamanho = 1;
-	this->tamanhoMax = 512;
+	this->minhaString = new char[513]();
+    this->minhaString[0] = caracter;
+	this->minhaString[1] = String::charNull;
 }
 
 String::String(const string &novaString) : 
@@ -75,7 +75,7 @@ tamanhoMax(novoTamanhoMax), tamanho(0)
 
 char String::deleteCharAt(const unsigned int &posicao)
 {
-	if (posicao < 0 || posicao > this->tamanhoMax || this->vazia()) // não pode ser menor que 0
+	if (posicao < 0 || posicao >= this->tamanho || this->vazia()) // não pode ser menor que 0 ou maior igual ao tamanho
 		return '\0';
 
 	char ret = this->minhaString[posicao];
@@ -88,10 +88,12 @@ char String::deleteCharAt(const unsigned int &posicao)
 	return ret;
 }
 
-char* String::deletar(unsigned int posIni, unsigned int qtos)
+String String::deletar(unsigned int posIni, unsigned int qtos)
 {
-	if (posIni < 0 || posIni >= this->tamanho || qtos < 0 || qtos > this->length() - 1 || this->vazia())
+	if (posIni < 0 || posIni >= this->tamanho || qtos <= 0 || qtos > this->length() - 1 || this->vazia())
 		return '\0';
+
+	String ret = this->substr(posIni, qtos);
 
 	for (int i = posIni; i + qtos < this->length(); i++) // mexendo, de posicao inicial pra frente, 1 para trás
 		this->minhaString[i] = (char)this->minhaString[i + qtos];
@@ -100,14 +102,16 @@ char* String::deletar(unsigned int posIni, unsigned int qtos)
 		this->minhaString[i] = this->charNull;
 	this->tamanho -= qtos;
 
-	return '\0';
+	return ret;
 } // "rrr"   --  ""
 
-void String::deletarTudo()
+String String::deletarTudo()
 {
+	String ret = this->clone();
 	this->minhaString = NULL;
 	this->minhaString = new char[this->tamanhoMax+1]();
 	this->tamanho = 0;
+	return ret;
 }
 
 bool String::cheia() const
@@ -118,6 +122,13 @@ bool String::cheia() const
 bool String::vazia() const
 {
 	return (this->tamanho == 0);
+}
+
+int String::tamanhoDe(const char* ch)
+{
+	int i;
+	for (i = 0; ch[i] != '\0'; i++) {}
+	return i-1;
 }
 
 void String::inserir(const char &letra, const unsigned int &posicao)
@@ -138,8 +149,8 @@ void String::inserir(const char &letra, const unsigned int &posicao)
 	{
 		this->minhaString[i] = aux[i-1];
 	}
-	this->minhaString[this->tamanho] = '\0';
 	this->tamanho++;
+	this->minhaString[this->tamanho] = '\0';
 }
 
 void String::inserir(const char &letra)
@@ -188,6 +199,12 @@ char* String::toString() const
 		pont[i] = (char)this->minhaString[i];
 
 	return pont;
+}
+
+String String::clone() const
+{
+	String ret(*this);
+	return ret;
 }
 
 // getters e setters

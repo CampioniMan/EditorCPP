@@ -11,7 +11,7 @@ class String
 		String(const String &original);
 		String(const string &original);
 		String(const char* original);
-		String(const char caracter);
+		String(const char &caracter);
 		String(const int &novoTamanho);
 		String(const int &n, char novaString[]);
 		String();
@@ -19,8 +19,8 @@ class String
 
 		// Métodos normais
 		char deleteCharAt(const unsigned int &posicao);
-		char* deletar(unsigned int posIni, unsigned int qtos);
-		void deletarTudo();
+		String deletar(unsigned int posIni, unsigned int qtos);
+		String deletarTudo();
 		void inserir(const char &letra, const unsigned int &posicao);
 		void inserir(const char &letra);
 		void inserir(const String &letra, const unsigned int &posicao);
@@ -28,6 +28,7 @@ class String
 		String substr(int posIni, int qtos);
 		bool cheia() const;
 		bool vazia() const;
+		static int tamanhoDe(const char* ch);
 
 		// Apocalipticos
 		char* toString() const;

@@ -28,7 +28,7 @@ Acao::Acao(const Acao &original) : tipo(original.tipo), tamanho(original.tamanho
 
 Acao::Acao()
 {
-	*this = Acao(String(""), String(""), 0, 0);
+	*this = Acao("", "", 0, 0);
 }
 
 Acao::~Acao()
@@ -124,11 +124,6 @@ unsigned int Acao::getTamanho() const
 }
 
 void Acao::setString(const String &novaLinha, const unsigned int pos)
-{
-	*(this->palavraMudou + pos) = novaLinha;
-}
-
-void Acao::setString(const string &novaLinha, const unsigned int pos)
 {
 	*(this->palavraMudou + pos) = novaLinha;
 }
