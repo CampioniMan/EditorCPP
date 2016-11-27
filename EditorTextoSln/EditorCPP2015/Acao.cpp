@@ -14,11 +14,9 @@ Acao::Acao(const String *novasLinhas, const String &novoTipo, const unsigned int
 
 Acao::Acao(const String &novaLinha, const String &novoTipo, const unsigned int novoPosY, const unsigned int novoPosX) : tipo(novoTipo), posX(novoPosX), tamanho(1)
 {
-	this->palavraMudou = (String*)malloc(sizeof(String));
+	this->palavraMudou = new String(novaLinha);
 	this->posY = (unsigned int*)malloc(sizeof(unsigned int));
-
-	*(this->palavraMudou) = novaLinha;
-	*(this->posY) = novoPosY;
+	this->setPosY(novoPosY, 0);
 }
 
 Acao::Acao(const Acao &original) : tipo(original.tipo), tamanho(original.tamanho), posX(original.posX)
@@ -26,9 +24,12 @@ Acao::Acao(const Acao &original) : tipo(original.tipo), tamanho(original.tamanho
 	this->aloca(original.palavraMudou, original.posY, original.tamanho);
 }
 
-Acao::Acao()
+Acao::Acao() : posX(0), tamanho(1)
 {
-	*this = Acao("", "", 0, 0);
+	this->palavraMudou = new String("");
+	this->tipo = String("");
+	this->posY = (unsigned int*)malloc(sizeof(unsigned int));
+	this->setPosY(0, 0);
 }
 
 Acao::~Acao()
@@ -186,17 +187,27 @@ void Acao::deletarTudo()
 
 void Acao::aloca(const String *novasString, const unsigned int *novoPosY, unsigned int novoTam, unsigned int ehStr, unsigned int ehLinhas)
 {
-	if (ehStr > 0)
+	if (novoTam == 1)
 	{
-		this->palavraMudou = (String*)malloc(novoTam * sizeof(String));
-		for (int i = 0; i < novoTam; i++)
-			*(this->palavraMudou + i) = *(novasString + i);
+		this->palavraMudou = new String("");
+		this->posY = (unsigned int*)malloc(sizeof(unsigned int));
+		this->setPosY(0, 0);
 	}
-	if (ehLinhas > 0)
+
+	else
 	{
-		this->posY = (unsigned int*)malloc(novoTam * sizeof(unsigned int));
-		for (int i = 0; i < novoTam; i++)
-			*(this->posY + i) = *(novoPosY + i);
+		if (ehStr > 0)
+		{
+			this->palavraMudou = (String*)malloc(novoTam * sizeof(String));
+			for (int i = 0; i < novoTam; i++)
+				*(this->palavraMudou + i) = *(novasString + i);
+		}
+		if (ehLinhas > 0)
+		{
+			this->posY = (unsigned int*)malloc(novoTam * sizeof(unsigned int));
+			for (int i = 0; i < novoTam; i++)
+				*(this->posY + i) = *(novoPosY + i);
+		}
 	}
 }
 
