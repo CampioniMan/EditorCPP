@@ -59,7 +59,7 @@ public:
 
 	void inserirNoFinal(const Tipo &novoElemento)
 	{
-		NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
+		static NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
 
 		if (this->estaVazia())
 		{
@@ -76,6 +76,29 @@ public:
 			novo->setProximo(this->primeiro);
 			this->primeiro->getAnterior()->setProximo(novo);
 			this->primeiro->setAnterior(novo);
+		}
+		this->tam++;
+	}
+
+	void inserirDepois(const Tipo &novoElemento)
+	{
+		static NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
+
+		if (this->estaVazia())
+		{
+			this->primeiro = new NoLista<Tipo>(novo);
+			primeiro->setAnterior(primeiro);
+			primeiro->setProximo(primeiro);
+			atual = primeiro;
+			proximo = primeiro;
+			anterior = primeiro;
+		}
+		else
+		{
+			novo->setAnterior(this->atual);
+			novo->setProximo(this->proximo);
+			this->atual->setProximo(novo);
+			this->proximo->setAnterior(novo);
 		}
 		this->tam++;
 	}
@@ -118,6 +141,29 @@ public:
 				this->primeiro = atual;
 			if (this->indexAtual == this->tam - 1)
 				this->indexAtual--;
+		}
+		else
+		{
+			atual = NULL;
+			primeiro = NULL;
+			anterior = NULL;
+			proximo = NULL;
+			this->indexAtual = 0;
+		}
+		this->tam--;
+		return true;
+	}
+
+	bool removaDepois()
+	{
+		if (this->estaVazia())
+			return false;
+
+		if (this->tam > 1)
+		{
+			proximo = proximo->getProximo();
+			atual->setProximo(proximo);
+			proximo->setAnterior(atual);
 		}
 		else
 		{

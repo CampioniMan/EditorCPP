@@ -25,7 +25,8 @@ class String
 		void inserir(const char &letra);
 		void inserir(const String &letra, const unsigned int &posicao);
 		void inserir(const String &letra);
-		String substr(int posIni, int qtos);
+		String substr(int posIni, int qtos) const;
+		String substr(int posIni) const;
 		bool cheia() const;
 		bool vazia() const;
 		static int tamanhoDe(const char* ch);

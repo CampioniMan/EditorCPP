@@ -36,8 +36,7 @@ private:
 	bool criarArquivo(const String& dir);
 	bool limparArquivo(const String& dir);
 	void inserirNaAtual(char c, int &indiceAtual);
-	void inserirComRecursion(const char &ASerInserido);
-	int primeiraComEspaco(int);
+	void deletarAtual(const int &indiceAtual);
 	void printarNaTela();
 	int getACPx();
 	int getACPy();

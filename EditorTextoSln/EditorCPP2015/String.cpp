@@ -179,8 +179,17 @@ void String::inserir(const String &letra)
 	*this = this->minhaString + letra;
 }
 
-String String::substr(int posIni, int qtos)
+String String::substr(int posIni, int qtos) const
 {
+	String ret(qtos);
+	for (int i = posIni; i < qtos; i++)
+		ret.inserir(this->operator[](i));
+	return ret;
+}
+
+String String::substr(int posIni) const
+{
+	int qtos = this->tamanho - 1 - posIni;
 	String ret(qtos);
 	for (int i = posIni; i < qtos; i++)
 		ret.inserir(this->operator[](i));

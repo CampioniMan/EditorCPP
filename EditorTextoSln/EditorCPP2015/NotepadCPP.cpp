@@ -18,6 +18,7 @@
 #define BACKSPACE 8
 #define MAXIMO_STRING 78
 #define SETAS_CRASE -32
+#define ENTER 13
 
 /*
 
@@ -78,10 +79,10 @@ NotepadCPP::NotepadCPP(const String& diretorio, const int ehSobre) : ehSobreescr
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_C_EVENT, true);
 	//SetConsoleCtrlHandler((PHANDLER_ROUTINE)CTRL_BREAK_EVENT, true);
 	//hidecursor();
-	acoesFeitas = Pilha<Acao>();
-	this->dir = String(diretorio);
+	//acoesFeitas = Pilha<Acao>();
+	this->dir = diretorio;
 	lista = ListaDuplaCirc<String>();
-	acoesDesfeitas = Pilha<Acao>();
+	//acoesDesfeitas = Pilha<Acao>();
 }
 
 void NotepadCPP::CtrlY(const Acao &dis)
@@ -501,10 +502,10 @@ void NotepadCPP::run()
 							posYFim = this->getACPy();
 
 							if (posYIni == posYFim) toClipboard(this->lista[posYIni].substr(posXIni, posXFim));
-							else if (posYFim == posYIni + 1) toClipboard(this->lista[posYIni].substr(posXIni, this->lista[posYIni].length()) + this->lista[posYFim].substr(0, posXFim));
+							else if (posYFim == posYIni + 1) toClipboard(this->lista[posYIni].substr(posXIni, this->lista[posYIni].length() - posXIni -1) + this->lista[posYFim].substr(0, posXFim));
 							else
 							{
-								String txt = String(this->lista[posYIni].substr(posXIni, this->lista[posYIni].length()));
+								String txt = this->lista[posYIni].substr(posXIni, this->lista[posYIni].length() - 1 - posXIni);
 								for (int i = posYIni + 1; i < posYFim; i++)
 									txt = txt + this->lista[i];
 								toClipboard(txt + this->lista[posYFim].substr(0, posXFim));
@@ -526,9 +527,24 @@ void NotepadCPP::run()
 						//this->lista[this->getACPy()].inserir( = aux[0];
 						break;
 					}
+					case ENTER:
+					{
+						if (indiceAtual == lista.getAtual().length()) // último caracter da linha
+						{
+							lista.inserirDepois(String());
+						}
+						else
+						{
+							String recorte = lista.getAtual().substr(indiceAtual);
+							lista[lista.getIndexAtual()].deletar(indiceAtual, lista[lista.getIndexAtual()].length() - 1 - indiceAtual);
+							lista.inserirDepois(String());
+							lista[lista.getIndexAtual() + 1] = recorte;
+						}
+						break;
+					}
 					case DELETE:
 					{
-						cout << "delete" << endl;
+						deletarAtual(indiceAtual);
 						break;
 					}
 					case 17:
@@ -638,38 +654,37 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 		else
 			aux[indiceAtual++] = c;
 
-		if (this->acoesFeitas.getTopo().getDado().getPosX() == this->getACPx() &&
-			this->acoesFeitas.getTopo().getDado().getPosY(0) == this->getACPy()) this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
+		//if (this->acoesFeitas.getTopo().getDado().getPosX() == this->getACPx() &&
+		//	this->acoesFeitas.getTopo().getDado().getPosY(0) == this->getACPy()) 
+		//  this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
 		this->lista.setAtual(aux);
 		this->gotoxy(indiceAtual, getACPy());
 	}
 }
 
-void NotepadCPP::inserirComRecursion(const char &ASerInserido)
+void NotepadCPP::deletarAtual(const int &indiceAtual)
 {
-	String aux = lista.getAtual();
-	int atualReserva = lista.indiceDe(aux);
-	int ateOndeMexer = primeiraComEspaco(atualReserva);
-
-	if (ateOndeMexer > lista.length() - 1)
+	if (indiceAtual == lista.getAtual().length()) // truncar as linhas
 	{
-		lista.inserirNoFinal(String(lista[-1][lista[-1].length() - 1])); // começando com o último char da lista anterior
-		ateOndeMexer--;
+		if (lista.getAtual().length() + lista[lista.getIndexAtual() + 1].length() > MAXIMO_STRING) // não vai truncar completamente
+		{
+			int qtosCabem = MAXIMO_STRING - lista.getAtual().length();
+			String truncada = lista.getAtual() + lista[lista.getIndexAtual() + 1].substr(0, qtosCabem);
+			lista[lista.getIndexAtual()] = truncada;
+			lista[lista.getIndexAtual() + 1] = lista[lista.getIndexAtual() + 1].substr(qtosCabem, lista.getAtual().length()-1 - qtosCabem);
+			// Adicionar Acao de Deletar com 2 Strings alteradas
+		}
+		else
+		{
+			String truncada = lista.getAtual() + lista[lista.getIndexAtual() + 1];
+			lista.removaDepois();
+			lista[lista.getIndexAtual()] = truncada;
+			// adicionar acao de Deletar
+		}
 	}
-	
-	char charAtual;
-	for (; atualReserva < ateOndeMexer; charAtual = lista[++atualReserva][MAXIMO_STRING - 1])
+	else
 	{
-		char removido = lista[atualReserva+1].deleteCharAt(MAXIMO_STRING-1);
-		lista[atualReserva + 1].inserir(charAtual);
+		lista[lista.getIndexAtual()].deleteCharAt(indiceAtual);
+		// adicionar acao de Deletar
 	}
-	lista[atualReserva + 2].inserir(lista[atualReserva + 1][MAXIMO_STRING - 1]);
-}
-
-int NotepadCPP::primeiraComEspaco(int atualReserva)
-{
-	for (int i = atualReserva + 1; lista[i] != lista[0]; i++) // acha a primeira string não cheia
-		if (lista[i].length() < MAXIMO_STRING)
-			return i;
-	return lista.length();
 }

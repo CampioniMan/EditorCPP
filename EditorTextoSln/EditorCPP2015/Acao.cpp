@@ -17,8 +17,8 @@ Acao::Acao(const String &novaLinha, const String &novoTipo, const unsigned int n
 	this->palavraMudou = (String*)malloc(sizeof(String));
 	this->posY = (unsigned int*)malloc(sizeof(unsigned int));
 
-	this->setString(novaLinha, 0);
-	this->setPosY(novoPosY, 0);
+	*(this->palavraMudou) = novaLinha;
+	*(this->posY) = novoPosY;
 }
 
 Acao::Acao(const Acao &original) : tipo(original.tipo), tamanho(original.tamanho), posX(original.posX)
