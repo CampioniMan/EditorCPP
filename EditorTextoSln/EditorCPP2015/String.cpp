@@ -7,70 +7,66 @@ using namespace std;
 String::String(const String &original) : 
 tamanho(original.length()), tamanhoMax(original.getTamanhoMax())
 {
-	this->minhaString = new char[original.getTamanhoMax()]();
+	this->minhaString = (char*)malloc(original.getTamanhoMax() * sizeof(char));
 	this->minhaString = original.toString();
 }
 
 String::String() : 
 tamanhoMax(80), tamanho(0)
 {
-	this->minhaString = new char[81]();
+	this->minhaString = (char*)malloc(81 * sizeof(char));
 }
 
 String::String(const int &novoTamanho) :
 tamanhoMax(novoTamanho), tamanho(0)
 {
-	this->minhaString = new char[novoTamanho+1]();
+	this->minhaString = (char*)malloc(novoTamanho * sizeof(char));
 }
 
 String::String(const char* original) : tamanho(tamanhoDe(original)+1), tamanhoMax((tamanho <= 1024) ? 1024 : tamanho * 2)
 {
-	this->minhaString = new char[this->tamanhoMax+1]();
+	this->minhaString = (char*)malloc((this->tamanhoMax + 1) * sizeof(char));
 	int i;
 	for (i = 0; i < tamanho; i++)
-		this->minhaString[i] = original[i];
-	this->minhaString[i] = '\0';
+		*(this->minhaString + i) = *(original + i);
+	*(this->minhaString + i) = '\0';
 }
 
 String::String(const char &caracter) : tamanho(1), tamanhoMax(512)
 {
-	this->minhaString = new char[513]();
-    this->minhaString[0] = caracter;
-	this->minhaString[1] = String::charNull;
+	this->minhaString = (char*)malloc(513 * sizeof(char));
+    *(this->minhaString + 0) = caracter;
+	*(this->minhaString + 1) = String::charNull;
 }
 
 String::String(const string &novaString) : 
 tamanhoMax((novaString.size() <= 512) ? 1024 : novaString.size()*2), tamanho(novaString.size())
 {
-	this->minhaString = new char[this->getTamanhoMax() + 1]();
+	this->minhaString = (char*)malloc((this->tamanhoMax + 1) * sizeof(char));
 	int i = 0;
 	for (i = 0; i < novaString.length(); i++)
-		this->minhaString[i] = (char)novaString.at(i);
-	this->minhaString[i] = (char)String::charNull;
+		*(this->minhaString + i) = (char)novaString.at(i);
+	*(this->minhaString + i) = (char)String::charNull;
 }
 
 
-String::String(const int &n,char novaString[]) :
+String::String(const int &n, char* novaString) :
 tamanhoMax((n <= 1024) ? 1024 : n * 2), tamanho(n)
 {
-	this->minhaString = new char[this->getTamanhoMax() + 1]();
+	this->minhaString = (char*)malloc((this->tamanhoMax + 1) * sizeof(char));
 	int i = 0;
 	for (i = 0; i < n; i++)
-		this->minhaString[i] = (char)novaString[i];
-	this->minhaString[i] = (char)String::charNull;
+		*(this->minhaString + i) = (char)*(novaString + i);
+	*(this->minhaString + i) = (char)String::charNull;
 }
 
-String::~String()
-{
-	//this->minhaString[this->length() - 1] = '\0';
-	//delete minhaString;
-}
+String::~String(){}
 
 // Métodos normais
 String::String(const unsigned int &novoTamanhoMax) : 
 tamanhoMax(novoTamanhoMax), tamanho(0)
 {
-	this->minhaString = new char[novoTamanhoMax + 1]();
+	this->minhaString = (char*)malloc((novoTamanhoMax + 1) * sizeof(char));
 }
 
 char String::deleteCharAt(const unsigned int &posicao)
@@ -78,12 +74,12 @@ char String::deleteCharAt(const unsigned int &posicao)
 	if (posicao < 0 || posicao >= this->tamanho || this->vazia()) // não pode ser menor que 0 ou maior igual ao tamanho
 		return '\0';
 
-	char ret = this->minhaString[posicao];
+	char ret = *(this->minhaString +posicao);
 
 	for (int i = posicao; i < this->length() - 1;i++) // mexendo, de posicao pra frente, 1 para trás
-		this->minhaString[i] = (char)this->minhaString[i+1];
+		*(this->minhaString + i) = (char)*(this->minhaString + (i + 1));
 
-	this->minhaString[this->length() - 1] = charNull; // deixando o último nulo
+	*(this->minhaString + (this->length() - 1)) = charNull; // deixando o último nulo
 	this->tamanho--;
 	return ret;
 }
@@ -96,10 +92,10 @@ String String::deletar(unsigned int posIni, unsigned int qtos)
 	String ret = this->substr(posIni, qtos);
 
 	for (int i = posIni; i + qtos < this->length(); i++) // mexendo, de posicao inicial pra frente, 1 para trás
-		this->minhaString[i] = (char)this->minhaString[i + qtos];
+		*(this->minhaString + i) = (char)*(this->minhaString + (i + qtos));
 
 	for (int i = qtos; i < this->length(); i++) // deixando os últimos nulos
-		this->minhaString[i] = this->charNull;
+		*(this->minhaString + i) = this->charNull;
 	this->tamanho -= qtos;
 
 	return ret;
@@ -109,7 +105,7 @@ String String::deletarTudo()
 {
 	String ret = this->clone();
 	this->minhaString = NULL;
-	this->minhaString = new char[this->tamanhoMax+1]();
+	this->minhaString = (char*)malloc((this->tamanhoMax + 1) * sizeof(char));
 	this->tamanho = 0;
 	return ret;
 }
@@ -127,7 +123,7 @@ bool String::vazia() const
 int String::tamanhoDe(const char* ch)
 {
 	int i;
-	for (i = 0; ch[i] != '\0'; i++) {}
+	for (i = 0; *(ch + i) != '\0'; i++) {}
 	return i-1;
 }
 
@@ -140,17 +136,17 @@ void String::inserir(const char &letra, const unsigned int &posicao)
 
 	for (int i = 0; i < posicao; i++)
 	{
-		this->minhaString[i] = aux[i];
+		*(this->minhaString + i) = aux[i];
 	}
 
 	minhaString[posicao] = letra;
 
 	for (int i = posicao+1; i < this->tamanho; i++)
 	{
-		this->minhaString[i] = aux[i-1];
+		*(this->minhaString + i) = aux[i-1];
 	}
 	this->tamanho++;
-	this->minhaString[this->tamanho] = '\0';
+	*(this->minhaString +this->tamanho] = '\0';
 }
 
 void String::inserir(const char &letra)
@@ -158,8 +154,8 @@ void String::inserir(const char &letra)
 	if (cheia())
 		return;
 
-	this->minhaString[this->tamanho] = letra;
-	this->minhaString[this->tamanho+1] = String::charNull;
+	*(this->minhaString +this->tamanho] = letra;
+	*(this->minhaString +this->tamanho+1] = String::charNull;
 	this->tamanho++;
 }
 
@@ -205,7 +201,7 @@ char* String::toString() const
 		return pont;
 
 	for (int i = 0; i < this->length(); i++)
-		pont[i] = (char)this->minhaString[i];
+		pont[i] = (char)*(this->minhaString + i);
 
 	return pont;
 }
@@ -233,7 +229,7 @@ char& String::operator[] (const int &indice) const
 	if (indice < 0 || indice > this->tamanho - 1) // index out of bounds
 		return nulao;
 
-	return this->minhaString[indice];
+	return *(this->minhaString +indice];
 }
 
 // operators
@@ -415,7 +411,7 @@ String::operator char*() const
 {
 	static char *ret = new char[this->tamanho+1]();
 	for (int i = 0; i < this->tamanho; i++)
-		ret[i] = (char)this->minhaString[i];
+		ret[i] = (char)*(this->minhaString + i);
 	ret[this->tamanho] = String::charNull;
 	return ret;
 }
@@ -429,7 +425,7 @@ String::operator const char*() const
 {
 	static char *ret = new char[this->tamanho + 1]();
 	for (int i = 0; i < this->tamanho; i++)
-		ret[i] = (char)this->minhaString[i];
+		ret[i] = (char)*(this->minhaString + i);
 	ret[this->tamanho] = String::charNull;
 	return ret;
 }
@@ -438,7 +434,7 @@ String::operator string() const
 {
 	string ret = string();
 	for (int i = 0; i < this->tamanho; i++)
-		ret.push_back((char)this->minhaString[i]);
+		ret.push_back((char)*(this->minhaString + i));
 	return ret;
 }
 
