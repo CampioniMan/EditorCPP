@@ -313,7 +313,7 @@ bool NotepadCPP::salvarArquivo(const String& dir)
 	lista.iniciarPercursoSequencial();
 	while (lista.podePercorrer())
 	{
-		arq.write(lista.getAtual(), lista.getAtual().length()*sizeof(char));
+		arq.write(lista.getAtual()+'\n', (lista.getAtual().length() + 1)*sizeof(char));
 	}
 	arq.close();
 	return true;
@@ -334,7 +334,7 @@ bool NotepadCPP::abrirArquivo(const String& dir)
 	if (!arq.is_open())
 		return false;
 
-	std::string line("");
+	std::string line;
 	while (!arq.eof())
 	{
 		std::getline(arq, line);
@@ -401,7 +401,7 @@ void NotepadCPP::printarNaTela()
 		indice++;
 	}
 	cout << lista[indice++];
-	while (indice <= 25)
+	while (indice < 25)
 	{
 		cout << String(" ") * MAXIMO_STRING << endl;
 		indice++;
@@ -455,9 +455,11 @@ void NotepadCPP::run()
 						if (lista.getIndexAtual() < lista.length() - 1)//if (lista[lista.getIndiceAtual()] != lista[-1])
 						{
 							lista.avancar();
+
 							int lDepo = lista.getAtual().length();
-							if (lDepo < indiceAtual)
+							if (lDepo < indiceAtual) // se a String nova for menor que o índice atual
 								indiceAtual = lDepo;
+
 							if (lista.getIndexAtual() > this->base)
 							{
 								if (lista.length() >= this->base)
@@ -544,21 +546,6 @@ void NotepadCPP::run()
 						//fromClipboard(aux);
 
 						//this->lista[this->getACPy()].inserir( = aux[0];
-						break;
-					}
-					case ENTER:
-					{
-						if (indiceAtual == lista.getAtual().length()) // último caracter da linha
-						{
-							lista.inserirDepois(String());
-						}
-						else
-						{
-							String recorte = lista.getAtual().substr(indiceAtual);
-							lista[lista.getIndexAtual()].deletar(indiceAtual, lista[lista.getIndexAtual()].length() - 1 - indiceAtual);
-							lista.inserirDepois(String());
-							lista[lista.getIndexAtual() + 1] = recorte;
-						}
 						break;
 					}
 					case DELETE:
@@ -719,30 +706,12 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 	String aux = lista.getAtual();
 	if (aux.length() >= MAXIMO_STRING) // máximo da string já alcançada
 	{
-		if (indiceAtual >= MAXIMO_STRING) // o cursor está no final
-		{
 			if (lista.getIndexAtual() == lista.length() - 1)
 				lista.inserirNoFinal(String());
 			lista.avancar();
 			indiceAtual = 0;
 			inserirNaAtual(c, indiceAtual);
-		}
-		else
-		{
-			int indexTual = lista.getIndexAtual();
-			char removida = aux.deleteCharAt(MAXIMO_STRING - 1); // removendo o último caracter
-			aux.inserir(c, indiceAtual++);
-			if (lista[indexTual + 1].length() >= MAXIMO_STRING)
-			{
-				if (lista.getIndexAtual() == lista.length() - 1)
-					lista.inserirNoFinal(String());
-				lista.avancar();
-				indiceAtual = 0;
-				inserirNaAtual(c, indiceAtual);
-			}
-			lista[indexTual + 1] = removida + lista[indexTual + 1];
-			lista[indexTual] = aux;
-		}
+		
 	}
 	else
 	{
@@ -769,6 +738,14 @@ void NotepadCPP::deletarAtual(const int &indiceAtual)
 			String truncada = lista.getAtual() + lista[lista.getIndexAtual() + 1].substr(0, qtosCabem);
 			lista[lista.getIndexAtual()] = truncada;
 			lista[lista.getIndexAtual() + 1] = lista[lista.getIndexAtual() + 1].substr(qtosCabem, lista.getAtual().length()-1 - qtosCabem);
+
+			String* txt = new String[2]();
+			txt[0] = truncada;
+			txt[1] = lista[lista.getIndexAtual() + 1];
+
+			unsigned int* posY = new unsigned int[2]{ (unsigned int)lista.getIndexAtual() , (unsigned int)lista.getIndexAtual()  + 1};
+
+			this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
 			// Adicionar Acao de Deletar com 2 Strings alteradas
 		}
 		else
@@ -776,11 +753,14 @@ void NotepadCPP::deletarAtual(const int &indiceAtual)
 			String truncada = lista.getAtual() + lista[lista.getIndexAtual() + 1];
 			lista.removaDepois();
 			lista[lista.getIndexAtual()] = truncada;
+
+			this->acoesFeitas.empilhar(Acao(truncada, ACAO_REMOVE, lista.getIndexAtual(), this->getACPx()));
 			// adicionar acao de Deletar
 		}
 	}
 	else
 	{
+		this->acoesFeitas.empilhar(Acao(lista[lista.getIndexAtual()], ACAO_REMOVE, lista.getIndexAtual(), this->getACPx()));
 		lista[lista.getIndexAtual()].deleteCharAt(indiceAtual);
 		// adicionar acao de Deletar
 	}
