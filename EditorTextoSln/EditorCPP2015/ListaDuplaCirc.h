@@ -126,6 +126,38 @@ public:
 		}
 		this->tam++;
 	}
+
+	void inserirNaPosicao(const Tipo &novoElemento, const int &n)
+	{
+		if (n < 0 || n > this->length()-1)
+			return;
+
+		NoLista<Tipo> *novo = new NoLista<Tipo>(novoElemento);
+
+		if (estaVazia())
+		{
+			this->primeiro = novo;
+			novo->setProximo(novo);
+			novo->setAnterior(novo);
+		}
+		else
+		{
+			NoLista<Tipo>* antigoAtual = this->atual;
+
+			this->iniciarPercursoSequencial();
+			int i = 0;
+			for (; podePercorrer(); i++) {}
+
+			novo->setAnterior(this->anterior);
+			novo->setProximo(this->atual);
+			this->anterior->setProximo(novo);
+			this->atual->setAnterior(novo);
+			this->atual = novo;
+
+			this->voltarPara(antigoAtual);
+		}
+		this->tam++;
+	}
 		
 	bool removaAtual()
 	{

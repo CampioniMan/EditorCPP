@@ -190,6 +190,7 @@ void Acao::aloca(const String *novasString, const unsigned int *novoPosY, unsign
 	if (novoTam == 1)
 	{
 		this->palavraMudou = new String("");
+		*this->palavraMudou = *novasString;
 		this->posY = (unsigned int*)malloc(sizeof(unsigned int));
 		this->setPosY(0, 0);
 	}
@@ -198,7 +199,9 @@ void Acao::aloca(const String *novasString, const unsigned int *novoPosY, unsign
 	{
 		if (ehStr > 0)
 		{
-			this->palavraMudou = (String*)malloc(novoTam * sizeof(String));
+			this->palavraMudou = new String[novoTam]();
+			for (int i = 0; i < novoTam; i++)
+				*(this->palavraMudou + i) = String("");
 			for (int i = 0; i < novoTam; i++)
 				*(this->palavraMudou + i) = *(novasString + i);
 		}
