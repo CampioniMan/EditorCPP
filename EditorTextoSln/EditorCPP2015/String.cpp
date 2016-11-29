@@ -132,46 +132,35 @@ void String::inserir(const char &letra, const unsigned int &posicao)
 	if (cheia() || posicao > this->tamanhoMax && posicao < 0)
 		return;
 	char* aux = this->minhaString;
-	this->minhaString = new char[this->tamanho+2]();
+	this->minhaString = (char*)malloc((this->tamanho + 1) * sizeof(char));// modificado
 
 	for (int i = 0; i < posicao; i++)
-	{
-		*(this->minhaString + i) = aux[i];
-	}
-
-	minhaString[posicao] = letra;
+		*(this->minhaString + i) = *(aux + i);
+	
+	*(minhaString + posicao) = letra;
 
 	for (int i = posicao+1; i < this->tamanho; i++)
-	{
-		*(this->minhaString + i) = aux[i-1];
-	}
-	this->tamanho++;
-	*(this->minhaString +this->tamanho] = '\0';
+		*(this->minhaString + i) = *(aux + (i - 1));
+	
+	*(this->minhaString + ++this->tamanho) = '\0'; // modificado
 }
 
 void String::inserir(const char &letra)
 {
-	if (cheia())
-		return;
-
-	*(this->minhaString +this->tamanho] = letra;
-	*(this->minhaString +this->tamanho+1] = String::charNull;
-	this->tamanho++;
+	if (cheia()) return;
+	*(this->minhaString + this->tamanho) = letra;
+	*(this->minhaString + ++this->tamanho) = String::charNull; // modificado
 }
 
 void String::inserir(const String &letra, const unsigned int &posicao) // não precisa verificar o tamanhoMax
 {
-	if (cheia())
-		return;
-
+	if (cheia()) return;
 	*this = this->substr(0, posicao) + letra + this->substr(posicao, this->tamanho-1);
 }
 
 void String::inserir(const String &letra)
 {
-	if (cheia())
-		return;
-
+	if (cheia()) return;
 	*this = this->minhaString + letra;
 }
 
@@ -179,7 +168,7 @@ String String::substr(int posIni, int qtos) const
 {
 	String ret(qtos);
 	for (int i = posIni; i < qtos; i++)
-		ret.inserir(this->operator[](i));
+		ret.inserir(this->operator[])(i);
 	return ret;
 }
 
@@ -188,20 +177,18 @@ String String::substr(int posIni) const
 	int qtos = this->tamanho - 1 - posIni;
 	String ret(qtos);
 	for (int i = posIni; i < qtos; i++)
-		ret.inserir(this->operator[](i));
+		ret.inserir(this->operator[])(i);
 	return ret;
 }
 
 // Apocalipticos
 char* String::toString() const
 {
-	char* pont = new char[this->length()+1]();
-
-	if (this->vazia())
-		return pont;
+	char* pont = (char*)malloc((this->length() + 1) * sizeof(char));
+	if (this->vazia()) return pont;
 
 	for (int i = 0; i < this->length(); i++)
-		pont[i] = (char)*(this->minhaString + i);
+		*(pont + i) = (char)*(this->minhaString + i);
 
 	return pont;
 }
@@ -229,7 +216,7 @@ char& String::operator[] (const int &indice) const
 	if (indice < 0 || indice > this->tamanho - 1) // index out of bounds
 		return nulao;
 
-	return *(this->minhaString +indice];
+	return *(this->minhaString + indice);
 }
 
 // operators
@@ -238,7 +225,7 @@ void String::operator= (const String &primeira)
 	this->tamanhoMax = primeira.getTamanhoMax();
 	this->deletarTudo();
 	for (int i = 0; i <= primeira.length(); i++)
-		this->inserir(primeira[i]);
+		this->inserir(primeira, i); // modificado
 }
 
 String String::operator*(const int & qtos) const
@@ -247,24 +234,25 @@ String String::operator*(const int & qtos) const
 
 	for (int i = 0; i < qtos; i++)
 		for (int index = 0; index < this->tamanho; index++)
-			ret[index + i * this->tamanho] = (*this)[index];
-	ret[ret.length()-1] = String::charNull;
+			*(ret.operator[] + index + (i * this->tamanho)) = ((*this) + index);
+	*(ret.operator[] + (ret.length()-1)) = String::charNull;
+
 	return ret;
 }
 
 String operator+ (const String &th, const String &outra)
 {
-	char *arrai = new char[th.tamanho + outra.length() + 1]();
+	char *arrai = (char*)malloc((th.tamanho + (outra.length() + 1)) * sizeof(char));
 	int i = 0;
 
 	for (i = 0; i < th.length(); i++)
-		arrai[i] = (char)th.minhaString[i];
+		*(arrai + i) = (char)*(th.minhaString + i);
 
 	int u = 0;
 	for (i = th.length(); i < th.length() + outra.length(); i++, u++)
-		arrai[i] = (char)outra[u];
+		*(arrai + i) = *(outra.operator[] + u);
 
-	arrai[i] = String::charNull;
+	*(arrai + i) = String::charNull;
 
 	String ret = String(i, arrai);
 	delete[] arrai;
@@ -274,18 +262,18 @@ String operator+ (const String &th, const String &outra)
 
 String operator+ (const String &th, const string &outra)
 {
-	char *arrai = new char[th.tamanho + outra.length() + 1]();
+	char *arrai = (char*)malloc((th.tamanho + (outra.length() + 1)) * sizeof(char));
 
 	int i = 0;
 
 	for (i = 0; i < th.tamanho + 1; i++)
-		arrai[i] = (char)th.minhaString[i];
+		*(arrai + i) = (char)*(th.minhaString + i);
 
 	int u = 0;
 	for (i = th.tamanho; i < th.tamanho + outra.length(); i++, u++)
-		arrai[i] = (char)outra.at(u);
+		*(arrai + i) = (char)outra.at(u);
 
-	arrai[i] = String::charNull;
+	*(arrai + i) = String::charNull;
 	String ret = String(i, arrai);
 	delete[] arrai;
 
@@ -294,12 +282,14 @@ String operator+ (const String &th, const string &outra)
 
 String operator+ (const String &th, const char &outra)
 {
-	char *arrai = new char[th.tamanho + 2]();
+	char *arrai = (char*)malloc((th.tamanho + 2) * sizeof(char));
 	int i;
 	for (i = 0; i < th.tamanho; i++)
-		arrai[i] = (char)th.minhaString[i];
-	arrai[i] = outra;
-	arrai[i+1] = String::charNull;
+		*(arrai + i) = (char)*(th.minhaString + i);
+
+	*(arrai + i) = outra;
+	*(arrai + i+1) = String::charNull;
+
 	String ret = String(i+1, arrai);
 	delete[] arrai;
 	return ret;
@@ -309,17 +299,17 @@ String operator+ (const String &th, const int &outra)
 {
 	string intEmStr = to_string(outra);
 
-	char *arrai = new char[th.tamanho + intEmStr.length() + 1]();
+	char *arrai = (char*)malloc((th.tamanho + 2) * sizeof(char));
 
 	int i = 0;
 	for (i = 0; i < th.tamanho; i++)
-		arrai[i] = (char)th.minhaString[i];
+		*(arrai + i) = (char)*(th.minhaString + i);
 
 	int u = 0;
 	for (i = th.tamanho; i < th.tamanho + intEmStr.length(); i++, u++)
-		arrai[i] = (char)intEmStr.at(u);
+		*(arrai + i) = (char)intEmStr.at(u);
 
-	arrai[i] = String::charNull;
+	*(arrai + i) = String::charNull;
 	String ret = String(i, arrai);
 	delete[] arrai;
 	return ret;
@@ -334,18 +324,18 @@ String operator+ (const String &th, const char* &outra)
 
 String operator+ (const std::string &outra, const String &th)
 {
-	char *arrai = new char[th.tamanho + outra.length() + 1]();
+	char *arrai = (char*)malloc((th.tamanho + (outra.length() + 1)) * sizeof(char));
 
 	int i = 0;
 
 	for (i = 0; i < outra.size(); i++)
-		arrai[i] = (char)outra.at(i);
+		*(arrai + i) = (char)outra.at(i);
 
 	int u = 0;
 	for (i = outra.size(); i < th.tamanho + outra.size(); i++, u++)
-		arrai[i] = (char)th.minhaString[u];
+		*(arrai + i) = (char)*(th.minhaString + u);
 
-	arrai[i] = String::charNull;
+	*(arrai + i) = String::charNull;
 	String ret = String(i, arrai);
 	delete[] arrai;
 
@@ -354,12 +344,15 @@ String operator+ (const std::string &outra, const String &th)
 
 String operator+ (const char &outra, const String &th)
 {
-	char *arrai = new char[th.tamanho + 2]();
+	char *arrai = (char*)malloc((th.tamanho + 2) * sizeof(char));
 	int i;
-	arrai[0] = outra;
+
+	*(arrai) = outra;
 	for (i = 1; i < th.tamanho+1; i++)
-		arrai[i] = (char)th.minhaString[i-1];
-	arrai[i] = String::charNull;
+		*(arrai + i) = (char)*(th.minhaString + (i - 1));
+
+	*(arrai + i) = String::charNull;
+
 	String ret = String(i, arrai);
 	delete[] arrai;
 	return ret;
@@ -376,17 +369,17 @@ String operator+ (const int &outra, const String &th)
 {
 	string intEmStr = to_string(outra);
 
-	char *arrai = new char[th.tamanho + intEmStr.length() + 1]();
+	char *arrai = (char*)malloc((th.tamanho + (intEmStr.length() + 1)) * sizeof(char));
 
 	int i = 0;
 	for (i = 0; i < th.tamanho; i++)
-		arrai[i] = (char)intEmStr.at(i);
+		*(arrai + i) = (char)intEmStr.at(i);
 
 	int u = 0;
 	for (i = th.tamanho; i < th.tamanho + intEmStr.length(); i++, u++)
-		arrai[i] = (char)th.minhaString[i];
+		*(arrai + i) = (char)*(th.minhaString + i);
 
-	arrai[i] = String::charNull;
+	*(arrai + i) = String::charNull;
 	String ret = String(i, arrai);
 	delete[] arrai;
 	return ret;
@@ -409,10 +402,10 @@ String operator+ (const char* outra, const String &th)
 
 String::operator char*() const
 {
-	static char *ret = new char[this->tamanho+1]();
+	static char *ret = (char*)malloc((this->tamanho + 1) * sizeof(char));
 	for (int i = 0; i < this->tamanho; i++)
-		ret[i] = (char)*(this->minhaString + i);
-	ret[this->tamanho] = String::charNull;
+		*(ret + i) = (char)*(this->minhaString + i);
+	*(ret + this->tamanho) = String::charNull;
 	return ret;
 }
 
@@ -423,10 +416,10 @@ void String::operator+= (const String &outra)
 
 String::operator const char*() const
 {
-	static char *ret = new char[this->tamanho + 1]();
+	static char *ret = (char*)malloc((this->tamanho + 1) * sizeof(char));
 	for (int i = 0; i < this->tamanho; i++)
-		ret[i] = (char)*(this->minhaString + i);
-	ret[this->tamanho] = String::charNull;
+		*(ret + i) = (char)*(this->minhaString + i);
+	*(ret + this->tamanho) = String::charNull;
 	return ret;
 }
 
@@ -443,20 +436,19 @@ ostream& operator<< (ostream &OS, const String &aString)
 	if (aString.vazia())
 		return OS;
 
-	char *pont = new char[aString.length()]();
+	char *pont = (char*)malloc(aString.length * sizeof(char));
 	for (int i = 0; i < aString.length(); i++)
-	{
-		pont[i] += (char)aString.minhaString[i];
-	}
+		*(pont + i) += (char)*(aString.minhaString + i);
+	
 
 	for (int i = 0; i < aString.length() - 1; i++) 
-		OS << pont[i];
-	return (OS << pont[aString.length() - 1]);
+		OS << *(pont + i);
+	return (OS << *(pont + (aString.length() - 1)));
 }
 
 istream& operator>> (istream &IS, String &aString)
 {
-	char* lida = new char[aString.tamanhoMax];
+	char* lida = (char*)malloc(aString.tamanhoMax * sizeof(char));
 
 	IS >> lida;
 
@@ -493,7 +485,7 @@ bool operator== (const String &pri, const String &seg) // verificar conteúdo tam
 
 	for (int i = 0; i < pri.tamanho; i++)
 	{
-		if (pri[i] != seg[i])
+		if (*(pri.operator[] + i) != *(seg.operator[] + i))
 			return false;
 	}
 	return true;
@@ -506,7 +498,7 @@ bool operator!= (const String &pri, const String &seg) // verificar conteúdo tam
 
 	for (int i = 0; i < pri.tamanho; i++)
 	{
-		if (pri[i] != seg[i])
+		if (*(pri.operator[] + i) != *(seg.operator[] + i))
 			return true;
 	}
 	return false;
@@ -515,7 +507,7 @@ bool operator!= (const String &pri, const String &seg) // verificar conteúdo tam
 bool operator< (const String &pri, const char* seg)
 {
 	int i = 0;
-	for (i = 0; seg[i] != String::charNull; i++)
+	for (i = 0; *(seg + i) != String::charNull; i++)
 	{}
 	return pri.length() < i;
 }
@@ -523,25 +515,21 @@ bool operator< (const String &pri, const char* seg)
 bool operator> (const String &pri, const char* seg)
 {
 	int i = 0;
-	for (i = 0; seg[i] != String::charNull; i++)
-	{
-	}
+	for (i = 0; *(seg + i) != String::charNull; i++){}
 	return pri.length() > i;
 }
 
 bool operator<= (const String &pri, const char* seg)
 {
 	int i = 0;
-	for (i = 0; seg[i] != String::charNull; i++)
-	{
-	}
+	for (i = 0; *(seg + i) != String::charNull; i++){}
 	return pri.length() <= i;
 }
 
 bool operator>= (const String &pri, const char* seg)
 {
 	int i = 0;
-	for (i = 0; seg[i] != String::charNull; i++)
+	for (i = 0; *(seg + i) != String::charNull; i++)
 	{
 	}
 	return pri.length() >= i;
@@ -550,7 +538,7 @@ bool operator>= (const String &pri, const char* seg)
 bool operator== (const String &pri, const char* seg) // verificar conteúdo também
 {
 	int i = 0;
-	for (i = 0; seg[i] != String::charNull; i++)
+	for (i = 0; *(seg + i) != String::charNull; i++)
 	{
 	}
 	if (pri.length() != i)
@@ -558,7 +546,7 @@ bool operator== (const String &pri, const char* seg) // verificar conteúdo també
 
 	for (int i = 0; i < pri.tamanho; i++)
 	{
-		if (pri[i] != seg[i])
+		if (*(pri.operator[] + i) != *(seg + i))
 			return false;
 	}
 	return true;
@@ -567,7 +555,7 @@ bool operator== (const String &pri, const char* seg) // verificar conteúdo també
 bool operator!= (const String &pri, const char* seg) // verificar conteúdo também
 {
 	int i = 0;
-	for (i = 0; seg[i] != String::charNull; i++)
+	for (i = 0; *(seg + i) != String::charNull; i++)
 	{
 	}
 	if (pri.length() != i)
@@ -575,7 +563,7 @@ bool operator!= (const String &pri, const char* seg) // verificar conteúdo també
 
 	for (int i = 0; i < pri.tamanho; i++)
 	{
-		if (pri[i] != seg[i])
+		if (*(pri.operator[] + i) != *(seg + i))
 			return true;
 	}
 	return false;
