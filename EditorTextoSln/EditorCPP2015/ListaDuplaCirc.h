@@ -99,6 +99,7 @@ public:
 			novo->setProximo(this->proximo);
 			this->atual->setProximo(novo);
 			this->proximo->setAnterior(novo);
+			this->proximo = novo;
 		}
 		this->tam++;
 	}

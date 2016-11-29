@@ -19,6 +19,9 @@
 #define MAXIMO_STRING 78
 #define SETAS_CRASE -32
 #define ENTER 13
+#define PAGE 224
+#define PAGE_DOWN 81
+#define PAGE_UP 73
 
 /*
 
@@ -255,6 +258,15 @@ void NotepadCPP::hidecursor()
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
 
+void NotepadCPP::showcursor()
+{
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO info;
+	info.dwSize = 100;
+	info.bVisible = TRUE;
+	SetConsoleCursorInfo(consoleHandle, &info);
+}
+
 bool NotepadCPP::setTamanho(int width, int height)
 {
 	COORD coord;
@@ -365,6 +377,7 @@ void NotepadCPP::printarNaTela()
 	int x = getACPx();
 	int y = getACPy();
 	gotoxy(0, 0);
+	hidecursor();
 	int indice = topo;
 	if (base > lista.length() - 1)
 	{
@@ -384,7 +397,7 @@ void NotepadCPP::printarNaTela()
 
 	while (indice < base)
 	{
-		cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length())) << endl;
+		cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1)) << endl;
 		indice++;
 	}
 	cout << lista[indice++];
@@ -394,6 +407,7 @@ void NotepadCPP::printarNaTela()
 		indice++;
 	}
 	gotoxy(x, y);
+	showcursor();
 }
 
 void NotepadCPP::run()
@@ -557,6 +571,37 @@ void NotepadCPP::run()
 						setForeGroundAndBackGroundColor(0);
 						break;
 					}
+					case PAGE_DOWN:
+					{
+						if (lista.length() < base + 24)
+						{
+							if (lista.length() < 24)
+								base = 24;
+							else
+								base = lista.length();
+							topo = base - 24;
+						}
+						else
+						{
+							topo += 24;
+							base += 24;
+						}
+						break;
+					}
+					case PAGE_UP:
+					{
+						if (topo - 24 < 0)
+						{
+							topo = 0;
+							base = 24;
+						}
+						else
+						{
+							topo -= 24;
+							base -= 24;
+						}
+						break;
+					}
 					default:
 					{
 						inserirNaAtual(SETAS_CRASE, indiceAtual);
@@ -596,10 +641,10 @@ void NotepadCPP::run()
 						{
 							int qtasPegar = MAXIMO_STRING - anteAux.length();
 							lista[lista.getIndexAtual() - 1] = anteAux + aux.substr(0, qtasPegar);
-							String oioioioio = lista[lista.getIndexAtual() - 1];
 							aux.deletar(0, qtasPegar);
 							lista[lista.getIndexAtual()] = aux;
 							indiceAtual = anteAux.length();
+							lista.removaAtual();
 							gotoxy(indiceAtual, getACPy() - 1);
 							lista.avancar();
 							lista.voltar();
@@ -628,6 +673,20 @@ void NotepadCPP::run()
 			{
 				if (!this->acoesDesfeitas.ehVazia()) this->CtrlY(this->acoesDesfeitas.desempilhar().getDado());
 			}
+			else if (c == ENTER)
+			{
+				if (indiceAtual == lista.getAtual().length())
+					lista.inserirDepois(String());
+				else
+				{
+					String tavaSobrando = lista.getAtual().substr(indiceAtual);
+					lista[lista.getIndexAtual()].deletar(indiceAtual, lista.getAtual().length() - indiceAtual);
+					lista.inserirDepois(tavaSobrando);
+				}
+				indiceAtual = 0;
+				lista.avancar();
+				gotoxy(indiceAtual, getACPy() + 1);
+			}
 		}
 	}
 }
@@ -635,22 +694,32 @@ void NotepadCPP::run()
 void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 {
 	String aux = lista.getAtual();
-	if (aux.cheia()) // máximo da string já alcançada
+	if (aux.length() >= MAXIMO_STRING) // máximo da string já alcançada
 	{
-		int indiceLoop = lista.getIndexAtual(); // obtendo os atuais
-		while (aux.cheia())
+		if (indiceAtual >= MAXIMO_STRING) // o cursor está no final
 		{
-			String removida = aux.deleteCharAt(aux.length() - 1); // removendo o último caracter
-			aux.inserir(c, indiceAtual++); // inserindo o novo carater
-
-			lista[indiceLoop] = aux; // setando com o novo caracter e sem o último
-
-			if (indiceLoop != lista.length() - 1)
-				aux = lista[indiceLoop++]; // indo para o próximo
-			else
-				lista.inserirNoFinal(String(c));
+			if (lista.getIndexAtual() == lista.length() - 1)
+				lista.inserirNoFinal(String());
+			lista.avancar();
+			indiceAtual = 0;
+			inserirNaAtual(c, indiceAtual);
 		}
-		this->gotoxy(indiceAtual, getACPy());
+		else
+		{
+			int indexTual = lista.getIndexAtual();
+			char removida = aux.deleteCharAt(MAXIMO_STRING - 1); // removendo o último caracter
+			aux.inserir(c, indiceAtual++);
+			if (lista[indexTual + 1].length() >= MAXIMO_STRING)
+			{
+				if (lista.getIndexAtual() == lista.length() - 1)
+					lista.inserirNoFinal(String());
+				lista.avancar();
+				indiceAtual = 0;
+				inserirNaAtual(c, indiceAtual);
+			}
+			lista[indexTual + 1] = removida + lista[indexTual + 1];
+			lista[indexTual] = aux;
+		}
 	}
 	else
 	{
@@ -693,3 +762,51 @@ void NotepadCPP::deletarAtual(const int &indiceAtual)
 		// adicionar acao de Deletar
 	}
 }
+
+
+
+/*
+int indiceLoop = lista.getIndexAtual(); // obtendo os atuais
+char removida;
+if (indiceAtual == MAXIMO_STRING)
+{
+while (aux.length() == MAXIMO_STRING)
+{
+aux.inserir(c, indiceAtual); // inserindo o novo carater
+
+lista[indiceLoop] = aux; // setando String com o novo caracter e sem o último
+
+if (indiceLoop != lista.length() - 1) // se não for o último
+aux = lista[indiceLoop++]; // indo para o próximo
+else
+{
+break;
+}
+removida = aux.deleteCharAt(aux.length() - 1); // removendo o último caracter
+}
+}
+else
+{
+while (aux.length() == MAXIMO_STRING)
+{
+removida = aux.deleteCharAt(aux.length() - 1); // removendo o último caracter
+aux.inserir(c, indiceAtual); // inserindo o novo carater
+
+lista[indiceLoop] = aux; // setando String com o novo caracter e sem o último
+
+if (indiceLoop != lista.length() - 1) // se não for o último
+aux = lista[indiceLoop++]; // indo para o próximo
+else
+{
+break;
+}
+}
+lista.inserirNoFinal(String(removida));
+if (indiceAtual >= MAXIMO_STRING)
+{
+indiceAtual = indiceAtual - MAXIMO_STRING;
+
+}
+}
+this->gotoxy(indiceAtual, getACPy());
+*/

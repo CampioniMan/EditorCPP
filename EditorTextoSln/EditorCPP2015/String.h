@@ -23,6 +23,7 @@ class String
 		String deletarTudo();
 		void inserir(const char &letra, const unsigned int &posicao);
 		void inserir(const char &letra);
+		void inserirNoComeco(const char &letra);
 		void inserir(const String &letra, const unsigned int &posicao);
 		void inserir(const String &letra);
 		String substr(int posIni, int qtos) const;

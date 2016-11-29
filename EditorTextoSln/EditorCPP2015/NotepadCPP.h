@@ -25,6 +25,7 @@ public:
 	static void setForeGroundAndBackGroundColor(int BackGroundColor);
 	static void ssetcolor(WORD color);
 	static void hidecursor();
+	static void showcursor();
 	static bool setTamanho(int width, int height);
 
 	const static int ABRIR_EXISTENTE = 0;
