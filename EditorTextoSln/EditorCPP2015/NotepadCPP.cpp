@@ -355,7 +355,7 @@ bool NotepadCPP::abrirArquivo(const String& dir)
 	}
 	ifstream arq = ifstream();
 	arq.open((char*)dir);
-	if (!arq.is_open())
+	if (!arq.is_open()) // se deu erro ao abrir o arquivo
 		return false;
 
 	std::string line;
@@ -425,7 +425,7 @@ void NotepadCPP::printarNaTela()
 		indice++;
 	}
 	cout << lista[indice++];
-	while (indice < 25)
+	while (indice <= 25)
 	{
 		cout << String(" ") * MAXIMO_STRING << endl;
 		indice++;
@@ -566,10 +566,6 @@ void NotepadCPP::run()
 					}
 					case CTRL_V:
 					{
-						//string aux = string(); 
-						//fromClipboard(aux);
-
-						//this->lista[this->getACPy()].inserir( = aux[0];
 						break;
 					}
 					case DELETE:
@@ -708,8 +704,6 @@ void NotepadCPP::run()
 					lista.setAtual(aux);
 					gotoxy(indiceAtual, getACPy());
 				}
-				//Acao novaAcao = Acao(lista.getAtual(), Acao::ACAO_ADICAO, getACPy());
-				//acoesFeitas.empilhar(novaAcao);
 			}
 			else if (c == CTRL_B)
 			{

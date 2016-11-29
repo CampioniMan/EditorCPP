@@ -197,7 +197,7 @@ String String::substr(int posIni, int qtos) const
 
 String String::substr(int posIni) const
 {
-	int qtos = this->tamanho - 1 - posIni;
+	int qtos = this->tamanho - posIni;
 	String ret(qtos);
 	for (int i = posIni; i < qtos; i++)
 		ret.inserir(this->operator[](i));
