@@ -261,9 +261,18 @@ public:
 		bool ret = this->atual != this->primeiro->getAnterior();
 		if (this->atual == NULL)
 		{
-			this->atual = this->primeiro->getAnterior();
-			this->proximo = this->primeiro;
-			this->anterior = this->primeiro->getAnterior()->getAnterior();
+			if (this->indoParaFrente)
+			{
+				this->atual = this->primeiro->getAnterior();
+				this->proximo = this->primeiro;
+				this->anterior = this->primeiro->getAnterior()->getAnterior();
+			}
+			else
+			{
+				this->atual = this->primeiro;
+				this->proximo = this->primeiro->getProximo();
+				this->anterior = this->primeiro->getAnterior();
+			}
 		}
 
 		if (this->indoParaFrente)

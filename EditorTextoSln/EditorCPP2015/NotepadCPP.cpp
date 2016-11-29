@@ -401,7 +401,7 @@ void NotepadCPP::printarNaTela()
 		indice++;
 	}
 	cout << lista[indice++];
-	while (indice < 24)
+	while (indice <= 25)
 	{
 		cout << String(" ") * MAXIMO_STRING << endl;
 		indice++;
@@ -573,33 +573,56 @@ void NotepadCPP::run()
 					}
 					case PAGE_DOWN:
 					{
-						if (lista.length() < base + 24)
+						if (base != lista.length())
 						{
-							if (lista.length() < 24)
-								base = 24;
+							if (lista.length() < base + 24)
+							{
+								if (lista.length() < 24)
+									base = 24;
+								else
+									base = lista.length();
+
+								lista.iniciarPercursoSequencial(false);
+								lista.podePercorrer();
+								lista.avancar();
+
+								topo = base - 24;
+								indiceAtual = 0;
+								gotoxy(0, (lista.length()-1 < 24)?lista.length()-1:24);
+							}
 							else
-								base = lista.length();
-							topo = base - 24;
-						}
-						else
-						{
-							topo += 24;
-							base += 24;
+							{
+								topo += 24;
+								base += 24;
+								for (int i = 0; i < 25; i++)
+									lista.avancar();
+								indiceAtual = 0;
+								gotoxy(0, getACPy());
+							}
 						}
 						break;
 					}
 					case PAGE_UP:
 					{
-						if (topo - 24 < 0)
+						if (topo != 0)
 						{
-							topo = 0;
-							base = 24;
+							if (topo - 24 < 0)
+							{
+								topo = 0;
+								base = 24;
+								lista.iniciarPercursoSequencial();
+								lista.podePercorrer();
+							}
+							else
+							{
+								topo -= 24;
+								base -= 24;
+								for (int i = 0; i < 25; i++)
+									lista.voltar();
+							}
 						}
-						else
-						{
-							topo -= 24;
-							base -= 24;
-						}
+						indiceAtual = 0;
+						gotoxy(0, 0);
 						break;
 					}
 					default:
