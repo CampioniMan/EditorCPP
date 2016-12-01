@@ -95,10 +95,10 @@ String String::deletar(unsigned int posIni, unsigned int qtos)
 
 	String ret = this->substr(posIni, qtos);
 
-	for (int i = posIni; i + qtos < this->length(); i++) // mexendo, de posicao inicial pra frente, 1 para trás
+	for (int i = posIni; i + qtos < this->tamanho; i++) // mexendo, de posicao inicial pra frente, 1 para trás
 		*(this->minhaString + i) = (char)*(this->minhaString + i + qtos);
 
-	for (int i = qtos; i < this->length(); i++) // deixando os últimos nulos
+	for (int i = posIni + qtos; i < this->tamanho; i++) // deixando os últimos nulos
 		*(this->minhaString+ i) = this->charNull;
 	this->tamanho -= qtos;
 
@@ -190,18 +190,14 @@ void String::inserir(const String &letra)
 String String::substr(int posIni, int qtos) const
 {
 	String ret(qtos);
-	for (int i = posIni; i < qtos; i++)
+	for (int i = posIni; i < posIni+qtos; i++)
 		ret.inserir(this->operator[](i));
 	return ret;
 }
 
 String String::substr(int posIni) const
 {
-	int qtos = this->tamanho - posIni;
-	String ret(qtos);
-	for (int i = posIni; i < qtos; i++)
-		ret.inserir(this->operator[](i));
-	return ret;
+	return substr(posIni, this->tamanho - posIni);
 }
 
 // Apocalipticos

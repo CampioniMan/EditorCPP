@@ -36,8 +36,8 @@ private:
 	bool abrirArquivo(const String& dir);
 	bool criarArquivo(const String& dir);
 	bool limparArquivo(const String& dir);
-	void inserirNaAtual(char c, int &indiceAtual);
-	void deletarAtual(const int &indiceAtual);
+	void inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar);
+	void deletarAtual(const int &indiceAtual, bool &precisaPrintar);
 	void printarNaTela();
 	int getACPx();
 	int getACPy();

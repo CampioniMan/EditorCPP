@@ -383,7 +383,7 @@ bool NotepadCPP::criarArquivo(const String& dir)
 	arq.open((char*)dir, fstream::out);
 	if (arq.fail())
 		return false;
-	lista.inserirNoComeco("");
+	lista.inserirNoComeco(String());
 	arq.close();
 	return true;
 }
@@ -394,7 +394,7 @@ bool NotepadCPP::limparArquivo(const String& dir)
 	arq.open((char*)dir, ios::out | ios::trunc);
 	if (arq.fail())
 		return false;
-	lista.inserirNoComeco("");
+	lista.inserirNoComeco(String());
 	arq.close();
 	return true;
 }
@@ -442,7 +442,7 @@ void NotepadCPP::printarNaTela()
 	{
 		while (indice < 25)
 		{
-			cout << String(" ") * (MAXIMO_STRING - 1) << endl;
+			cout << String(" ") * MAXIMO_STRING << endl;
 			indice++;
 		}
 	}
@@ -450,7 +450,7 @@ void NotepadCPP::printarNaTela()
 	{
 		while (indice < 25)
 		{
-			cout << String(" ") * (MAXIMO_STRING-1) << endl;
+			cout << String(" ") * MAXIMO_STRING << endl;
 			indice++;
 		}
 	}
@@ -624,7 +624,7 @@ void NotepadCPP::run()
 					}
 					case DELETE:
 					{
-						deletarAtual(indiceAtual);
+						deletarAtual(indiceAtual, precisaPrintar);
 						break;
 					}
 					case 17:
@@ -688,15 +688,15 @@ void NotepadCPP::run()
 					}
 					default:
 					{
-						inserirNaAtual(SETAS_CRASE, indiceAtual);
-						inserirNaAtual(c, indiceAtual);
+						inserirNaAtual(SETAS_CRASE, indiceAtual, precisaPrintar);
+						inserirNaAtual(c, indiceAtual, precisaPrintar);
 						break;
 					}
 				}
 			}
 			else if (c >= 32) // caracter imprimível
 			{
-				inserirNaAtual(c, indiceAtual);
+				inserirNaAtual(c, indiceAtual, precisaPrintar);
 			}
 			else if (c == BACKSPACE)
 			{
@@ -734,6 +734,7 @@ void NotepadCPP::run()
 						}
 						else if (anteAux.length() < MAXIMO_STRING)
 						{
+							// início da Acao
 							String* txt = new String[2]();
 							txt[0] = lista.getAtual();
 							txt[1] = lista[lista.getIndexAtual() + 1];
@@ -742,6 +743,7 @@ void NotepadCPP::run()
 
 							this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
 
+							// Fim da acao
 							int qtasPegar = MAXIMO_STRING - anteAux.length();
 							lista[lista.getIndexAtual() - 1] = anteAux + aux.substr(0, qtasPegar);
 							aux.deletar(0, qtasPegar);
@@ -750,8 +752,6 @@ void NotepadCPP::run()
 							indiceAtual = anteAux.length();
 							lista.removaAtual();
 							gotoxy(indiceAtual, getACPy() - 1);
-
-							lista.avancar();
 						}
 					}
 				}
@@ -765,6 +765,9 @@ void NotepadCPP::run()
 
 					aux.deleteCharAt(--indiceAtual);
 					lista.setAtual(aux);
+					precisaPrintar = false;
+					gotoxy(0, getACPy());
+					cout << aux + (String(" ") * (MAXIMO_STRING - aux.length() - 1));
 					gotoxy(indiceAtual, getACPy());
 				}
 			}
@@ -782,9 +785,9 @@ void NotepadCPP::run()
 					lista.inserirDepois(String());
 				else
 				{
-					String tavaSobrando = lista.getAtual().substr(indiceAtual);
+					String temAMais = lista.getAtual().substr(indiceAtual);
 					lista[lista.getIndexAtual()].deletar(indiceAtual, lista.getAtual().length() - indiceAtual);
-					lista.inserirDepois(tavaSobrando);
+					lista.inserirDepois(temAMais);
 				}
 				indiceAtual = 0;
 				lista.avancar();
@@ -826,7 +829,7 @@ void NotepadCPP::run()
 	}
 }
 
-void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
+void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 {
 	String aux = lista.getAtual();
 	if (aux.length() >= MAXIMO_STRING) // máximo da string já alcançada
@@ -835,7 +838,7 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 			lista.inserirNoFinal(String());
 		lista.avancar();
 		indiceAtual = 0;
-		inserirNaAtual(c, indiceAtual);
+		inserirNaAtual(c, indiceAtual, precisaprintar);
 	}
 	else
 	{
@@ -843,6 +846,11 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 			aux.inserir(c, indiceAtual++);
 		else
 			aux[indiceAtual++] = c;
+
+		precisaprintar = false;
+		gotoxy(0, getACPy());
+		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length() - 1));
+		gotoxy(indiceAtual, getACPy());
 
 		if (this->acoesFeitas.ehVazia()) 
 			this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
@@ -855,7 +863,7 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 	}
 }
 
-void NotepadCPP::deletarAtual(const int &indiceAtual)
+void NotepadCPP::deletarAtual(const int &indiceAtual, bool &precisaPrintar)
 {
 	if (indiceAtual == lista.getAtual().length()) // truncar as linhas
 	{
@@ -894,54 +902,10 @@ void NotepadCPP::deletarAtual(const int &indiceAtual)
 	{
 		this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, lista.getIndexAtual(), this->getACPx()));
 		lista[lista.getIndexAtual()].deleteCharAt(indiceAtual);
+		String aux = lista[lista.getIndexAtual()];
+		precisaPrintar = false;
+		gotoxy(0, getACPy());
+		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length() - 1));
 		// adicionar acao de Deletar
 	}
 }
-
-
-
-/*
-int indiceLoop = lista.getIndexAtual(); // obtendo os atuais
-char removida;
-if (indiceAtual == MAXIMO_STRING)
-{
-while (aux.length() == MAXIMO_STRING)
-{
-aux.inserir(c, indiceAtual); // inserindo o novo carater
-
-lista[indiceLoop] = aux; // setando String com o novo caracter e sem o último
-
-if (indiceLoop != lista.length() - 1) // se não for o último
-aux = lista[indiceLoop++]; // indo para o próximo
-else
-{
-break;
-}
-removida = aux.deleteCharAt(aux.length() - 1); // removendo o último caracter
-}
-}
-else
-{
-while (aux.length() == MAXIMO_STRING)
-{
-removida = aux.deleteCharAt(aux.length() - 1); // removendo o último caracter
-aux.inserir(c, indiceAtual); // inserindo o novo carater
-
-lista[indiceLoop] = aux; // setando String com o novo caracter e sem o último
-
-if (indiceLoop != lista.length() - 1) // se não for o último
-aux = lista[indiceLoop++]; // indo para o próximo
-else
-{
-break;
-}
-}
-lista.inserirNoFinal(String(removida));
-if (indiceAtual >= MAXIMO_STRING)
-{
-indiceAtual = indiceAtual - MAXIMO_STRING;
-
-}
-}
-this->gotoxy(indiceAtual, getACPy());
-*/
