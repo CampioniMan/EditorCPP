@@ -852,11 +852,13 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 	String aux = lista.getAtual();
 	if (aux.length() >= MAXIMO_STRING) // máximo da string já alcançada
 	{
-		if (lista.getIndexAtual() == lista.length() - 1)
-			lista.inserirNoFinal(String());
+		if (indiceAtual == lista.getAtual().length())
+			lista.inserirDepois(String());
 		lista.avancar();
 		indiceAtual = 0;
 		inserirNaAtual(c, indiceAtual, precisaprintar);
+		precisaprintar = true;
+		gotoxy(indiceAtual, getACPy()+1);
 	}
 	else
 	{
@@ -867,7 +869,7 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 
 		precisaprintar = false;
 		gotoxy(0, getACPy());
-		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length() - 1));
+		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length()));
 		gotoxy(indiceAtual, getACPy());
 
 		if (this->acoesFeitas.ehVazia()) 
