@@ -424,11 +424,22 @@ void NotepadCPP::printarNaTela()
 		cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1)) << endl;
 		indice++;
 	}
-	cout << lista[indice++];
-	while (indice <= 25)
+	cout << lista[indice++] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1));
+	if (topo == 0)
 	{
-		cout << String(" ") * MAXIMO_STRING << endl;
-		indice++;
+		while (indice <= 25)
+		{
+			cout << String(" ") * MAXIMO_STRING << endl;
+			indice++;
+		}
+	}
+	else
+	{
+		while (indice <= 25)
+		{
+			cout << String(" ") * MAXIMO_STRING << endl;
+			indice++;
+		}
 	}
 	gotoxy(x, y);
 	showcursor();
@@ -436,7 +447,7 @@ void NotepadCPP::printarNaTela()
 
 void NotepadCPP::run()
 {
-	String vaiSalvar = 'N';
+	bool precisaPrintar = true;
 	int indiceAtual = 0, qtosCtrlC = 0, posXIni = 0, posYIni = 0, posXFim = 0, posYFim = 0;
 	if (this->abrirArquivo(this->dir))
 	{
@@ -446,7 +457,9 @@ void NotepadCPP::run()
 		gotoxy(0,0);
 		while (true)
 		{
-			printarNaTela();
+			if (precisaPrintar)
+				printarNaTela();
+			precisaPrintar = true;
 			while (!_kbhit()) {}
 			char c = _getch();
 			if (c == SETAS_CRASE) // setas
@@ -472,7 +485,10 @@ void NotepadCPP::run()
 								}
 							}
 							else
+							{
+								precisaPrintar = false;
 								gotoxy(indiceAtual, getACPy() - 1);
+							}
 						}
 						break;
 					case KEY_DOWN:
@@ -493,7 +509,10 @@ void NotepadCPP::run()
 								}
 							}
 							else
+							{
 								gotoxy(indiceAtual, getACPy() + 1);
+								precisaPrintar = false;
+							}
 
 						}
 						break;
@@ -501,6 +520,7 @@ void NotepadCPP::run()
 						if (indiceAtual < lista.getAtual().length()) // vai 1 a mais para a direita
 						{
 							gotoxy(++indiceAtual, getACPy());
+							precisaPrintar = false;
 						}
 						else
 						{
@@ -514,7 +534,10 @@ void NotepadCPP::run()
 						break;
 					case KEY_LEFT:
 						if (indiceAtual > 0)
+						{
 							gotoxy(--indiceAtual, getACPy());
+							precisaPrintar = false;
+						}
 						else
 						{
 							if (lista.getIndexAtual() != 0)
@@ -534,11 +557,6 @@ void NotepadCPP::run()
 						indiceAtual = 0;
 						gotoxy(indiceAtual, getACPy());
 						break;
-					case CTRL_S:
-					{
-						cout << "Ctrl+S" << endl;
-						break;
-					}
 					case CTRL_R:
 					{
 						if (++qtosCtrlC == 2)
@@ -562,10 +580,6 @@ void NotepadCPP::run()
 							posXIni = this->getACPx();
 							posYIni = this->getACPy();
 						}
-						break;
-					}
-					case CTRL_V:
-					{
 						break;
 					}
 					case DELETE:
@@ -704,10 +718,6 @@ void NotepadCPP::run()
 					lista.setAtual(aux);
 					gotoxy(indiceAtual, getACPy());
 				}
-			}
-			else if (c == CTRL_B)
-			{
-				
 			}
 			else if (c == CTRL_Z)
 			{
