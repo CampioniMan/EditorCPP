@@ -23,6 +23,8 @@
 #define PAGE_DOWN 81
 #define PAGE_UP 73
 #define ESC 27
+#define TAB 9
+#define MAXIMO_LINHAS 25
 
 /*
 
@@ -411,17 +413,17 @@ void NotepadCPP::printarNaTela()
 		if (topo == 0)
 		{
 			indice = topo;
-			base = 24;
+			base = MAXIMO_LINHAS-1;
 		}
 		else
 		{
-			indice = lista.length() - 25;
+			indice = lista.length() - MAXIMO_LINHAS;
 			topo = indice;
 			base = lista.length() - 1;
 		}
 	}
 
-	if (lista.length() - 1 < 24)
+	if (lista.length() - 1 < MAXIMO_LINHAS-1)
 	{
 		while (indice < lista.length() - 1)
 		{
@@ -440,7 +442,7 @@ void NotepadCPP::printarNaTela()
 	cout << lista[indice++] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1));
 	if (topo == 0)
 	{
-		while (indice < 25)
+		while (indice < MAXIMO_LINHAS)
 		{
 			cout << String(" ") * MAXIMO_STRING << endl;
 			indice++;
@@ -448,7 +450,7 @@ void NotepadCPP::printarNaTela()
 	}
 	else
 	{
-		while (indice < 25)
+		while (indice < MAXIMO_LINHAS)
 		{
 			cout << String(" ") * MAXIMO_STRING << endl;
 			indice++;
@@ -636,10 +638,10 @@ void NotepadCPP::run()
 					{
 						if (base != lista.length())
 						{
-							if (lista.length() < base + 24)
+							if (lista.length() < base + MAXIMO_LINHAS-1)
 							{
-								if (lista.length() < 24)
-									base = 24;
+								if (lista.length() < MAXIMO_LINHAS-1)
+									base = MAXIMO_LINHAS-1;
 								else
 									base = lista.length();
 
@@ -647,15 +649,15 @@ void NotepadCPP::run()
 								lista.podePercorrer();
 								lista.voltar();
 
-								topo = base - 24;
+								topo = base - MAXIMO_LINHAS-1;
 								indiceAtual = 0;
-								gotoxy(0, (lista.length()-1 < 24)?lista.length()-1:24);
+								gotoxy(0, (lista.length() - 1 < MAXIMO_LINHAS - 1) ? lista.length() - 1 : MAXIMO_LINHAS-1);
 							}
 							else
 							{
-								topo += 24;
-								base += 24;
-								for (int i = 0; i < 25; i++)
+								topo += MAXIMO_LINHAS-1;
+								base += MAXIMO_LINHAS-1;
+								for (int i = 0; i < MAXIMO_LINHAS-1; i++)
 									lista.avancar();
 								indiceAtual = 0;
 								gotoxy(0, getACPy());
@@ -667,18 +669,18 @@ void NotepadCPP::run()
 					{
 						if (topo != 0) // não é o primeiro
 						{
-							if (topo - 24 < 0) // se faltar menos que 24 pro topo
+							if (topo - MAXIMO_LINHAS-1 < 0) // se faltar menos que 24 pro topo
 							{
 								topo = 0;
-								base = 24;
+								base = MAXIMO_LINHAS-1;
 								lista.iniciarPercursoSequencial();
 								lista.podePercorrer();
 							}
 							else
 							{
-								topo -= 24;
-								base -= 24;
-								for (int i = 0; i < 25; i++)
+								topo -= MAXIMO_LINHAS-1;
+								base -= MAXIMO_LINHAS-1;
+								for (int i = 0; i < MAXIMO_LINHAS; i++)
 									lista.voltar();
 							}
 						}
@@ -760,7 +762,7 @@ void NotepadCPP::run()
 					if (this->acoesFeitas.ehVazia())
 						this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, getACPy(), getACPx()));
 
-					else if (this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy())
+				        	else if (this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy())
 						this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, getACPy(), getACPx()));
 
 					aux.deleteCharAt(--indiceAtual);
@@ -773,24 +775,33 @@ void NotepadCPP::run()
 			}
 			else if (c == CTRL_Z)
 			{
-				if (!this->acoesFeitas.ehVazia()) indiceAtual = this->CtrlZ(this->acoesFeitas.desempilhar().getDado());
+				if (!this->acoesFeitas.ehVazia()) indiceAtual = this->CtrlZ(this->acoesFeitas.desempilhar().getDado()); 
+				//desempilha dos feitos pros desfeitos
 			}
 			else if (c == CTRL_Y)
 			{
-				if (!this->acoesDesfeitas.ehVazia()) indiceAtual = this->CtrlY(this->acoesDesfeitas.desempilhar().getDado());
+				if (!this->acoesDesfeitas.ehVazia()) indiceAtual = this->CtrlY(this->acoesDesfeitas.desempilhar().getDado()); 
+				//desempilha dos desfeitos pros feitos
 			}
 			else if (c == ENTER)
 			{
 				if (indiceAtual == lista.getAtual().length())
+				{
 					lista.inserirDepois(String());
+					lista.avancar();
+				}
+				else if (indiceAtual == 0)
+				{
+					lista.inserirAntes(String());
+				}
 				else
 				{
 					String temAMais = lista.getAtual().substr(indiceAtual);
 					lista[lista.getIndexAtual()].deletar(indiceAtual, lista.getAtual().length() - indiceAtual);
 					lista.inserirDepois(temAMais);
+					lista.avancar();
 				}
 				indiceAtual = 0;
-				lista.avancar();
 				gotoxy(indiceAtual, getACPy() + 1);
 			}
 			else if (c == ESC)
@@ -824,6 +835,13 @@ void NotepadCPP::run()
 			else if (c == CTRL_B)
 			{
 				salvarArquivo(dir);
+			}
+			else if (c == TAB)
+			{
+				inserirNaAtual(' ', indiceAtual, precisaPrintar);
+				inserirNaAtual(' ', indiceAtual, precisaPrintar);
+				inserirNaAtual(' ', indiceAtual, precisaPrintar);
+				inserirNaAtual(' ', indiceAtual, precisaPrintar);
 			}
 		}
 	}

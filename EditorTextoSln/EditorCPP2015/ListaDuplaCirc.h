@@ -104,6 +104,31 @@ public:
 		this->tam++;
 	}
 
+	void inserirAntes(const Tipo &novoElemento)
+	{
+		NoLista<Tipo>* novo = new NoLista<Tipo>(novoElemento);
+
+		if (this->estaVazia())
+		{
+			this->primeiro = new NoLista<Tipo>(novo);
+			primeiro->setAnterior(primeiro);
+			primeiro->setProximo(primeiro);
+			atual = primeiro;
+			proximo = primeiro;
+			anterior = primeiro;
+		}
+		else
+		{
+			novo->setAnterior(anterior);
+			novo->setProximo(this->atual);
+			this->anterior->setProximo(novo);
+			this->atual->setAnterior(novo);
+			this->anterior = novo;
+		}
+		this->indexAtual++;
+		this->tam++;
+	}
+
 	void inserirNoComeco(const Tipo &novoElemento)
 	{
 		NoLista<Tipo> *novo = new NoLista<Tipo>(novoElemento);
