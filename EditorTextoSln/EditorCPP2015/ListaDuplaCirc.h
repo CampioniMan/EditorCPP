@@ -168,11 +168,11 @@ public:
 		{
 			anterior->setProximo(proximo);
 			proximo->setAnterior(anterior);
-			atual = proximo;
-			proximo = proximo->getProximo();
+			atual = anterior;
+			anterior = anterior->getAnterior();
 			if (this->indexAtual == 0)
 				this->primeiro = atual;
-			if (this->indexAtual == this->tam - 1)
+			if (this->indexAtual != 0)
 				this->indexAtual--;
 		}
 		else

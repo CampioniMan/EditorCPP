@@ -365,10 +365,10 @@ bool NotepadCPP::abrirArquivo(const String& dir)
 	{
 		std::getline(arq, line);
 		int qtos = 0;
-		while (line.length() > 80)
+		while (line.length() > MAXIMO_STRING)
 		{
-			lista.inserirNoFinal(line.substr(80 * qtos++,80));
-			line = line.substr(80 * qtos, 80);
+			lista.inserirNoFinal(line.substr(MAXIMO_STRING * qtos++,MAXIMO_STRING));
+			line = line.substr(MAXIMO_STRING * qtos, MAXIMO_STRING);
 		}
 		lista.inserirNoFinal(line);
 	}
@@ -409,9 +409,8 @@ void NotepadCPP::printarNaTela()
 	{
 		if (topo == 0)
 		{
-			indice = lista.length() - 25;
 			indice = topo;
-			base = lista.length() - 1;
+			base = 24;
 		}
 		else
 		{
@@ -421,25 +420,36 @@ void NotepadCPP::printarNaTela()
 		}
 	}
 
-	while (indice < base)
+	if (lista.length() - 1 < 24)
 	{
-		cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1)) << endl;
-		indice++;
-	}
-	cout << lista[indice++] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1));
-	if (topo == 0)
-	{
-		while (indice <= 25)
+		while (indice < lista.length() - 1)
 		{
-			cout << String(" ") * MAXIMO_STRING << endl;
+			cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1)) << endl;
 			indice++;
 		}
 	}
 	else
 	{
-		while (indice <= 25)
+		while (indice < base)
 		{
-			cout << String(" ") * MAXIMO_STRING << endl;
+			cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1)) << endl;
+			indice++;
+		}
+	}
+	cout << lista[indice++] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1));
+	if (topo == 0)
+	{
+		while (indice < 25)
+		{
+			cout << String(" ") * (MAXIMO_STRING - 1) << endl;
+			indice++;
+		}
+	}
+	else
+	{
+		while (indice < 25)
+		{
+			cout << String(" ") * (MAXIMO_STRING-1) << endl;
 			indice++;
 		}
 	}
@@ -492,6 +502,8 @@ void NotepadCPP::run()
 								gotoxy(indiceAtual, getACPy() - 1);
 							}
 						}
+						else
+							precisaPrintar = false;
 						break;
 					case KEY_DOWN:
 						if (lista.getIndexAtual() < lista.length() - 1)//if (lista[lista.getIndiceAtual()] != lista[-1])
@@ -517,6 +529,8 @@ void NotepadCPP::run()
 							}
 
 						}
+						else
+							precisaPrintar = false;
 						break;
 					case KEY_RIGHT:
 						if (indiceAtual < lista.getAtual().length()) // vai 1 a mais para a direita
@@ -530,7 +544,18 @@ void NotepadCPP::run()
 							{
 								lista.avancar();
 								indiceAtual = 0;
-								gotoxy(indiceAtual, getACPy() + 1);
+								
+								if (getACPy() >= base)
+								{
+									topo++;
+									base++;
+									gotoxy(indiceAtual, getACPy());
+								}
+								else
+								{
+									gotoxy(indiceAtual, getACPy() + 1);
+									precisaPrintar = false;
+								}
 							}
 						}
 						break;
@@ -546,18 +571,30 @@ void NotepadCPP::run()
 							{
 								lista.voltar();
 								indiceAtual = lista.getAtual().length();
-								gotoxy(indiceAtual, getACPy() - 1);
+								if (getACPy() <= topo)
+								{
+									topo--;
+									base--;
+									gotoxy(indiceAtual, getACPy());
+								}
+								else
+								{
+									gotoxy(indiceAtual, getACPy() - 1);
+									precisaPrintar = false;
+								}
 							}
 						}
 						break;
 					case END:
 						indiceAtual = lista.getAtual().length();
 						gotoxy(indiceAtual, getACPy());
+						precisaPrintar = false;
 						break;
 
 					case HOME:
 						indiceAtual = 0;
 						gotoxy(indiceAtual, getACPy());
+						precisaPrintar = false;
 						break;
 					case CTRL_R:
 					{
@@ -605,9 +642,9 @@ void NotepadCPP::run()
 								else
 									base = lista.length();
 
-								lista.iniciarPercursoSequencial(false);
+								lista.iniciarPercursoSequencial();
 								lista.podePercorrer();
-								lista.avancar();
+								lista.voltar();
 
 								topo = base - 24;
 								indiceAtual = 0;
@@ -627,9 +664,9 @@ void NotepadCPP::run()
 					}
 					case PAGE_UP:
 					{
-						if (topo != 0)
+						if (topo != 0) // não é o primeiro
 						{
-							if (topo - 24 < 0)
+							if (topo - 24 < 0) // se faltar menos que 24 pro topo
 							{
 								topo = 0;
 								base = 24;
@@ -645,7 +682,7 @@ void NotepadCPP::run()
 							}
 						}
 						indiceAtual = 0;
-						gotoxy(0, 0);
+						gotoxy(0, lista.getIndexAtual()-topo);
 						break;
 					}
 					default:
@@ -663,13 +700,14 @@ void NotepadCPP::run()
 			else if (c == BACKSPACE)
 			{
 				String aux = lista.getAtual();
-				if (indiceAtual == 0) // 0 no X
+				if (indiceAtual == 0) // se é o primeiro caracter da linha
 				{
-					if (lista.getIndexAtual() != 0) // não é o primeiro
+					if (lista.getIndexAtual() != 0) // não é a primeira linha
 					{
 						String anteAux = lista[lista.getIndexAtual() - 1];
 						if (aux.length() + anteAux.length() <= MAXIMO_STRING)
 						{
+							//Acao a ser registrada
 							String* txt = new String[2]();
 							txt[0] = lista.getAtual();
 							txt[1] = lista[lista.getIndexAtual() + 1];
@@ -677,19 +715,20 @@ void NotepadCPP::run()
 							unsigned int* posY = new unsigned int[2]{ (unsigned int)lista.getIndexAtual() , (unsigned int)lista.getIndexAtual() + 1 };
 
 							this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
+							// fim da acao registrada
 							lista[lista.getIndexAtual() - 1] = anteAux + aux;
 							lista.removaAtual();
 							indiceAtual = anteAux.length();
 							if (lista.getIndexAtual() != lista.length() - 1 && topo == 0) // se não for o último e o topo é o primeiro
 							{
-								gotoxy(indiceAtual, getACPy());
+								gotoxy(indiceAtual, getACPy()-1);
 							}
 							else
 							{
-								gotoxy(indiceAtual, getACPy()-1);
+								gotoxy(indiceAtual, getACPy());
+								topo--;
+								base--;
 							}
-
-							lista.voltar();
 						}
 						else if (anteAux.length() < MAXIMO_STRING)
 						{
@@ -708,8 +747,6 @@ void NotepadCPP::run()
 							indiceAtual = anteAux.length();
 							lista.removaAtual();
 							gotoxy(indiceAtual, getACPy() - 1);
-							lista.avancar();
-							lista.voltar();
 							lista.avancar();
 						}
 					}
@@ -792,7 +829,7 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 	}
 	else
 	{
-		if (aux.length() != indiceAtual + 1)
+		if (aux.length() != indiceAtual-1)
 			aux.inserir(c, indiceAtual++);
 		else
 			aux[indiceAtual++] = c;
