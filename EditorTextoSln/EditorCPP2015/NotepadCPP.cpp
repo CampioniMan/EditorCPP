@@ -98,7 +98,7 @@ void NotepadCPP::CtrlY(const Acao &dis)
 	this->acoesFeitas.empilhar(Acao(txt, ACAO_CTRL_Z, dis.getPosY(0), dis.getPosX()));
 }
 
-void NotepadCPP::CtrlZ(const Acao &dis)
+int NotepadCPP::CtrlZ(const Acao &dis)
 {
 	if (dis.getString(0) == "" && dis.getTipo() == ACAO_REMOVE)
 	{
@@ -125,10 +125,12 @@ void NotepadCPP::CtrlZ(const Acao &dis)
 		String txt = this->lista[dis.getPosY(0)];
 		if (this->lista[dis.getPosY(0)].length() < MAXIMO_STRING)
 			this->lista[dis.getPosY(0)] = dis.getString(0);
+
 		this->gotoxy(dis.getPosX(), dis.getPosY(0));
 		this->acoesDesfeitas.esvaziar();
 		this->acoesDesfeitas.empilhar(Acao(txt, ACAO_CTRL_Y, dis.getPosY(0), dis.getPosX()));
 	}
+	return dis.getPosX();
 }
 
 Acao NotepadCPP::CtrlC(const Acao &dis)
@@ -721,7 +723,7 @@ void NotepadCPP::run()
 			}
 			else if (c == CTRL_Z)
 			{
-				if (!this->acoesFeitas.ehVazia()) this->CtrlZ(this->acoesFeitas.desempilhar().getDado());
+				if (!this->acoesFeitas.ehVazia()) indiceAtual = this->CtrlZ(this->acoesFeitas.desempilhar().getDado());
 			}
 			else if (c == CTRL_Y)
 			{
@@ -782,12 +784,11 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 	String aux = lista.getAtual();
 	if (aux.length() >= MAXIMO_STRING) // máximo da string já alcançada
 	{
-			if (lista.getIndexAtual() == lista.length() - 1)
-				lista.inserirNoFinal(String());
-			lista.avancar();
-			indiceAtual = 0;
-			inserirNaAtual(c, indiceAtual);
-		
+		if (lista.getIndexAtual() == lista.length() - 1)
+			lista.inserirNoFinal(String());
+		lista.avancar();
+		indiceAtual = 0;
+		inserirNaAtual(c, indiceAtual);
 	}
 	else
 	{
@@ -796,9 +797,12 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual)
 		else
 			aux[indiceAtual++] = c;
 
-		if (this->acoesFeitas.getTopo().getDado().getPosX() == this->getACPx() &&
-			this->acoesFeitas.getTopo().getDado().getPosY(0) == this->getACPy()) 
-		  this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
+		if (this->acoesFeitas.ehVazia()) 
+			this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
+
+		else if (this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy()) 
+		    this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
+
 		this->lista.setAtual(aux);
 		this->gotoxy(indiceAtual, getACPy());
 	}

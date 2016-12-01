@@ -114,7 +114,7 @@ protected:
 	{
 		if (&feita == NULL) throw "Ação Inválida";
 
-		NoLista<Tipo> no = NoLista<Tipo>(feita);
+		NoLista<Tipo>* no = new NoLista<Tipo>(feita);
 		if (this->ehCheia())
 		{
 			NoLista<Tipo> acc = *(this->nos + 0);
@@ -126,13 +126,13 @@ protected:
 		}
 		else if (this->ehVazia())
 		{
-			*(this->nos + this->tamanhoAtual++) = no;
+			*(this->nos + this->tamanhoAtual++) = *no;
 			return NoLista<Tipo>();
 		}
 
-		(this->nos + this->tamanhoAtual - 1)->setProximo(no);
-		no.setAnterior((this->nos + this->tamanhoAtual - 1));
-		*(this->nos + this->tamanhoAtual++) = no;
+		(this->nos + (this->tamanhoAtual - 1))->setProximo(no);
+		no->setAnterior((this->nos + (this->tamanhoAtual - 1)));
+		*(this->nos + this->tamanhoAtual++) = *no;
 		return NoLista<Tipo>();
 	}
 
@@ -150,7 +150,7 @@ protected:
 	NoLista<Tipo> getTopo() const
 	{
 		if (this->tamanhoAtual == 0) return *(this->nos + this->tamanhoAtual);
-		return *(this->nos + this->tamanhoAtual - 1);
+		return *(this->nos + (this->tamanhoAtual - 1));
 	}
 private:
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------//

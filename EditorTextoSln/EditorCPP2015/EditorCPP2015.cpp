@@ -148,13 +148,12 @@ int main()
 			dormir(100);
 			cout << "e. Utilize as setas para mover o cursor." << endl;
 			dormir(100);
-			cout << "f. Ctrl+Q sai do modo de edição." << endl;
+			cout << "f. ESC sai do modo de edição." << endl;
 			dormir(100);
 			cout << "g. Ctrl+Z retrocede o arquivo ao estado anterior." << endl;
 			dormir(100);
 			cout << "h. Ctrl+Y volta o arquivo ao estado editado." << endl;
 			dormir(100);
-			cout << "i. Ctrl+R para selecionar o começo e fim da seleção." << endl;
 			cout << "Pressione qualquer tecla para continuar" << endl;
 			_getch();
 			break;

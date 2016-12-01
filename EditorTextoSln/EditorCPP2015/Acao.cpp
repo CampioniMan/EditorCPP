@@ -192,7 +192,7 @@ void Acao::aloca(const String *novasString, const unsigned int *novoPosY, unsign
 		this->palavraMudou = new String("");
 		*this->palavraMudou = *novasString;
 		this->posY = (unsigned int*)malloc(sizeof(unsigned int));
-		this->setPosY(0, 0);
+		this->setPosY(*novoPosY, 0);
 	}
 
 	else
