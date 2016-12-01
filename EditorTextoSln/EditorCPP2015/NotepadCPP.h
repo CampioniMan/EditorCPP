@@ -42,7 +42,7 @@ private:
 	int getACPx();
 	int getACPy();
 	int CtrlZ(const Acao &dis);
-	void CtrlY(const Acao &dis);
+	int CtrlY(const Acao &dis);
 	Acao CtrlX(const Acao &dis);
 	Acao CtrlC(const Acao &dis);
 	Acao CtrlH(const Acao &dis);

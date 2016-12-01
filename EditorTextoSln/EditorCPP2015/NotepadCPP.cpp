@@ -89,13 +89,14 @@ NotepadCPP::NotepadCPP(const String& diretorio, const int ehSobre) : ehSobreescr
 	//acoesDesfeitas = Pilha<Acao>();
 }
 
-void NotepadCPP::CtrlY(const Acao &dis)
+int NotepadCPP::CtrlY(const Acao &dis)
 {
 	String txt = this->lista[dis.getPosY(0)];
 	if (this->lista[dis.getPosY(0)].length() < MAXIMO_STRING)
 		this->lista[dis.getPosY(0)] = dis.getString(0);
 	this->gotoxy(dis.getPosX(), dis.getPosY(0));
 	this->acoesFeitas.empilhar(Acao(txt, ACAO_CTRL_Z, dis.getPosY(0), dis.getPosX()));
+	return dis.getPosX();
 }
 
 int NotepadCPP::CtrlZ(const Acao &dis)
@@ -127,8 +128,8 @@ int NotepadCPP::CtrlZ(const Acao &dis)
 			this->lista[dis.getPosY(0)] = dis.getString(0);
 
 		this->gotoxy(dis.getPosX(), dis.getPosY(0));
-		this->acoesDesfeitas.esvaziar();
-		this->acoesDesfeitas.empilhar(Acao(txt, ACAO_CTRL_Y, dis.getPosY(0), dis.getPosX()));
+		this->acoesDesfeitas.empilhar(Acao(txt, ACAO_CTRL_Y, dis.getPosY(0), 0));
+		this->acoesDesfeitas.getTopo().getDado().setTipo((dis.getTipo() == ACAO_REMOVE) ? getACPx() : dis.getPosX());
 	}
 	return dis.getPosX();
 }
@@ -719,16 +720,17 @@ void NotepadCPP::run()
 							lista[lista.getIndexAtual() - 1] = anteAux + aux;
 							lista.removaAtual();
 							indiceAtual = anteAux.length();
-							if (lista.getIndexAtual() != lista.length() - 1 && topo == 0) // se não for o último e o topo é o primeiro
-							{
+
+							if (lista.getIndexAtual() != lista.length() - 1 && topo == 0) // se não for o último e o topo é o primeiro					
 								gotoxy(indiceAtual, getACPy()-1);
-							}
+							
 							else
 							{
 								gotoxy(indiceAtual, getACPy());
 								topo--;
 								base--;
 							}
+							lista.voltar();
 						}
 						else if (anteAux.length() < MAXIMO_STRING)
 						{
@@ -743,16 +745,24 @@ void NotepadCPP::run()
 							int qtasPegar = MAXIMO_STRING - anteAux.length();
 							lista[lista.getIndexAtual() - 1] = anteAux + aux.substr(0, qtasPegar);
 							aux.deletar(0, qtasPegar);
+
 							lista[lista.getIndexAtual()] = aux;
 							indiceAtual = anteAux.length();
 							lista.removaAtual();
 							gotoxy(indiceAtual, getACPy() - 1);
+
 							lista.avancar();
 						}
 					}
 				}
 				else
 				{
+					if (this->acoesFeitas.ehVazia())
+						this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, getACPy(), getACPx()));
+
+					else if (this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy())
+						this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, getACPy(), getACPx()));
+
 					aux.deleteCharAt(--indiceAtual);
 					lista.setAtual(aux);
 					gotoxy(indiceAtual, getACPy());
@@ -764,7 +774,7 @@ void NotepadCPP::run()
 			}
 			else if (c == CTRL_Y)
 			{
-				if (!this->acoesDesfeitas.ehVazia()) this->CtrlY(this->acoesDesfeitas.desempilhar().getDado());
+				if (!this->acoesDesfeitas.ehVazia()) indiceAtual = this->CtrlY(this->acoesDesfeitas.desempilhar().getDado());
 			}
 			else if (c == ENTER)
 			{
