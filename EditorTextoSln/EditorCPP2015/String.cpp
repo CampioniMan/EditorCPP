@@ -63,7 +63,7 @@ tamanhoMax((n <= 1024) ? 1024 : n * 2), tamanho(n)
 
 String::~String()
 {
-	free(minhaString);
+	//free(minhaString);
 }
 
 // Métodos normais
