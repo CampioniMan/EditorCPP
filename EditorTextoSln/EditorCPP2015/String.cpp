@@ -199,6 +199,23 @@ String String::substr(int posIni) const
 	return substr(posIni, this->tamanho - posIni);
 }
 
+int String::StrToInt() const
+{
+	int ret = 0;
+
+	for (int i = 0; i < this->tamanho; i++)
+	{
+		if (this->minhaString[i] >= 48 && this->minhaString[i] <= 57) // entre 0 e 9
+		{
+			ret += this->minhaString[i] - 48;
+			if (i != this->tamanho -1)
+				ret *= 10;
+		}
+	}
+
+	return ret;
+}
+
 // Apocalipticos
 char* String::toString() const
 {

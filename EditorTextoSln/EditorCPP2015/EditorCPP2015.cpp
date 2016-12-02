@@ -161,6 +161,7 @@ int main()
 			opcao = ' ';
 			continue;
 		}
+		
 	}
 	return esperaEnter();
 }
