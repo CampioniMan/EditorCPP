@@ -744,14 +744,13 @@ void NotepadCPP::run()
 							this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
 
 							// Fim da acao
-							int qtasPegar = MAXIMO_STRING - anteAux.length();
-							lista[lista.getIndexAtual() - 1] = anteAux + aux.substr(0, qtasPegar);
-							aux.deletar(0, qtasPegar);
+							int qtasPegar = MAXIMO_STRING - anteAux.length(); // acha quantas cabem na string de cima
+							lista[lista.getIndexAtual() - 1] = (anteAux + aux.deletar(0, qtasPegar)).substr(0, 78); // adiciona na string de cima quantas foram deletadas
 
-							lista[lista.getIndexAtual()] = aux;
-							indiceAtual = anteAux.length();
-							lista.removaAtual();
-							gotoxy(indiceAtual, getACPy() - 1);
+							lista[lista.getIndexAtual()] = aux; // atualiza o atual com a string que teve uma parte deletada
+							indiceAtual = anteAux.length(); // atualiza o lugar do cursor
+							gotoxy(indiceAtual, getACPy() - 1); // volta para o anterior na tela
+							lista.voltar();
 						}
 						else
 						{
@@ -762,7 +761,7 @@ void NotepadCPP::run()
 							char primeiroDaAtual = lista[lista.getIndexAtual()].deleteCharAt(0);
 							lista[lista.getIndexAtual()-1].deleteCharAt(lista[lista.getIndexAtual() - 1].length()-1);
 							lista[lista.getIndexAtual() - 1].inserir(primeiroDaAtual);
-							indiceAtual = MAXIMO_STRING;
+							indiceAtual = MAXIMO_STRING - 1;
 							gotoxy(indiceAtual, getACPy() - 1);
 							lista.voltar();
 						}
@@ -780,7 +779,7 @@ void NotepadCPP::run()
 					lista.setAtual(aux);
 					precisaPrintar = false;
 					gotoxy(0, getACPy());
-					cout << aux + (String(" ") * (MAXIMO_STRING - aux.length() - 1));
+					cout << aux + (String(" ") * (MAXIMO_STRING - aux.length()));
 					gotoxy(indiceAtual, getACPy());
 				}
 			}
