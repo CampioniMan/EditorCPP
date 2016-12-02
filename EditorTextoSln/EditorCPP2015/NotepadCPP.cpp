@@ -753,6 +753,19 @@ void NotepadCPP::run()
 							lista.removaAtual();
 							gotoxy(indiceAtual, getACPy() - 1);
 						}
+						else
+						{
+							// "aaaa"
+							// "bbbb"
+							// "aaab"
+							// "bbb"
+							char primeiroDaAtual = lista[lista.getIndexAtual()].deleteCharAt(0);
+							lista[lista.getIndexAtual()-1].deleteCharAt(lista[lista.getIndexAtual() - 1].length()-1);
+							lista[lista.getIndexAtual() - 1].inserir(primeiroDaAtual);
+							indiceAtual = MAXIMO_STRING;
+							gotoxy(indiceAtual, getACPy() - 1);
+							lista.voltar();
+						}
 					}
 				}
 				else
@@ -880,18 +893,12 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 	}
 	else
 	{
-		if (indiceAtual == 0)
-		{
-			aux.inserirNoComeco(c);
-			indiceAtual++;
-		}
-		else
-			aux.inserir(c, indiceAtual++);
-
+		aux.inserir(c, indiceAtual++);
 		precisaprintar = false;
-		gotoxy(0, getACPy());
+		int y = getACPy();
+		gotoxy(0, y);
 		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length()));
-		gotoxy(indiceAtual, getACPy());
+		gotoxy(indiceAtual, y);
 
 		if (this->acoesFeitas.ehVazia()) 
 			this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
@@ -900,7 +907,6 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 		    this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
 
 		this->lista.setAtual(aux);
-		this->gotoxy(indiceAtual, getACPy());
 	}
 }
 
