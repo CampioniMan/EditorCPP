@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <thread>
 #include "NotepadCPP.h"
 #include "ListaDuplaCirc.h"
 #include <sys/stat.h>
@@ -25,6 +26,7 @@
 #define ESC 27
 #define TAB 9
 #define MAXIMO_LINHAS 25
+#define CTRL_P 16
 
 /*
 
@@ -93,11 +95,24 @@ NotepadCPP::NotepadCPP(const String& diretorio, const int ehSobre) : ehSobreescr
 
 int NotepadCPP::CtrlY(const Acao &dis)
 {
-	String txt = this->lista[dis.getPosY(0)];
-	if (this->lista[dis.getPosY(0)].length() < MAXIMO_STRING)
+	if (dis.getTipo() == ACAO_REMOVE && dis.getTamanho() == 2)
+	{
+		String* txt = new String[2]{lista[dis.getPosY(0)], lista[dis.getPosY(1)]};
+		unsigned int* posY = new unsigned int[2]{ dis.getPosY(0), dis.getPosY(1) };
+		this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
+
+		this->lista.remover(dis.getPosY(1));
 		this->lista[dis.getPosY(0)] = dis.getString(0);
-	this->gotoxy(dis.getPosX(), dis.getPosY(0));
-	this->acoesFeitas.empilhar(Acao(txt, ACAO_CTRL_Z, dis.getPosY(0), dis.getPosX()));
+	}
+
+	else
+	{
+		String txt = this->lista[dis.getPosY(0)];
+		if (this->lista[dis.getPosY(0)].length() < MAXIMO_STRING)
+			this->lista[dis.getPosY(0)] = dis.getString(0);
+		this->gotoxy(dis.getPosX(), dis.getPosY(0));
+		this->acoesFeitas.empilhar(Acao(txt, ACAO_CTRL_Z, dis.getPosY(0), dis.getPosX()));
+	}
 	return dis.getPosX();
 }
 
@@ -105,52 +120,43 @@ int NotepadCPP::CtrlZ(const Acao &dis)
 {
 	if (dis.getTipo() == ACAO_REMOVE && dis.getTamanho() == 2)
 	{
+		String *ptr;
 		if (dis.getPosY(0) == 0)
 		{
-			String *txt = new String[2]{ this->lista.getPrimeiro(), String() };
-			unsigned int *posY = new unsigned int[2]{dis.getPosY(0), dis.getPosY(1)};
+			ptr = new String[2]{ this->lista.getPrimeiro(), String() };
 
 			this->lista.remover(0);
 			this->lista.inserirNoComeco(dis.getString(1));
 			this->lista.inserirNoComeco(dis.getString(0));
+			this->lista.voltar();
+			this->lista.voltar();
 
-			this->gotoxy(dis.getPosX(), dis.getPosY(0));
-			this->acoesDesfeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, dis.getPosX()));
-			
-			//free(txt);
-			//free(posY);
+			//this->lista.setAtual(this->lista.getPrimeiro());
 		}
 
-		else if (dis.getPosY(1) == this->lista.length() - 1)
+		else if (dis.getPosY(0) == this->lista.length() - 1)
 		{
-			String *txt = new String[2]{ String(), this->lista[-1] };
-			unsigned int *posY = new unsigned int[2]{ dis.getPosY(0), dis.getPosY(1) };
+			ptr = new String[2]{ this->lista[-1], String() };
 
 			this->lista.remover(this->lista.length() - 1);
 			this->lista.inserirNoFinal(dis.getString(0));
 			this->lista.inserirNoFinal(dis.getString(1));
-
-			this->gotoxy(dis.getPosX(), dis.getPosY(0));
-			this->acoesDesfeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, dis.getPosX()));
-
-			//free(txt);
-			//free(posY);
 		}
 
 		else
 		{
-			String *txt = new String[2]{ String(), this->lista[-1] };
-			unsigned int *posY = new unsigned int[2]{ dis.getPosY(0), dis.getPosY(1) };
+			ptr = new String[2]{ this->lista[-1], String() };
 
 			this->lista[dis.getPosY(0)] = dis.getString(0);
 			this->lista.inserirNaPosicao(dis.getString(1), dis.getPosY(1));
-
-			this->gotoxy(dis.getPosX(), dis.getPosY(0));
-			this->acoesDesfeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, dis.getPosX()));
-
-			//free(txt);
-			//free(posY);
 		}
+
+		unsigned int *posY = new unsigned int[2]{ dis.getPosY(0), dis.getPosY(1) };
+		this->acoesDesfeitas.empilhar(Acao(ptr, ACAO_REMOVE, posY, 2, dis.getPosX()));
+		this->gotoxy(dis.getPosX(), dis.getPosY(0));
+
+		//delete[] ptr;
+		//delete[] posY;
 	}
 	else
 	{
@@ -740,8 +746,14 @@ void NotepadCPP::run()
 						if (aux.length() + anteAux.length() <= MAXIMO_STRING)
 						{
 							//Acao a ser registrada
-							String* txt = new String[2]{lista.getAtual(), lista[lista.getIndexAtual() + 1]};
-							unsigned int* posY = new unsigned int[2]{ (unsigned int)lista.getIndexAtual() , (unsigned int)lista.getIndexAtual() + 1 };
+							String* txt = new String[2]();
+							*(txt + 1) = lista.getAtual();
+							*(txt + 0) = lista[lista.getIndexAtual() - 1];
+
+							unsigned int* posY = new unsigned int[2]();//{ (unsigned int)(lista.getIndexAtual()) , (unsigned int)(lista.getIndexAtual() -1) };
+							*(posY + 1) = lista.getIndexAtual();
+							*(posY + 0) = lista.getIndexAtual() - 1;
+
 							this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
 
 							//free(txt);
@@ -816,11 +828,13 @@ void NotepadCPP::run()
 			else if (c == CTRL_Z)
 			{
 				if (!this->acoesFeitas.ehVazia()) indiceAtual = this->CtrlZ(this->acoesFeitas.desempilhar().getDado()); 
+				precisaPrintar = true;
 				//desempilha dos feitos pros desfeitos
 			}
 			else if (c == CTRL_Y)
 			{
 				if (!this->acoesDesfeitas.ehVazia()) indiceAtual = this->CtrlY(this->acoesDesfeitas.desempilhar().getDado()); 
+				precisaPrintar = true;
 				//desempilha dos desfeitos pros feitos
 			}
 			else if (c == ENTER)
@@ -882,8 +896,37 @@ void NotepadCPP::run()
 				inserirNaAtual(' ', indiceAtual, precisaPrintar);
 				inserirNaAtual(' ', indiceAtual, precisaPrintar);
 			}
+			else if (c == CTRL_P)
+			{
+				this->ClearScreen();
+				String opcao;
+
+				cout << "> Deseja salvar o arquivo como?" << endl << "> ";
+				cin >> opcao;
+
+				if (!fexists(opcao))
+				{
+					salvarArquivo(opcao);
+				}
+				else
+				{
+					cout << "> Diretório inválido" << endl;
+					cout << "> Aperte qualquer tecla para continuar" << endl;
+					_getch();
+				}
+				gotoxy(0, 0);
+				indiceAtual = 0;
+
+				this->lista.iniciarPercursoSequencial();
+				this->lista.podePercorrer();
+			}
 		}
 	}
+}
+
+void NotepadCPP::dormir(unsigned int mili)
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(mili));
 }
 
 void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)

@@ -27,6 +27,7 @@ public:
 	static void hidecursor();
 	static void showcursor();
 	static bool setTamanho(int width, int height);
+	void dormir(unsigned int mili);
 
 	const static int ABRIR_EXISTENTE = 0;
 	const static int ABRIR_SOBREESCREVER = 1;

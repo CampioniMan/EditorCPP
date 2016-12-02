@@ -137,7 +137,10 @@ public:
 		{
 			this->primeiro = novo;
 			novo->setProximo(novo);
-			novo->setAnterior(novo);
+			novo->setAnterior(novo); 
+			atual = primeiro;
+			proximo = primeiro;
+			anterior = primeiro;
 		}
 		else
 		{
@@ -149,6 +152,7 @@ public:
 
 			this->primeiro = novo;
 		}
+		this->indexAtual++;
 		this->tam++;
 	}
 
@@ -240,11 +244,26 @@ public:
 		if (this->estaVazia() || elemento < 0 || elemento >= this->tam)
 			return false;
 
+		if (elemento == 0)
+		{
+			this->iniciarPercursoSequencial();
+			this->podePercorrer();
+			removaAtual();
+			if (this->atual == this->primeiro)
+				this->atual = primeiro->getProximo();
+			this->primeiro = primeiro->getProximo();
+		}
+		else
+		{
+			NoLista<Tipo>* atualmente = this->atual;
 
-		for (int i = elemento; i <= this->tam - 1; i++)
-			this->operator[](i) = this->operator[](i + 1);
-		//this->remover(this->operator[](-1));
-		this->tam--;
+			this->iniciarPercursoSequencial();
+			for (int i = 0; i <= elemento; podePercorrer(), i++) {}
+			removaAtual();
+
+			voltarPara(atualmente);
+		}
+
 		return true;
 	}
 
