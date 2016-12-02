@@ -10,19 +10,19 @@ public:
 	//-------------------------------------------------------------CONSTRUTORES/DESTRUTOR--------------------------------------------------------------------//
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-	ListaDuplaCirc() : primeiro(NULL), atual(NULL), anterior(NULL), proximo(NULL), indexAtual(0){}
+	ListaDuplaCirc() : primeiro(NULL), atual(NULL), anterior(NULL), proximo(NULL), indexAtual(0) {}
 
-	ListaDuplaCirc(const ListaDuplaCirc<Tipo> &original) : primeiro(original.getPrimeiro()), atual(original.getAtual()), 
-			                                                anterior(original.getAnterior()), proximo(original.getProximo(), indexAtual(original.getIndexAtual())){}
+	ListaDuplaCirc(const ListaDuplaCirc<Tipo> &original) : primeiro(original.getPrimeiro()), atual(original.getAtual()),
+		anterior(original.getAnterior()), proximo(original.getProximo(), indexAtual(original.getIndexAtual())) {}
 
 	ListaDuplaCirc(Tipo novoPrimeiro) : primeiro(novoPrimeiro), atual(novoPrimeiro), anterior(novoPrimeiro), proximo(novoPrimeiro), indexAtual(0) {}
 
-	~ListaDuplaCirc(){}
+	~ListaDuplaCirc() {}
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
 	//---------------------------------------------------------------GETTERS E SETTERS-----------------------------------------------------------------------//
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
-		
+
 	int length() const
 	{
 		return this->tam;
@@ -43,11 +43,6 @@ public:
 		return this->primeiro->getDado();
 	}
 
-	Tipo getUltimo() const
-	{
-		return this->primeiro->ante->getDado();
-	}
-
 	void setAtual(Tipo novoDado)
 	{
 		this->atual->setDado(novoDado);
@@ -57,7 +52,7 @@ public:
 	{
 		this->primeiro->setDado(novoDado);
 	}
-		
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
 	//----------------------------------------------------------------MÉTODOS PRINCIPAIS---------------------------------------------------------------------//
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -159,7 +154,7 @@ public:
 
 	void inserirNaPosicao(const Tipo &novoElemento, const int &n)
 	{
-		if (n < 0 || n > this->length()-1)
+		if (n < 0 || n > this->length() - 1)
 			return;
 
 		NoLista<Tipo> *novo = new NoLista<Tipo>(novoElemento);
@@ -188,7 +183,7 @@ public:
 		}
 		this->tam++;
 	}
-		
+
 	bool removaAtual()
 	{
 		if (this->estaVazia())
@@ -245,14 +240,14 @@ public:
 		if (this->estaVazia() || elemento < 0 || elemento >= this->tam)
 			return false;
 
-		
+
 		for (int i = elemento; i <= this->tam - 1; i++)
 			this->operator[](i) = this->operator[](i + 1);
-		this->remover(this->operator[](-1));
+		//this->remover(this->operator[](-1));
 		this->tam--;
 		return true;
 	}
-		
+
 	int buscar(const Tipo &procurada)
 	{
 		NoLista<Tipo>* reserva = this->atual;
@@ -301,7 +296,7 @@ public:
 		}
 		return -1;
 	}
-		
+
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------//
 	//----------------------------------------------------------------MÉTODOS DE PERCURSSÃO---------------------------------------------------------------------//
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------//
@@ -341,7 +336,7 @@ public:
 			this->avancar();
 		else
 			this->voltar();
-			
+
 
 		return ret;
 	}
@@ -363,9 +358,9 @@ public:
 		this->proximo = this->proximo->getAnterior();
 		this->indexAtual--;
 		if (this->indexAtual < 0)
-			this->indexAtual = this->tam-1;
+			this->indexAtual = this->tam - 1;
 	}
-		
+
 	bool estaVazia() const
 	{
 		return (this->primeiro == NULL);
@@ -374,7 +369,7 @@ public:
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------//
 	//--------------------------------------------------------------------OPERATORS-----------------------------------------------------------------------------//
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------//
-		
+
 	bool operator= (const ListaDuplaCirc &outra)
 	{
 		return true;
@@ -427,4 +422,3 @@ private:
 	NoLista<Tipo> *atual, *anterior, *proximo, *primeiro;
 	int tam = 0, indexAtual = 0;
 };
-
