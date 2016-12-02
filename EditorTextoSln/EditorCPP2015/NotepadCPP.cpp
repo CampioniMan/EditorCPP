@@ -427,7 +427,7 @@ void NotepadCPP::printarNaTela()
 	{
 		while (indice < lista.length() - 1)
 		{
-			cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1)) << endl;
+			cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length())) << endl;
 			indice++;
 		}
 	}
@@ -435,11 +435,11 @@ void NotepadCPP::printarNaTela()
 	{
 		while (indice < base)
 		{
-			cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1)) << endl;
+			cout << lista[indice] + (String(" ") * (MAXIMO_STRING - lista[indice].length())) << endl;
 			indice++;
 		}
 	}
-	cout << lista[indice++] + (String(" ") * (MAXIMO_STRING - lista[indice].length() - 1));
+	cout << lista[indice++] + (String(" ") * (MAXIMO_STRING - lista[indice].length()));
 	if (topo == 0)
 	{
 		while (indice < MAXIMO_LINHAS)
@@ -725,14 +725,12 @@ void NotepadCPP::run()
 
 							if (lista.getIndexAtual() != lista.length() - 1 && topo == 0) // se não for o último e o topo é o primeiro					
 								gotoxy(indiceAtual, getACPy()-1);
-							
 							else
 							{
 								gotoxy(indiceAtual, getACPy());
 								topo--;
 								base--;
 							}
-							lista.voltar();
 						}
 						else if (anteAux.length() < MAXIMO_STRING)
 						{
@@ -809,14 +807,14 @@ void NotepadCPP::run()
 				this->ClearScreen();
 				char opcao = ' ';
 
-				cout << "Deseja sair do arquivo?" << endl;
+				cout << "> Deseja sair do arquivo?(Y/[N])" << endl << "> ";
 				cin >> opcao;
 
 				if (opcao == 'y' || opcao == 'Y')
 				{
 					opcao = ' ';
 
-					cout << "Deseja salvar o arquivo?" << endl;
+					cout << "> Deseja salvar o arquivo?(Y/[N])" << endl << "> ";
 					cin >> opcao;
 
 					if (opcao == 'y' || opcao == 'Y')
@@ -853,19 +851,28 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 	if (aux.length() >= MAXIMO_STRING) // máximo da string já alcançada
 	{
 		if (indiceAtual == lista.getAtual().length())
-			lista.inserirDepois(String());
-		lista.avancar();
-		indiceAtual = 0;
-		inserirNaAtual(c, indiceAtual, precisaprintar);
-		precisaprintar = true;
-		gotoxy(indiceAtual, getACPy()+1);
+		{
+			lista.avancar();
+			indiceAtual = 0;
+			inserirNaAtual(c, indiceAtual, precisaprintar);
+			precisaprintar = true;
+			gotoxy(indiceAtual, getACPy() + 1);
+		}
+		else
+		{
+			char reserva = lista[lista.getIndexAtual()].deleteCharAt(lista.getAtual().length()-1);
+			lista[lista.getIndexAtual()].inserir(c, indiceAtual++);
+			lista.avancar();
+			int r = 0;
+			inserirNaAtual(reserva, r, precisaprintar);
+			lista.voltar();
+			gotoxy(indiceAtual, getACPy());
+			precisaprintar = true;
+		}
 	}
 	else
 	{
-		if (aux.length() != indiceAtual-1)
-			aux.inserir(c, indiceAtual++);
-		else
-			aux[indiceAtual++] = c;
+		aux.inserir(c, indiceAtual++);
 
 		precisaprintar = false;
 		gotoxy(0, getACPy());
@@ -925,7 +932,7 @@ void NotepadCPP::deletarAtual(const int &indiceAtual, bool &precisaPrintar)
 		String aux = lista[lista.getIndexAtual()];
 		precisaPrintar = false;
 		gotoxy(0, getACPy());
-		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length() - 1));
+		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length()));
 		// adicionar acao de Deletar
 	}
 }

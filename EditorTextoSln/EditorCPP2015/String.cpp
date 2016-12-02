@@ -52,7 +52,7 @@ tamanhoMax((novaString.size() <= 512) ? 1024 : novaString.size()*2), tamanho(nov
 
 
 String::String(const int &n,char novaString[]) :
-tamanhoMax((n <= 1024) ? 1024 : n * 2), tamanho(n)
+tamanhoMax((n < 1024) ? 1024 : n * 2), tamanho(n)
 {
 	this->minhaString = (char*)malloc((this->getTamanhoMax() + 1) * sizeof(char));
 	int i = 0;
@@ -274,7 +274,7 @@ String operator+ (const String &th, const String &outra)
 	int u = 0;
 	for (i = th.length(); i < th.length() + outra.length(); i++, u++)
 		*(arrai + i) = (char)*((char*)outra + u);
-
+	
 	*(arrai + i) = String::charNull;
 
 	String ret = String(i, arrai);
