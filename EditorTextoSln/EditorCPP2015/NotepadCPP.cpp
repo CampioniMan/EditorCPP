@@ -103,25 +103,54 @@ int NotepadCPP::CtrlY(const Acao &dis)
 
 int NotepadCPP::CtrlZ(const Acao &dis)
 {
-	if (dis.getString(0) == "" && dis.getTipo() == ACAO_REMOVE)
+	if (dis.getTipo() == ACAO_REMOVE && dis.getTamanho() == 2)
 	{
-		String* txt = new String[2]();
-		txt[0] = lista[dis.getPosY(0)];
-		txt[1] = String();
+		if (dis.getPosY(0) == 0)
+		{
+			String *txt = new String[2]{ this->lista.getPrimeiro(), String() };
+			unsigned int *posY = new unsigned int[2]{dis.getPosY(0), dis.getPosY(1)};
 
-		unsigned int* posY = new unsigned int[2]{ (unsigned int)dis.getPosY(0) , (unsigned int)dis.getPosY(1) };
+			this->lista.remover(0);
+			this->lista.inserirNoComeco(dis.getString(1));
+			this->lista.inserirNoComeco(dis.getString(0));
 
-		Acao t;
-		if (acoesDesfeitas.getTopo().getDado().getTipo() == dis.getTipo())
-			t = acoesDesfeitas.getTopo().getDado();
+			this->gotoxy(dis.getPosX(), dis.getPosY(0));
+			this->acoesDesfeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, dis.getPosX()));
+			
+			free(txt);
+			free(posY);
+		}
 
-		this->acoesDesfeitas.esvaziar();
-		t = t + Acao(txt, ACAO_CTRL_Y, posY, 2, dis.getPosX());
-		this->acoesDesfeitas.empilhar(t);
+		else if (dis.getPosY(1) == this->lista.length() - 1)
+		{
+			String *txt = new String[2]{ String(), this->lista.getUltimo() };
+			unsigned int *posY = new unsigned int[2]{ dis.getPosY(0), dis.getPosY(1) };
 
-		String ttttt = dis.getString(1);
-		this->lista[lista.getIndexAtual()] = dis.getString(0);
-		this->lista.inserirNaPosicao(dis.getString(1) + dis.getString(0), dis.getPosY(1));
+			this->lista.remover(this->lista.length() - 1);
+			this->lista.inserirNoFinal(dis.getString(0));
+			this->lista.inserirNoFinal(dis.getString(1));
+
+			this->gotoxy(dis.getPosX(), dis.getPosY(0));
+			this->acoesDesfeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, dis.getPosX()));
+
+			free(txt);
+			free(posY);
+		}
+
+		else
+		{
+			String *txt = new String[2]{ String(), this->lista.getUltimo() };
+			unsigned int *posY = new unsigned int[2]{ dis.getPosY(0), dis.getPosY(1) };
+
+			this->lista[dis.getPosY(0)] = dis.getString(0);
+			this->lista.inserirNaPosicao(dis.getString(1), dis.getPosY(1));
+
+			this->gotoxy(dis.getPosX(), dis.getPosY(0));
+			this->acoesDesfeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, dis.getPosX()));
+
+			free(txt);
+			free(posY);
+		}
 	}
 	else
 	{
@@ -711,13 +740,13 @@ void NotepadCPP::run()
 						if (aux.length() + anteAux.length() <= MAXIMO_STRING)
 						{
 							//Acao a ser registrada
-							String* txt = new String[2]();
-							txt[0] = lista.getAtual();
-							txt[1] = lista[lista.getIndexAtual() + 1];
-
+							String* txt = new String[2]{lista.getAtual(), lista[lista.getIndexAtual() + 1]};
 							unsigned int* posY = new unsigned int[2]{ (unsigned int)lista.getIndexAtual() , (unsigned int)lista.getIndexAtual() + 1 };
-
 							this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
+
+							free(txt);
+							free(posY);
+
 							// fim da acao registrada
 							lista[lista.getIndexAtual() - 1] = anteAux + aux;
 							lista.removaAtual();
@@ -739,6 +768,9 @@ void NotepadCPP::run()
 								String *txt = new String[2]{lista.getAtual(), lista[lista.getIndexAtual() + 1]};
 								unsigned int *posY = new unsigned int[2]{((unsigned int)lista.getIndexAtual()), ((unsigned int)lista.getIndexAtual() + (unsigned int)1)};
 								this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, getACPx()));
+
+								free(txt);
+								free(posY);
 							}
 
 							// Fim da acao
@@ -747,6 +779,7 @@ void NotepadCPP::run()
 
 							lista[lista.getIndexAtual()] = aux; // atualiza o atual com a string que teve uma parte deletada
 							indiceAtual = anteAux.length(); // atualiza o lugar do cursor
+
 							gotoxy(indiceAtual, getACPy() - 1); // volta para o anterior na tela
 							lista.voltar();
 						}
@@ -759,6 +792,7 @@ void NotepadCPP::run()
 							char primeiroDaAtual = lista[lista.getIndexAtual()].deleteCharAt(0);
 							lista[lista.getIndexAtual()-1].deleteCharAt(lista[lista.getIndexAtual() - 1].length()-1);
 							lista[lista.getIndexAtual() - 1].inserir(primeiroDaAtual);
+
 							indiceAtual = MAXIMO_STRING - 1;
 							gotoxy(indiceAtual, getACPy() - 1);
 							lista.voltar();
@@ -861,10 +895,13 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 		{
 			if (lista.getIndexAtual() == lista.length() - 1)
 				lista.inserirNoFinal(String());
+
 			lista.avancar();
 			indiceAtual = 0;
+
 			inserirNaAtual(c, indiceAtual, precisaprintar);
 			precisaprintar = true;
+
 			if (!(lista.getIndexAtual() == lista.length() - 1))
 				gotoxy(indiceAtual, getACPy() + 1);
 		}
@@ -872,6 +909,7 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 		{
 			char reserva = lista[lista.getIndexAtual()].deleteCharAt(lista.getAtual().length()-1);
 			lista[lista.getIndexAtual()].inserir(c, indiceAtual++);
+
 			if (lista.getIndexAtual() == lista.length() - 1)
 			{
 				lista.inserirNoFinal(String());
@@ -879,9 +917,11 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 				base++;
 			}
 			lista.avancar();
+
 			int r = 0;
 			inserirNaAtual(reserva, r, precisaprintar);
 			lista.voltar();
+
 			gotoxy(indiceAtual, getACPy());
 			precisaprintar = true;
 		}
@@ -911,13 +951,12 @@ void NotepadCPP::deletarAtual(const int &indiceAtual, bool &precisaPrintar)
 			int qtosCabem = MAXIMO_STRING - lista.getAtual().length();
 			String truncada = lista.getAtual() + lista[lista.getIndexAtual() + 1].substr(0, qtosCabem);
 
-			String* txt = new String[2]();
-			txt[0] = lista.getAtual();
-			txt[1] = lista[lista.getIndexAtual() + 1];
-
+			String* txt = new String[2]{ lista.getAtual(), lista[lista.getIndexAtual() + 1] };
 			unsigned int* posY = new unsigned int[2]{ ((unsigned int)lista.getIndexAtual()), ((unsigned int)lista.getIndexAtual() + (unsigned int)1) };
-
 			this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
+
+			free(txt);
+			free(posY);
 
 			lista[lista.getIndexAtual()] = truncada;
 			lista[lista.getIndexAtual() + 1] = lista[lista.getIndexAtual() + 1].substr(qtosCabem, lista.getAtual().length()-1 - qtosCabem);
@@ -931,6 +970,9 @@ void NotepadCPP::deletarAtual(const int &indiceAtual, bool &precisaPrintar)
 				String *txt = new String[2]{lista.getAtual(), lista[lista.getIndexAtual() + 1]};
 				unsigned int *posY = new unsigned int[2]{((unsigned int)lista.getIndexAtual()), ((unsigned int)lista.getIndexAtual() + (unsigned int)1)};
 				this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, getACPx()));
+
+				free(txt);
+				free(posY);
 			}
 			String truncada = lista.getAtual() + lista[lista.getIndexAtual() + 1];
 			lista.removaDepois();

@@ -43,6 +43,11 @@ public:
 		return this->primeiro->getDado();
 	}
 
+	Tipo getUltimo() const
+	{
+		return this->primeiro->ante->getDado();
+	}
+
 	void setAtual(Tipo novoDado)
 	{
 		this->atual->setDado(novoDado);
