@@ -794,8 +794,7 @@ void NotepadCPP::run()
 				}
 				else
 				{
-					String temAMais = lista.getAtual().substr(indiceAtual);
-					lista[lista.getIndexAtual()].deletar(indiceAtual, lista.getAtual().length() - indiceAtual);
+					String temAMais = lista[lista.getIndexAtual()].deletar(indiceAtual, lista.getAtual().length() - indiceAtual);
 					lista.inserirDepois(temAMais);
 					lista.avancar();
 				}
@@ -852,16 +851,25 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 	{
 		if (indiceAtual == lista.getAtual().length())
 		{
+			if (lista.getIndexAtual() == lista.length() - 1)
+				lista.inserirNoFinal(String());
 			lista.avancar();
 			indiceAtual = 0;
 			inserirNaAtual(c, indiceAtual, precisaprintar);
 			precisaprintar = true;
-			gotoxy(indiceAtual, getACPy() + 1);
+			if (!(lista.getIndexAtual() == lista.length() - 1))
+				gotoxy(indiceAtual, getACPy() + 1);
 		}
 		else
 		{
 			char reserva = lista[lista.getIndexAtual()].deleteCharAt(lista.getAtual().length()-1);
 			lista[lista.getIndexAtual()].inserir(c, indiceAtual++);
+			if (lista.getIndexAtual() == lista.length() - 1)
+			{
+				lista.inserirNoFinal(String());
+				topo++;
+				base++;
+			}
 			lista.avancar();
 			int r = 0;
 			inserirNaAtual(reserva, r, precisaprintar);
@@ -872,7 +880,13 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 	}
 	else
 	{
-		aux.inserir(c, indiceAtual++);
+		if (indiceAtual == 0)
+		{
+			aux.inserirNoComeco(c);
+			indiceAtual++;
+		}
+		else
+			aux.inserir(c, indiceAtual++);
 
 		precisaprintar = false;
 		gotoxy(0, getACPy());
