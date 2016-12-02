@@ -100,7 +100,7 @@ int main()
 			cout << "Você selecionou a opção '1'\n";
 			cout << "Digite o diretório do arquivo que deseja-se abrir:";
 			//cin >> file_path;
-			file_path = "C:\\Temp\\trabalho.txt";
+			file_path = "C:\\Temp\\README.txt";
 			if (NotepadCPP::fexists(file_path))
 			{
 				NotepadCPP editar(file_path, NotepadCPP::ABRIR_EXISTENTE);

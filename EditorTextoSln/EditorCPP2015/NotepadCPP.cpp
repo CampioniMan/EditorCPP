@@ -734,14 +734,12 @@ void NotepadCPP::run()
 						}
 						else if (anteAux.length() < MAXIMO_STRING)
 						{
-							// início da Acao
-							String* txt = new String[2]();
-							txt[0] = lista.getAtual();
-							txt[1] = lista[lista.getIndexAtual() + 1];
-
-							unsigned int* posY = new unsigned int[2]{ (unsigned int)lista.getIndexAtual() , (unsigned int)lista.getIndexAtual() + 1 };
-
-							this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
+							if (this->acoesFeitas.ehVazia() || this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy())
+							{
+								String *txt = new String[2]{lista.getAtual(), lista[lista.getIndexAtual() + 1]};
+								unsigned int *posY = new unsigned int[2]{((unsigned int)lista.getIndexAtual()), ((unsigned int)lista.getIndexAtual() + (unsigned int)1)};
+								this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, getACPx()));
+							}
 
 							// Fim da acao
 							int qtasPegar = MAXIMO_STRING - anteAux.length(); // acha quantas cabem na string de cima
@@ -769,10 +767,8 @@ void NotepadCPP::run()
 				}
 				else
 				{
-					if (this->acoesFeitas.ehVazia())
-						this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, getACPy(), getACPx()));
 
-				        	else if (this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy())
+					if (this->acoesFeitas.ehVazia() || this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy())
 						this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, getACPy(), getACPx()));
 
 					aux.deleteCharAt(--indiceAtual);
@@ -899,10 +895,7 @@ void NotepadCPP::inserirNaAtual(char c, int &indiceAtual, bool &precisaprintar)
 		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length()));
 		gotoxy(indiceAtual, y);
 
-		if (this->acoesFeitas.ehVazia()) 
-			this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
-
-		else if (this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy()) 
+		if (this->acoesFeitas.ehVazia() || this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy()) 
 		    this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_ADICIONAR, getACPy(), getACPx()));
 
 		this->lista.setAtual(aux);
@@ -922,36 +915,38 @@ void NotepadCPP::deletarAtual(const int &indiceAtual, bool &precisaPrintar)
 			txt[0] = lista.getAtual();
 			txt[1] = lista[lista.getIndexAtual() + 1];
 
-			unsigned int* posY = new unsigned int[2]{ (unsigned int)lista.getIndexAtual() , (unsigned int)lista.getIndexAtual() + 1 };
+			unsigned int* posY = new unsigned int[2]{ ((unsigned int)lista.getIndexAtual()), ((unsigned int)lista.getIndexAtual() + (unsigned int)1) };
 
 			this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, this->getACPx()));
 
 			lista[lista.getIndexAtual()] = truncada;
 			lista[lista.getIndexAtual() + 1] = lista[lista.getIndexAtual() + 1].substr(qtosCabem, lista.getAtual().length()-1 - qtosCabem);
 
-
-			
 			// Adicionar Acao de Deletar com 2 Strings alteradas
 		}
 		else
 		{
+			if (this->acoesFeitas.ehVazia() || this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy())
+			{
+				String *txt = new String[2]{lista.getAtual(), lista[lista.getIndexAtual() + 1]};
+				unsigned int *posY = new unsigned int[2]{((unsigned int)lista.getIndexAtual()), ((unsigned int)lista.getIndexAtual() + (unsigned int)1)};
+				this->acoesFeitas.empilhar(Acao(txt, ACAO_REMOVE, posY, 2, getACPx()));
+			}
 			String truncada = lista.getAtual() + lista[lista.getIndexAtual() + 1];
-
-			this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, lista.getIndexAtual(), this->getACPx()));
-
 			lista.removaDepois();
 			lista[lista.getIndexAtual()] = truncada;
-			// adicionar acao de Deletar
 		}
 	}
 	else
 	{
-		this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, lista.getIndexAtual(), this->getACPx()));
+		if (this->acoesFeitas.ehVazia() || this->acoesFeitas.getTopo().getDado().getPosY(0) != this->getACPy())
+			this->acoesFeitas.empilhar(Acao(lista.getAtual(), ACAO_REMOVE, getACPy(), getACPx()));
+
 		lista[lista.getIndexAtual()].deleteCharAt(indiceAtual);
 		String aux = lista[lista.getIndexAtual()];
+
 		precisaPrintar = false;
 		gotoxy(0, getACPy());
 		cout << aux + (String(" ") * (MAXIMO_STRING - aux.length()));
-		// adicionar acao de Deletar
 	}
 }
